@@ -1,0 +1,22 @@
+{
+    "name": "MaterialKeys",
+    "title": "Material Keys",
+    "description": "Description",
+    "version": "0.0.1",
+    "author": "CDeenen",
+    "esmodules": [
+      "./MaterialKeys.js"
+    ],
+    "socket": true,
+    "compatibleCoreVersion": "0.6.6",
+    "languages": [
+      {
+        "lang": "en",
+        "name": "English",
+        "path": "lang/en.json"
+      }
+    ],
+    "url": "",
+    "manifest": "",
+    "download": ""
+  }
