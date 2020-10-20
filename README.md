@@ -3,21 +3,20 @@ Material Keys is a <a href="https://foundryvtt.com/">Foundry VTT</a> module that
 <br>
 Material Keys currently has 7 different functions:<br>
 <ul>
-<li>Audio Effects Soundboard</li>
-<li>Playlist Control</li>
-<li>Playlist Volume Control</li>
-<li>Visual Effects Control</li>
-<li>Combat Tracker</li>
-<li>Token Health Tracker</li>
-<li>Macro Board</li>
+<li><a href="https://github.com/CDeenen/MaterialKeys#audio-effects-soundboard">Audio Effects Soundboard</a></li>
+<li><a href="https://github.com/CDeenen/MaterialKeys#playlist-control">Playlist Control</a></li>
+<li><a href="https://github.com/CDeenen/MaterialKeys#playlist-volume-control">Playlist Volume Control</a></li>
+<li><a href="https://github.com/CDeenen/MaterialKeys#visual-effects-control">Visual Effects Control</a></li>
+<li><a href="https://github.com/CDeenen/MaterialKeys#combat-tracker">Combat Tracker</a></li>
+<li><a href="https://github.com/CDeenen/MaterialKeys#token-health-tracker">Token Health Tracker</a></li>
+<li><a href="https://github.com/CDeenen/MaterialKeys#macro-board">Macro Board</a></li>
 </ul>
 Each of these functions are discussed in detail below.
 
-# Getting Started
-Besides the Material Keys module and the Launchpad, you will also need to use a companion app, called MIDI Bridge. MIDI Bridge is a simple app that will bridge the communication between the Launchpad and Foundry, since Foundry does not support USB devices natively. The app can be downloaded <a href=" ">here</a>.<br>
-Connection between the app and both Foundry and the Launchpad should be automatic, if not, you can find more details <a href=" ">here</a>.
-
 # Using the Module
+Besides the Material Keys module and the Launchpad, you will also need to use a companion app, called MIDI Bridge. MIDI Bridge is a simple app that will bridge the communication between the Launchpad and Foundry, since Foundry does not support USB devices natively. The app can be downloaded <a href="https://github.com/CDeenen/MaterialKeys/releases/tag/App_v1.0.0">here</a>.<br>
+Connection between the app and both Foundry and the Launchpad should be automatic, if not, you can find more details <a href="https://github.com/CDeenen/MaterialKeys/blob/main/App/README.md">here</a>.<br>
+<br>
 The module needs to be enabled, and the correct MIDI bridge address must be set for the module to work. Please see the section on the <a href=" ">module settings</a> below.<br>
 <br>
 3 different key types can be found on the Launchpad:
@@ -30,7 +29,7 @@ The module needs to be enabled, and the correct MIDI bridge address must be set 
 ## Audio Effects Soundboard
 Using the Audio Effects Soundboard, you can easily play audio tracks.<br>
 You could, for example, set up some keys to play battle effects, such as clashing swords, arrow hits, or explosions. Another thing you could do is to create an atmosphere, by setting some keys to play, for example, weather sounds.<br>
-You can enter the Audio Effects Soundboard by pressing the first Function key from the top<br>
+You can enter the Audio Effects Soundboard by pressing the first Function key from the top.<br>
 Once you've set up the soundboard, pressing a key will play the pre-set sound and change the LED to indicate the sound is playing. Pressing the key again will stop the sound.<br>
 
 ### Soundboard Configuration
@@ -94,3 +93,6 @@ Each column, including the control keys, correspond with a token in the combat t
 If there are more than 8 tokens in the initiative tracker, you can press the same function key again to go to the next 8 tokens, which changes the color of the function key to indicate this, going from green, to blue, to purple, to yellow. A total of 32 tokens can be displayed.
 
 ### Macro Board
+
+# Module Settings
+

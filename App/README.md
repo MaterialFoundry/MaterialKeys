@@ -5,6 +5,10 @@ The Launchpad controller communicates with the computer using MIDI <a href="http
 <br>
 <b>Note: </b>This app has only been tested on my Windows 10 machine. There are Linux and OSX files included, but I don't know if they work. I cannot guarantee compatibility.
 
+## Starting the app
+The app can be downloaded from <a href="https://github.com/CDeenen/MaterialKeys/releases/tag/App_v1.0.0">here</a>. Extract the .rar file, and run midiBridge-win.exe.<br>
+For OSX or Linux users, you should run midiBridge-macos or midibridge-linux, respectively. As stated before, I do not know if they work.
+
 ## Receiving data from the Launchpad
 If a key on the Launchpad is pressed, the launchpad sends a 'note on' or 'control change' message. 'Note on' for the 64 main keys, and 'control change' for the other keys. The 'note' or 'controller' parameter corresponds with the pressed key, while the 'velocity' or 'value' parameter corresponds with whether the key is pressed or released. The key and press state are then send over a websocket to Foundry, where it is further processed.
 
