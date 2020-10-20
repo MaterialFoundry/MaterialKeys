@@ -13,27 +13,27 @@ Material Keys currently has 7 different functions:<br>
 </ul>
 Each of these functions are discussed in detail below.
 
-## Getting Started
+# Getting Started
 Besides the Material Keys module and the Launchpad, you will also need to use a companion app, called MIDI Bridge. MIDI Bridge is a simple app that will bridge the communication between the Launchpad and Foundry, since Foundry does not support USB devices natively. The app can be downloaded <a href=" ">here</a>.<br>
 Connection between the app and both Foundry and the Launchpad should be automatic, if not, you can find more details <a href=" ">here</a>.
 
-## Using the Module
+# Using the Module
 The module needs to be enabled, and the correct MIDI bridge address must be set for the module to work. Please see the section on the <a href=" ">module settings</a> below.<br>
 <br>
 3 different key types can be found on the Launchpad:
 <ul>
-<li><b>Function keys: </b>The 8 vertical keys on the right, the function of these keys is to change between the various Material Keys functions<li>
-<li><b>Control keys: </b>The 8 horizontal keys on the top, the function of which will change depending on the selected function<li>
-<li><b>Main keys: </b>The other 64 keys that form the majority of keys<li>
+<li><b>Function keys: </b>The 8 vertical keys on the right, the function of these keys is to change between the various Material Keys functions</li>
+<li><b>Control keys: </b>The 8 horizontal keys on the top, the function of which will change depending on the selected function</li>
+<li><b>Main keys: </b>The other 64 keys that form the majority of keys</li>
 </ul>
 
-### Audio Effects Soundboard
+## Audio Effects Soundboard
 Using the Audio Effects Soundboard, you can easily play audio tracks.<br>
 You could, for example, set up some keys to play battle effects, such as clashing swords, arrow hits, or explosions. Another thing you could do is to create an atmosphere, by setting some keys to play, for example, weather sounds.<br>
 You can enter the Audio Effects Soundboard by pressing the first Function key from the top<br>
 Once you've set up the soundboard, pressing a key will play the pre-set sound and change the LED to indicate the sound is playing. Pressing the key again will stop the sound.<br>
 
-#### Soundboard Configuration
+### Soundboard Configuration
 The Audio Effects Soundboard is set-up in the Soundboard Configuration screen, which can be found in the module settings.<br>
 In the top right, you set the playlist from which you will select the sounds. Once you've done that you can edit each individual key. The rest of the Soundboard Configuration screen is divided into 64 boxes, each representing a key, ordered as you find them on the Launchpad (For example, Sound 81 corresponds with the top left key).<br>
 <ul>
@@ -47,18 +47,18 @@ In the top right, you set the playlist from which you will select the sounds. On
 The LED color is represented by a number. This number corresponds with a factory programmed color, as can be seen in the image below. Besides filling in a number, you could also press the palette button next to the number field, which allows the Launchpad to display all the available colors. There are 2 groups of 64 colors, and by pressing the fading green function key (rightmost key), you can switch between the groups. The currently selected color will be fading, and pressing a key will send the color of that key to the Soundboard Configuration screen.<br>
 An empty color field will be interpreted as a 0, which means that the LED will be off.
 
-### Playlist Control
+## Playlist Control
 The playlist control screen gives easy control over up to 8 playlists. For each of these playlists, up to 8 tracks can be directly controlled.<br>
 For each of these tracks and playlists, you have an indicator showing that the track is playing and you can stop or play tracks or playlists.<br>
 You can enter the playlist control by pressing the second function key from the top.<br>
 <br>
 The screen is divided into 8 columns, where each column represents a playlist. The control (uppermost) key indicates and controls the playlist. If that playlist is playing, the LED will turn green, if that playlist is not playing, it will turn red. Pressing the key when the playlist is not playing will start the playlist, pressing the key when the playlist is playing will stop it. The same functionality can be found in the other 8 keys in the column. These 8 keys represent the first 8 tracks in the playlist (first track is at the top).
 
-#### Playlist Configuration
+### Playlist Configuration
 The playlist control can be configured in the playlist configuration screen, which can be found in the module settings.<br>
 <br>
 <b>Play Method:</b> The play method determines what to do when a track is playing, while another track is requested. By setting it to 'Unrestricted', you can play as many tracks at the same time as you want. Setting it to 'One track per playlist' will automatically stop all playing tracks in the playlist, ensuring that only one track is playing at a time. Setting 'Play Method' to 'One track in total' will limit playback to only one track in total.<br>
-<b>Note:<b> This play method only applies if tracks are started using the Launchpad, you can still play more tracks using Foundry's internal audio player.<br>
+<b>Note:</b> This play method only applies if tracks are started using the Launchpad, you can still play more tracks using Foundry's internal audio player.<br>
 <br>
 <b>Playlists:</b> Here you can select which playlists correspond to which column in the Playlist Control screen.
 
