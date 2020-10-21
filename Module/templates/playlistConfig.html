@@ -1,0 +1,36 @@
+<form autocomplete="off" onsubmit="event.preventDefault()">
+    <div >                    
+        <h2>{{localize "MaterialKeys.Playlist.Playmethod.Header"}}</h2>
+    </div>
+    <div class="form-group">     
+        <label>{{localize "MaterialKeys.Playlist.Playmethod.Label"}}</label>
+        <select name="playMethod" class="playMethod" default="">
+            {{#select playMethod}}
+                <option value="0">{{localize "MaterialKeys.Playlist.Playmethod.Unrestricted"}}</option>
+                <option value="1">{{localize "MaterialKeys.Playlist.Playmethod.OneTrackPlaylist"}}</option>
+                <option value="2">{{localize "MaterialKeys.Playlist.Playmethod.OneTrackTotal"}}</option>
+            {{/select}}
+        </select>
+    </div>
+    <div>                    
+        <h2>{{localize "MaterialKeys.Playlist.Playlists"}}</h2>
+    </div>
+    {{#each playlistData}}
+        <div class="form-group">
+            <label>{{localize "MaterialKeys.Playlist.Playlist"}} {{this.iteration}}</label>
+            <select name="selectedPlaylist" class="playlist-select" default="">
+                {{#select this.playlist}}
+                    <option value="">{{localize "MaterialKeys.Playlist.None"}}</option>
+                    {{#each this.playlists}}
+                    <option value="{{this._id}}">{{this.name}}</option>
+                    {{/each}}
+                {{/select}}
+            </select>
+        </div>
+    {{/each}}
+
+    <button type="submit" name="submit">
+        <i class="far fa-save"></i> {{localize "MaterialKeys.Playlist.Save"}}
+    </button>
+
+</form>
