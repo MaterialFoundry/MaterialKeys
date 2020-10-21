@@ -13,7 +13,7 @@ For OSX or Linux users, you should run midiBridge-macos or midibridge-linux, res
 The connection to Foundry should go automatically, if the correct IP address is set in the module settings. If the app is run on the same computer as the client, the IP addres can be set as 'localhost'. Otherwise, use the IP address that the app prints after startup.<br>
 The default port is 3001, but this can be changed in midiBridge.js.
 
-<img src="https://github.com/CDeenen/MaterialKeys/blob/master/App/img/App.png" width="500">
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/App/img/App.png" width="1000">
 
 ## Receiving data from the Launchpad
 If a key on the Launchpad is pressed, the launchpad sends a 'note on' or 'control change' message. 'Note on' for the 64 main keys, and 'control change' for the other keys. The 'note' or 'controller' parameter corresponds with the pressed key, while the 'velocity' or 'value' parameter corresponds with whether the key is pressed or released. The key and press state are then send over a websocket to Foundry, where it is further processed.
