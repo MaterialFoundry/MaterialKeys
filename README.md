@@ -33,6 +33,10 @@ Using the Audio Effects Soundboard, you can easily play audio tracks.<br>
 You could, for example, set up some keys to play battle effects, such as clashing swords, arrow hits, or explosions. Another thing you could do is to create an atmosphere, by setting some keys to play, for example, weather sounds.<br>
 You can enter the Audio Effects Soundboard by pressing the first Function key from the top.<br>
 Once you've set up the soundboard, pressing a key will play the pre-set sound and change the LED to indicate the sound is playing. Pressing the key again will stop the sound.<br>
+<br>
+<b>Outdated video showing the Audio Effects Soundboard (will be updated)</b>
+
+[![Youtube Video](https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/YoutubeAudioFx.png)](https://youtu.be/7dLJlhtw0DY "Audio Fx Soundboard")
 
 ### Soundboard Configuration
 The Audio Effects Soundboard is set-up in the Soundboard Configuration screen, which can be found in the module settings.<br>
@@ -46,7 +50,7 @@ In the top right, you set the playlist from which you will select the sounds. On
 <li><b>Volume:</b> Sets the playback volume. This volume is relative to the 'Interface' volume</li>
 </ul>
 
-<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/SoundboardConfiguration.png" width="500">
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/SoundboardConfiguration.png" width="1000">
 
 The LED color is represented by a number. This number corresponds with a factory programmed color, as can be seen in the image below. Besides filling in a number, you could also press the palette button next to the number field, which allows the Launchpad to display all the available colors. There are 2 groups of 64 colors, and by pressing the fading green function key (rightmost key), you can switch between the groups. The currently selected color will be fading, and pressing a key will send the color of that key to the Soundboard Configuration screen.<br>
 An empty color field will be interpreted as a 0, which means that the LED will be off.
@@ -61,6 +65,11 @@ You can enter the playlist control by pressing the second function key from the 
 The screen is divided into 8 columns, where each column represents a playlist. The control (uppermost) key indicates and controls the playlist. If that playlist is playing, the LED will turn green, if that playlist is not playing, it will turn red. Pressing the key when the playlist is not playing will start the playlist, pressing the key when the playlist is playing will stop it. The same functionality can be found in the other 8 keys in the column. These 8 keys represent the first 8 tracks in the playlist (first track is at the top).
 
 <img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/PlaylistControl.jpg" width="500">
+
+<br>
+<b>Outdated video showing the Playlist Control (will be updated)</b>
+
+[![Youtube Video](https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/YoutubePlaylistControl.png)](https://youtu.be/qHnw2HGb6X8 "Audio Fx Soundboard")
 
 ### Playlist Configuration
 The playlist control can be configured in the playlist configuration screen, which can be found in the module settings.<br>
@@ -84,7 +93,6 @@ The main keys are again divided into 8 columns, but here each column represents 
 ## Visual Effects Control
 The visual effects control screen gives you control over certain visual effects. For most of these effects, the <a href="https://foundryvtt.com/packages/fxmaster/">FXMaster</a> module is required. The visual effects control has 2 tabs.<br>
 You can enter the visual effects control by pressing the fourth function key from the top. Furthermore, you can switch between the two tabs by pressing that key again, changing the color from green (tab 1) to red (tab 2).<br>
-<br>
 
 ### Tab 1
 There are 3 sections on this tab, separated by empty keys.<br>
@@ -141,7 +149,7 @@ The Macro Configuration screen is divided into 64 boxes, each representing a key
 <li><b>Color:</b> This sets the color of the corresponding macro key. See below for information on what the color number represents</li>
 </ul>
 
-<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/MacroConfiguration.png" width="500">
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/MacroConfiguration.png" width="1000">
 
 The LED color is represented by a number. This number corresponds with a factory programmed color, as can be seen in the image below. Besides filling in a number, you could also press the palette button next to the number field, which allows the Launchpad to display all the available colors. There are 2 groups of 64 colors, and by pressing the fading green function key (rightmost key), you can switch between the groups. The currently selected color will be fading, and pressing a key will send the color of that key to the Soundboard Configuration screen.<br>
 An empty color field will be interpreted as a 0, which means that the LED will be off.
