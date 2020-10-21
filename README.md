@@ -26,6 +26,8 @@ The module needs to be enabled, and the correct MIDI bridge address must be set 
 <li><b>Main keys: </b>The other 64 keys that form the majority of keys</li>
 </ul>
 
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/Keys.png" width="500">
+
 ## Audio Effects Soundboard
 Using the Audio Effects Soundboard, you can easily play audio tracks.<br>
 You could, for example, set up some keys to play battle effects, such as clashing swords, arrow hits, or explosions. Another thing you could do is to create an atmosphere, by setting some keys to play, for example, weather sounds.<br>
