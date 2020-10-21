@@ -45,8 +45,13 @@ In the top right, you set the playlist from which you will select the sounds. On
 <li><b>Playback:</b> Sets the playback mode. The sound can either play once ('Once'), be played on repeat ('Repeat'), or only be played as long as the key is pressed ('Hold')</li>
 <li><b>Volume:</b> Sets the playback volume. This volume is relative to the 'Interface' volume</li>
 </ul>
+
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/SoundboardConfiguration.png" width="500">
+
 The LED color is represented by a number. This number corresponds with a factory programmed color, as can be seen in the image below. Besides filling in a number, you could also press the palette button next to the number field, which allows the Launchpad to display all the available colors. There are 2 groups of 64 colors, and by pressing the fading green function key (rightmost key), you can switch between the groups. The currently selected color will be fading, and pressing a key will send the color of that key to the Soundboard Configuration screen.<br>
 An empty color field will be interpreted as a 0, which means that the LED will be off.
+
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/FactoryColors.png" width="1000">
 
 ## Playlist Control
 The playlist control screen gives easy control over up to 8 playlists. For each of these playlists, up to 8 tracks can be directly controlled.<br>
@@ -54,6 +59,8 @@ For each of these tracks and playlists, you have an indicator showing that the t
 You can enter the playlist control by pressing the second function key from the top.<br>
 <br>
 The screen is divided into 8 columns, where each column represents a playlist. The control (uppermost) key indicates and controls the playlist. If that playlist is playing, the LED will turn green, if that playlist is not playing, it will turn red. Pressing the key when the playlist is not playing will start the playlist, pressing the key when the playlist is playing will stop it. The same functionality can be found in the other 8 keys in the column. These 8 keys represent the first 8 tracks in the playlist (first track is at the top).
+
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/PlaylistControl.jpg" width="500">
 
 ### Playlist Configuration
 The playlist control can be configured in the playlist configuration screen, which can be found in the module settings.<br>
@@ -63,12 +70,16 @@ The playlist control can be configured in the playlist configuration screen, whi
 <br>
 <b>Playlists:</b> Here you can select which playlists correspond to which column in the Playlist Control screen.
 
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/PlaylistConfiguration.png" width="500">
+
 ### Playlist Volume Control
 The playlist volulme control screen gives control over the volume of the tracks that have been set up in the Playlist Control.<br>
 You can enter the playlist volume control by pressing the third function key from the top.<br>
 <br>
 The 8 control keys in the top represent the 8 playlists from the playlist control screen. The fading LED indicates which playlist you are currently controlling, and selecting a different control key will switch the control to the corresponding playlist.<br>
 The main keys are again divided into 8 columns, but here each column represents a track, which correspond to the first 8 tracks in the playlist. The amount of LEDs that are on represents the volume of the track. Pressing any of the keys sets the volume to that level. If a playlist and/or track is playing, the corresponding LEDs will turn green.
+
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/VolumeControl.jpg" width="500">
 
 ## Visual Effects Control
 The visual effects control screen gives you control over certain visual effects. For most of these effects, the <a href="https://foundryvtt.com/packages/fxmaster/">FXMaster</a> module is required. The visual effects control has 2 tabs.<br>
@@ -81,10 +92,14 @@ There are 3 sections on this tab, separated by empty keys.<br>
 <b>Color overlay:</b> (FXMaster required) The second section, containing a column of colored keys, creates an overlay of that color. So, pressing the green key gives the scene a green overlay.<br>
 <b>Extended color overlay:</b> (FXMaster required) The third section, containing 3 columns of red, green and blue keys, give further control over these colored overlays. Pressing the main keys in this section set the amount of red, green or blue in the overlay, by pressing the correspondingly colored keys. The 3 control (topmost) keys display this color, and pressing one of those keys clears the overlay.
 
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/VisualFx1.jpg" width="500">
+
 ### Tab 2
 Tab 2 contains 2 sections, both requiring FXMaster:<br>
 <b>Weather effects:</b> The keys on the left control the FXMaster weather effects. The keys are colored in a way to approximate the weather effect, for example blue for rain, or grey for fog. You can switch on as many of the effects as you like, where fading keys indicate that that effects is on. Pressing one of the red keys in the bottom disables all weather effects.<br>
 <b>Filters:</b> To the right of the weather effects, there are 4 buttons. They control the FXMaster filters. From the top to the bottom: Underwater Filter, Predator Filter, Old Film Filter and Bloom Filter. Filters that are on are indicated by a fading key. The red key at the bottom disables all filters.
+
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/VisualFx2.jpg" width="500">
 
 ## Combat Tracker
 The combat tracker screen gives a rough indication of the initiative order, and it can be used to start or stop the combat and go to the next or previous turn.<br>
@@ -101,12 +116,16 @@ If no tokens are in Foundry's combat tracker, all buttons will fade, indicating 
 One one or more tokens are in the combat tracker, the start/stop button will stop fading, indicating that it can be pressed to start the combat.<br>
 Once combat has started, all buttons stop fading, and the color of the buttons change. The start/stop button now turns red to indicate that it is now the stop combat button, and the next/previous buttons turn green.
 
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/CombatTracker.jpg" width="500">
+
 ## Token Health Tracker
 The token health screen gives a rough indication of the relative health of each token in the combat tracker.<br>
 You can enter the token health screen by pressing the 6th function button from the top.<br>
 <br>
 Each column, including the control keys, correspond with a token in the combat tracker. They are horizontally ordered by initiative, and colored to indicate hostility, just like the combat tracker. The amount of LEDs that are on, represent the relative health of the token, so an empty bar means the token has 0 health, while a full bar means the token has full health. A blinking column indicates whose turn it is.<br>
 If there are more than 8 tokens in the initiative tracker, you can press the same function key again to go to the next 8 tokens, which changes the color of the function key to indicate this, going from green, to blue, to purple, to yellow. A total of 32 tokens can be displayed.
+
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/HPTracker.jpg" width="500">
 
 ## Macro Board
 The macro board allows you to run macro's. You can use chat or script macro's, and when you have <a href="https://foundryvtt.com/packages/furnace/">The Furnace</a> installed, you can use advanced macro's with arguments.<br>
@@ -121,8 +140,13 @@ The Macro Configuration screen is divided into 64 boxes, each representing a key
 <li><b>Furnace Arguments:</b> (The Furnace required) Here you can enter arguments for Furnace macro's. Normally, to run a Furnace macro, you'd call "/my-macro-name argument1 argument2 argument3", in this box, you only have to enter "argument1 argument2 argument3". Please refer to the Furnace documentation for more info on using Furnace macro's.</li>
 <li><b>Color:</b> This sets the color of the corresponding macro key. See below for information on what the color number represents</li>
 </ul>
+
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/MacroConfiguration.png" width="500">
+
 The LED color is represented by a number. This number corresponds with a factory programmed color, as can be seen in the image below. Besides filling in a number, you could also press the palette button next to the number field, which allows the Launchpad to display all the available colors. There are 2 groups of 64 colors, and by pressing the fading green function key (rightmost key), you can switch between the groups. The currently selected color will be fading, and pressing a key will send the color of that key to the Soundboard Configuration screen.<br>
 An empty color field will be interpreted as a 0, which means that the LED will be off.
+
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/FactoryColors.png" width="1000">
 
 # Module Settings
 In the module settings screen, you can find some settings, and 3 buttons:<br>
@@ -137,6 +161,8 @@ Below those buttons, you will find the following settings:<br>
 <li><b>Brightness:</b> Sets the LED brightness of the Launchpad</li>
 <li><b>MIDI Bridge Address:</b> Sets the IP address of the MIDI bridge, see below</li>
 </ul>
+
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/ModuleSettings.png" width="500">
 
 ### MIDI Bridge Address
 You need to fill in the IP address of the companion app. When running this app from the same computer as the Foundry client, you should be able to get away with using:<br>
