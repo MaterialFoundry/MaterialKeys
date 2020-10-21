@@ -181,8 +181,8 @@ Otherwise, fill in the IP address that the MIDI Bridge app outputs when it start
 More details on the app can be found <a href="https://github.com/CDeenen/MaterialKeys/blob/main/App/README.md">here</a>.
 
 # Software Versions & Module Incompatibilities
-<b>Foundry VTT:</b> Tested on 0.6.6 & 0.7.4<br>
-<b>Module Incompatibilities:</b> None known.<br>
+<b>Foundry VTT:</b> Tested on 0.7.5 (not fully compatible with 0.6.6)<br>
+<b>Module Incompatibilities:</b> None known<br>
 
 # Feedback
 If you have any suggestions or bugs to report, feel free to contact me on Discord (Cris#6864), or send me an email: cdeenen@outlook.com.
