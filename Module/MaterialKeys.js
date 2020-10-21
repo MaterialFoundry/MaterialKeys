@@ -147,21 +147,53 @@ Hooks.once('init', ()=>{
     registerSettings(); //in ./src/settings.js
 })
 
-Hooks.on('ready', ()=>{
+Hooks.once('ready', ()=>{
+    if (game.user.isGM == false) return;
+    
+});
+
+Hooks.once('ready', ()=>{
     enableModule = (game.settings.get(moduleName,'Enable') && game.user.isGM) ? true : false;
     if (enableModule) {
         startWebsocket();
     }
-    if (game.user.isGM) return;
+    
     for (let i=0; i<64; i++)
             activeSounds[i] = false;
-    game.socket.on(`module.MaterialKeys`, (payload) =>{
-         //console.log(payload);
-         if (payload.msgType != "playSound") return;
-         playTrack(payload.trackNr,payload.play,payload.repeat,payload.volume);
+        game.socket.on(`module.MaterialKeys`, (payload) =>{
+            //console.log(payload);
+            if (payload.msgType != "playSound") return;
+            playTrack(payload.trackNr,payload.play,payload.repeat,payload.volume);
          
          
      });
+     if (game.user.isGM == false) return;
+    let soundBoardSettings = game.settings.get(moduleName,'soundboardSettings');
+    let macroSettings = game.settings.get(moduleName, 'macroSettings');
+    let array = [];
+    for (let i=0; i<64; i++) array[i] = "";
+    let arrayVolume = [];
+    for (let i=0; i<64; i++) arrayVolume[i] = "50";
+    let arrayZero = [];
+    for (let i=0; i<64; i++) arrayZero[i] = "0";
+
+    if (macroSettings.color == undefined){
+        game.settings.set(moduleName,'macroSettings',{
+            macros: array,
+            color: arrayZero
+        });
+    }
+    if (soundBoardSettings.colorOff == undefined){
+        game.settings.set(moduleName,'soundboardSettings',{
+            playlist: "",
+            sounds: array,
+            colorOn: arrayZero,
+            colorOff: arrayZero,
+            mode: arrayZero,
+            toggle: arrayZero,
+            volume: arrayVolume
+        });
+    }
 });
 
 Hooks.on('closeApplication', (form)=>{

@@ -89,7 +89,7 @@ export class soundboardConfigForm extends FormApplication {
             title: "Material Keys: "+game.i18n.localize("MaterialKeys.Sett.SoundboardConfig"),
             template: "./modules/MaterialKeys/templates/soundboardConfig.html",
             classes: ["sheet"],
-            width: 1200,
+            width: 1400,
             height: 720
         });
     }
@@ -258,7 +258,7 @@ export class macroConfigForm extends FormApplication {
             title: "Material Keys: "+game.i18n.localize("MaterialKeys.Sett.MacroConfig"),
             template: "./modules/MaterialKeys/templates/macroConfig.html",
             classes: ["sheet"],
-            width: 1200,
+            width: 1400,
             height: 720
         });
     }

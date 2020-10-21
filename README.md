@@ -131,7 +131,9 @@ The token health screen gives a rough indication of the relative health of each 
 You can enter the token health screen by pressing the 6th function button from the top.<br>
 <br>
 Each column, including the control keys, correspond with a token in the combat tracker. They are horizontally ordered by initiative, and colored to indicate hostility, just like the combat tracker. The amount of LEDs that are on, represent the relative health of the token, so an empty bar means the token has 0 health, while a full bar means the token has full health. A blinking column indicates whose turn it is.<br>
-If there are more than 8 tokens in the initiative tracker, you can press the same function key again to go to the next 8 tokens, which changes the color of the function key to indicate this, going from green, to blue, to purple, to yellow. A total of 32 tokens can be displayed.
+If there are more than 8 tokens in the initiative tracker, you can press the same function key again to go to the next 8 tokens, which changes the color of the function key to indicate this, going from green, to blue, to purple, to yellow. A total of 32 tokens can be displayed.<br>
+<br>
+<b>Note:</b> The health tracker might not work in your system. I have confirmed compatibility with DnD5e and pathfinder 2e.
 
 <img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/HPTracker.jpg" width="500">
 

@@ -249,6 +249,7 @@ export class Launchpad{
 
         for (let i=0; i<64; i++){
             let mode = 0;
+            
             let color = game.settings.get(MODULE.moduleName,'soundboardSettings').colorOff[i];
             
             if (this.activeSounds[i] != false){
@@ -301,8 +302,6 @@ export class Launchpad{
         if (this.keyMode != 5 && this.keyMode != 51) return;
         let column = (key % 10)-1;
         let row = 8-Math.floor(key/10);
-        console.log(row+" "+column)
-        console.log("keymode",this.keyMode);
         if (this.keyMode == 5){
             if (column == 0 && row >= 0){
                 let darkness = row/7;
@@ -431,7 +430,6 @@ export class Launchpad{
                             this.colorizeColor.red = red;
                             this.colorizeColor.green = green;
                             this.colorizeColor.blue = blue;
-                            console.log(this.colorizeColor);
                         }
                     }
                 }
@@ -466,7 +464,6 @@ export class Launchpad{
                     this.setLED(led,3,0,0,color);
                 }
     
-                console.log("R: "+red+" G: "+green+" B: "+blue);
                 //Colorize effects
                 let colorizeLedColor = [53,45,37,27,21,13,9,5];
                 for (let i=1; i<9; i++){
@@ -778,7 +775,7 @@ export class Launchpad{
                 else
                     this.setLED(led,type,color);
                 
-                    token = canvas.tokens.children[0].children.find(p => p.id == token._id);
+                token = canvas.tokens.children[0].children.find(p => p.id == token._id);
                 let leds = 0;
 
                 let hp = token.actor.data.data.attributes.hp.value;
@@ -922,7 +919,6 @@ export class Launchpad{
         }
         msg+= "\"}"
         MODULE.sendWS(msg);
-        //console.log(msg);
     }
     
     setLED(led,type,color,color2=0,color3=0){
