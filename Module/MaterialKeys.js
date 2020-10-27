@@ -148,11 +148,6 @@ Hooks.once('init', ()=>{
 })
 
 Hooks.once('ready', ()=>{
-    if (game.user.isGM == false) return;
-    
-});
-
-Hooks.once('ready', ()=>{
     enableModule = (game.settings.get(moduleName,'Enable') && game.user.isGM) ? true : false;
     if (enableModule) {
         startWebsocket();
@@ -201,6 +196,7 @@ Hooks.on('closeApplication', (form)=>{
     if (form.id == "playlist-config" && WSconnected){
         launchpad.setMainLEDs(0,0);
         launchpad.updatePlaylist();
+        launchpad.playlistVolumeUpdate();
     }
 });
 

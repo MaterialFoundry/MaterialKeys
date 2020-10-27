@@ -4,12 +4,11 @@ import * as MODULE from "../MaterialKeys.js";
 export class Launchpad{
     constructor() {
         this.keyMode = 8;
-        this.playlistPlaying = [false,false,false,false,false,false,false,false];
         this.controlledPlaylists = [];
         this.combatState = 0;
         this.combatantsLengthOld = 0;
         this.playlistVolumeSelector = 0;
-        this.visualFxState = [false,false,false,false,false,false,false,false,false,false,false];
+        this.visualFxState = [false,false,false,false,false,false,false,false,false,false,false,false,false];
         this.visualFxFilters = [false,false,false,false];
         this.colorizeColors = [
             {red: 1,green: 0,blue: 0},
@@ -26,7 +25,6 @@ export class Launchpad{
         this.activeSounds = [];
         for (let i=0; i<64; i++)
             this.activeSounds[i] = false;
-        this.hpTrackerPages = 1;
         this.ledBufferColor = [];
         this.ledBufferColor2 = [];
         this.ledBufferColor3 = [];
@@ -69,12 +67,12 @@ export class Launchpad{
         }
         
         //Playlist soundboard
-        else if (this.keyMode == 7){
+        else if (Math.floor(this.keyMode/10) == 7){
             if (data.S == 0) return;
             this.playTrack(key);
         }
         //Playlist soundboard volume control
-        else if (this.keyMode == 6){
+        else if (Math.floor(this.keyMode/10) == 6){
             if (data.S == 0) return;
             this.playlistVolume(key);
         }
@@ -89,6 +87,12 @@ export class Launchpad{
         else if (game.combat && this.keyMode == 4) { 
             if (data.S == 0) return;
             this.combatTrackerUpdate(key);
+        }
+
+        //Token Health tracker
+        else if (Math.floor(this.keyMode/10) == 3){
+            if (data.S == 0) return;
+            this.HpTracker(key);
         }
         
     }
@@ -110,19 +114,16 @@ export class Launchpad{
         if (playlist == undefined) return;
         let playMode = game.settings.get(MODULE.moduleName,'playlistMethod');
         let trackNr = 8-Math.floor(key/10);
-        //If playlist selector
+
         if (trackNr == -1){
-            if (playlist.playing == true || this.playlistPlaying[playlistNr] == true){
-                this.playlistPlaying[playlistNr] = false;
+            if (playlist.playing == true)
                 await playlist.stopAll();
-            }
-            else {
+            else 
                 await playlist.playAll();
-                this.playlistPlaying[playlistNr] = true;
-            }
         }
         else {
-            let track = playlist.sounds[trackNr];
+            let screen = this.keyMode - 70;
+            let track = playlist.sounds[trackNr+8*screen];
             let playing = track.playing;
             if (playing == false){
                 if (playMode == 1) await playlist.stopAll();
@@ -135,40 +136,67 @@ export class Launchpad{
                 }
             } 
             await playlist.updateEmbeddedEntity("PlaylistSound", {_id: track._id, playing: !playing});
-            if (playing) this.playlistPlaying[playlistNr] = false;
-            else this.playlistPlaying[playlistNr] = true;
+            playlist.update({playing: !playing});
         }
         this.updatePlaylist();
     }
-    
-    updatePlaylist(){  
+
+    getMaxTracks(){
+        let maxTracks = 0;
         for (let i=0; i<8; i++){
             let playlist = this.getPlaylist(i);
-            
-            this.playlistPlaying[i] = false;
+            if (playlist != undefined){
+                let nrOfTracks = playlist.data.sounds.length;
+                if (nrOfTracks > maxTracks) maxTracks = nrOfTracks;
+            }
+        }
+        return maxTracks;
+    }
+
+    updatePlaylist(){  
+        if (Math.floor(this.keyMode/10) != 7) return;
+        let color;
+        let type;
+        let maxTracks = this.getMaxTracks();
+        type = (this.keyMode == 70)? 1 : 2;
+        color = (maxTracks>8)? 87 : 0;
+        this.setLED(69,type,color);
+        type = (this.keyMode == 71)? 1 : 2;
+        color = (maxTracks>8)? 79 : 0;
+        this.setLED(59,type,color);
+        type = (this.keyMode == 72)? 1 : 2;
+        color = (maxTracks>16)? 53 : 0;
+        this.setLED(49,type,color);
+        type = (this.keyMode == 73)? 1 : 2;
+        color = (maxTracks>24)? 74 : 0;
+        this.setLED(39,type,color);
+
+        let screen = this.keyMode - 70;
+        
+        for (let i=0; i<8; i++){
+            let playlist = this.getPlaylist(i);
             let led;
             if (playlist != undefined){
+                let nrOfTracks = playlist.data.sounds.length;
+                let tracksRemaining = nrOfTracks - 8*screen;
+                if (tracksRemaining < 0) tracksRemaining = 0;
                 for (let j=0; j<8; j++){
-                    if (playlist.data.sounds.length > j){
+                    if (tracksRemaining > j){
                         led = 81-10*j+i;
-                        if (playlist.data.sounds[j].playing){
-                            this.playlistPlaying[i] = true;
+                        if (playlist.data.sounds[j+8*screen].playing)
                             this.setLED(led,0,87);
-                        }
                         else
                             this.setLED(led,0,72);
                     }
                 }
                 led = 91+i;
-                if (this.playlistPlaying[i] == true){
+                if (playlist.playing == true)
                     this.setLED(led,0,87);
-                }
-                else{
+                else
                     this.setLED(led,0,72);
-                }
             }
         }
-        if (this.keyMode != 7) return;
+        
         this.updateLEDs();
     }
 
@@ -270,14 +298,16 @@ export class Launchpad{
         if (num == 0) type = 'leaves';
         else if (num == 1) type = 'rain';
         else if (num == 2) type = 'snow';
-        else if (num == 3) type = 'bubbles';
-        else if (num == 4) type = 'clouds';
-        else if (num == 5) type = 'embers';
-        else if (num == 6) type = 'stars';
-        else if (num == 7) type = 'crows';
-        else if (num == 8) type = 'bats';
-        else if (num == 9) type = 'fog';
-        else if (num == 10) type = 'raintop';
+        else if (num == 3) type = 'snowstorm';
+        else if (num == 4) type = 'bubbles';
+        else if (num == 5) type = 'clouds';
+        else if (num == 6) type = 'embers';
+        else if (num == 7) type = 'rainsimple';
+        else if (num == 8) type = 'stars';
+        else if (num == 9) type = 'crows';
+        else if (num == 10) type = 'bats';
+        else if (num == 11) type = 'fog';
+        else if (num == 12) type = 'raintop';
         return type;
     }
 
@@ -331,17 +361,17 @@ export class Launchpad{
             
         }
         else if (this.keyMode == 51){
-        
             if ((column < 3) && row >= 0){
-                let sel = (row - 2) + 4*(column);
-                if (row < 2 || row == 6 || (row == 5 && column == 6)) return;
+                let sel = (row - 1) + 5*(column);
+                if (sel > 9) sel--;
+                if (row < 1 || row == 6 || (row == 5 && column > 0)) return;
                 else if (column < 3 && row == 7) 
-                    for (let i=0; i<11; i++)
+                    for (let i=0; i<13; i++)
                         this.visualFxState[i] = false;
                 else this.visualFxState[sel] = !this.visualFxState[sel];
                     
                 let effects = {};
-                for (let i=0; i<11; i++){
+                for (let i=0; i<13; i++){
                     if (this.visualFxState[i] == false) continue;
                     let type = this.getVisualFxType(i);
                     effects[randomID()] = {
@@ -498,26 +528,28 @@ export class Launchpad{
                     if (weather.label === 'Autumn Leaves') this.visualFxState[0] = true;
                     else if (weather.label === 'Rain') this.visualFxState[1] = true;
                     else if (weather.label === 'Snow') this.visualFxState[2] = true;
-                    else if (weather.label === 'Bubbles') this.visualFxState[3] = true;
-                    else if (weather.label === 'Clouds') this.visualFxState[4] = true;
-                    else if (weather.label === 'Embers') this.visualFxState[5] = true;
-                    else if (weather.label === 'Stars') this.visualFxState[6] = true;
-                    else if (weather.label === 'Crows') this.visualFxState[7] = true;
-                    else if (weather.label === 'Bats') this.visualFxState[8] = true;
-                    else if (weather.label == 'Fog') this.visualFxState[9] = true;
-                    else if (weather.label == 'Topdown Rain') this.visualFxState[10] = true;
+                    else if (weather.label === 'Snowstorm') this.visualFxState[3] = true;
+                    else if (weather.label === 'Bubbles') this.visualFxState[4] = true;
+                    else if (weather.label === 'Clouds') this.visualFxState[5] = true;
+                    else if (weather.label === 'Embers') this.visualFxState[6] = true;
+                    else if (weather.label === 'Rain without splash') this.visualFxState[7] = true;
+                    else if (weather.label === 'Stars') this.visualFxState[8] = true;
+                    else if (weather.label === 'Crows') this.visualFxState[9] = true;
+                    else if (weather.label === 'Bats') this.visualFxState[10] = true;
+                    else if (weather.label === 'Fog') this.visualFxState[11] = true;
+                    else if (weather.label === 'Topdown Rain') this.visualFxState[12] = true;
                 }
             }
             //VisualFx leds
-            let fxLedColor = [127,79,90,3,71,84,81,99,97,1,79];
+            let fxLedColor = [127,79,90,90,3,71,84,79,81,99,97,1,79];
             let stopState = 0;
-            for (let i=0; i<11; i++){
+            for (let i=0; i<13; i++){
                 let state = this.visualFxState[i] ? 2 : 0;
                 if (state) stopState = 2;
                 let led;
-                if (i < 4) led = 61-10*i;
-                else if (i < 8) led = 62-10*(i-4);
-                else led = 63-10*(i-8);
+                if (i < 5) led = 71-10*i;
+                else if (i < 9) led = 72-10*(i-5);
+                else led = 73-10*(i-9);
                 this.setLED(led,state,fxLedColor[i]);
             }
             this.setLED(11,stopState,72);
@@ -553,48 +585,61 @@ export class Launchpad{
         this.updateLEDs();  
     }
 
-
-
     playlistVolume(key){
-        if (this.keyMode != 6) return;
+        if (Math.floor(this.keyMode/10) != 6) return;
         let column = (key % 10)-1;
         let row = 8-Math.floor(key/10);
-        //If playlist selector
         if (row == -1){
             this.playlistVolumeSelector = column;
             this.setMainLEDs(0,0);
             this.playlistVolumeUpdate(); 
             return;
         }
-
+        let screen = this.keyMode - 60;
         let playlist = this.getPlaylist(this.playlistVolumeSelector);
-        let track = playlist._data.sounds[column];
+        let track = playlist._data.sounds[column+8*screen];
+        if (track == undefined) return;
         row /= 7;
         const volume = AudioHelper.inputToVolume(1-row);
         playlist.updateEmbeddedEntity("PlaylistSound", {_id: track._id, volume: volume});
-        
     }
 
     playlistVolumeUpdate(){
-        if (this.keyMode != 6) return;
+        if (Math.floor(this.keyMode/10) != 6) return;
+        let color;
+        let type;
+        let maxTracks = this.getMaxTracks();
+        type = (this.keyMode == 60)? 1 : 2;
+        color = (maxTracks>8)? 87 : 0;
+        this.setLED(59,type,color);
+        type = (this.keyMode == 61)? 1 : 2;
+        color = (maxTracks>8)? 79 : 0;
+        this.setLED(49,type,color);
+        type = (this.keyMode == 62)? 1 : 2;
+        color = (maxTracks>16)? 53 : 0;
+        this.setLED(39,type,color);
+        type = (this.keyMode == 63)? 1 : 2;
+        color = (maxTracks>24)? 74 : 0;
+        this.setLED(29,type,color);
+
         for (let i=0; i<8; i++){
             let playlist = this.getPlaylist(i);
             if (playlist != undefined){
                 let led = 91+i;
                 let mode = 0;
                 if (this.playlistVolumeSelector == i) mode = 2;
-                if (this.playlistPlaying[i] == true)
+                if (playlist.playing == true)
                     this.setLED(led,mode,87);
                 else
                     this.setLED(led,mode,72);  
             } 
         }
         
+        let screen = this.keyMode - 60;
         let playlist = this.getPlaylist(this.playlistVolumeSelector);
         if (playlist != undefined){
             for (let i=0; i<8; i++){
-                
-                let track = playlist.data.sounds[i];
+                let track = playlist.data.sounds[i+8*screen];
                 if (track == undefined) continue;
                 let volume = AudioHelper.volumeToInput(track.volume)*7;
                 let color = 72;
@@ -742,11 +787,46 @@ export class Launchpad{
         this.updateLEDs();
     }
     
-    updateHpTracker(combat){
-        let page = this.keyMode % 10-1;
+    HpTracker(key){
         if (Math.floor(this.keyMode/10) != 3) return;
+        let page = this.keyMode % 10-1;
+        let selected = key % 10 - 1 + 8 * page;
+        let token = game.combat.turns[selected].token;
+        if (token != undefined){
+            let tokenId = token._id;
+            let tokens = canvas.tokens.children[0].children;
+            for (let i=0; i<tokens.length; i++){
+                if (tokens[i].id == tokenId){
+                    tokens[i].name;
+                    tokens[i].control();
+                }    
+            }
+            canvas.animatePan({x: token.x, y: token.y, speed: 2000});
+        }
+    }
+
+    updateHpTracker(combat){
+        if (Math.floor(this.keyMode/10) != 3) return;
+        let hpTrackerPages;
+        if (game.combat) hpTrackerPages = Math.ceil(game.combat.combatants.length/8);
+        let color;
+        let type;
+        type = (this.keyMode == 31)? 1 : 2;
+        color = (hpTrackerPages>1)? 87 : 0;
+        this.setLED(79,type,color);
+        type = (this.keyMode == 32)? 1 : 2;
+        color = (hpTrackerPages>1)? 79 : 0;
+        this.setLED(69,type,color);
+        type = (this.keyMode == 33)? 1 : 2;
+        color = (hpTrackerPages>2)? 53 : 0;
+        this.setLED(59,type,color);
+        type = (this.keyMode == 34)? 1 : 2;
+        color = (hpTrackerPages>3)? 74 : 0;
+        this.setLED(49,type,color);
+
+        let page = this.keyMode % 10-1;
         let combatants = combat.combatants;
-        let counter = 0;
+        
         this.setMainLEDs(0,0);
         if (combatants.length > 0){
             let initiativeOrder = combat.turns;
@@ -767,7 +847,7 @@ export class Launchpad{
                 if (i>7) j = i-18;
                 if (j>15) j = i-28;
                 
-                counter++
+               
                 let led = 91+i;
 
                 if (initiativeOrder[nr].defeated)
@@ -862,8 +942,9 @@ export class Launchpad{
         else if (mode == 3){
             if (Math.floor(this.keyMode/10) != 3) this.keyMode = 31;
             else this.keyMode++;
-            if (game.combat) this.hpTrackerPages = Math.ceil(game.combat.combatants.length/8);
-            if (this.keyMode > 30+this.hpTrackerPages || this.keyMode > 34) this.keyMode = 31;
+            let hpTrackerPages;
+            if (game.combat) hpTrackerPages = Math.ceil(game.combat.combatants.length/8);
+            if (this.keyMode > 30+hpTrackerPages || this.keyMode > 34) this.keyMode = 31;
             let color;
             if (this.keyMode == 31) color = 87;
             else if (this.keyMode == 32) color = 79;
@@ -886,17 +967,35 @@ export class Launchpad{
             this.visualFx();
         }
         /*
-         * Music Soundboard
+         * Playlist Volume Control
         */
         else if (mode == 6) {
-            this.keyMode = mode;
-            this.setControlKeys(mode,87,0);
+            if (Math.floor(this.keyMode/10) != 6) this.keyMode = 60;
+            else this.keyMode++;
+            let maxTracks = this.getMaxTracks();
+            if (this.keyMode > 59 + Math.ceil(maxTracks/8) || this.keyMode > 63) this.keyMode = 60;
+            let color;
+            if (this.keyMode == 60) color = 87;
+            else if (this.keyMode == 61) color = 79;
+            else if (this.keyMode == 62) color = 53;
+            else if (this.keyMode == 63) color = 74;
+            this.setControlKeys(mode,color,0);
             this.playlistVolumeUpdate();
         }
-
+        /*
+         * Playlist Soundboard
+        */
         else if (mode == 7) {
-            this.keyMode = mode;
-            this.setControlKeys(mode,87,0);
+            if (Math.floor(this.keyMode/10) != 7) this.keyMode = 70;
+            else this.keyMode++;
+            let maxTracks = this.getMaxTracks();
+            if (this.keyMode > 69 + Math.ceil(maxTracks/8) || this.keyMode > 73) this.keyMode = 70;
+            let color;
+            if (this.keyMode == 70) color = 87;
+            else if (this.keyMode == 71) color = 79;
+            else if (this.keyMode == 72) color = 53;
+            else if (this.keyMode == 73) color = 74;
+            this.setControlKeys(mode,color,0);
             this.updatePlaylist();
         }
             

@@ -58,11 +58,13 @@ An empty color field will be interpreted as a 0, which means that the LED will b
 <img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/FactoryColors.png" width="1000">
 
 ## Playlist Control
-The playlist control screen gives easy control over up to 8 playlists. For each of these playlists, up to 8 tracks can be directly controlled.<br>
+The playlist control screen gives easy control over up to 8 playlists. For each of these playlists, up to 32 tracks can be directly controlled.<br>
 For each of these tracks and playlists, you have an indicator showing that the track is playing and you can stop or play tracks or playlists.<br>
 You can enter the playlist control by pressing the second function key from the top.<br>
 <br>
-The screen is divided into 8 columns, where each column represents a playlist. The control (uppermost) key indicates and controls the playlist. If that playlist is playing, the LED will turn green, if that playlist is not playing, it will turn red. Pressing the key when the playlist is not playing will start the playlist, pressing the key when the playlist is playing will stop it. The same functionality can be found in the other 8 keys in the column. These 8 keys represent the first 8 tracks in the playlist (first track is at the top).
+The screen is divided into 8 columns, where each column represents a playlist. The control (uppermost) key indicates and controls the playlist. If that playlist is playing, the LED will turn green, if that playlist is not playing, it will turn red. Pressing the key when the playlist is not playing will start the playlist, pressing the key when the playlist is playing will stop it. The same functionality can be found in the other 8 keys in the column. These 8 keys represent 8 tracks in the playlist. If there are more than 8 tracks in the playlist, pressing the playlist control function key will toggle between up to 4 pages, where each page controls 8 tracks. Below the playlist control function key, up to 4 function keys will start blinking or fading, this indicates how many pages are available (determined by the amount of function keys that are lit), and the blinking led indicates on which page you currently are. The playlist control function key will also change color to correspond with the selected page.<br>
+<b>Note 1:</b> Pressing any of the blinking or fading function keys will take you out of the playlist control screen, and into the screen that key is assigned to (for example, pressing the key below the playlist function key will open the playlist volume control screen). You have to toggle between the pages by pressing the playlist control function key (second function key from the top).<br>
+<b>Note 2:</b> This page functionality is not shown in the image below.<br>
 
 <img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/PlaylistControl.jpg" width="500">
 
@@ -82,11 +84,13 @@ The playlist control can be configured in the playlist configuration screen, whi
 <img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/PlaylistConfiguration.png" width="500">
 
 ### Playlist Volume Control
-The playlist volulme control screen gives control over the volume of the tracks that have been set up in the Playlist Control.<br>
+The playlist volume control screen gives control over the volume of the tracks that have been set up in the Playlist Control.<br>
 You can enter the playlist volume control by pressing the third function key from the top.<br>
 <br>
 The 8 control keys in the top represent the 8 playlists from the playlist control screen. The fading LED indicates which playlist you are currently controlling, and selecting a different control key will switch the control to the corresponding playlist.<br>
-The main keys are again divided into 8 columns, but here each column represents a track, which correspond to the first 8 tracks in the playlist. The amount of LEDs that are on represents the volume of the track. Pressing any of the keys sets the volume to that level. If a playlist and/or track is playing, the corresponding LEDs will turn green.
+The main keys are again divided into 8 columns, but here each column represents a track, which correspond to 8 tracks in the playlist. The amount of LEDs that are on represents the volume of the track. Pressing any of the keys sets the volume to that level. If a playlist and/or track is playing, the corresponding LEDs will turn green. If there are more than 8 tracks in the playlist, pressing the playlist volume control function key will toggle between up to 4 pages, where each page controls 8 tracks. Below the volume control function key, up to 4 function keys will start blinking or fading, this indicates how many pages are available (determined by the amount of function keys that are lit), and the blinking led indicates on which page you currently are. The volume control function key will also change color to correspond with the selected page.<br>
+<b>Note 1:</b> Pressing any of the blinking or fading function keys will take you out of the volume control screen, and into the screen that key is assigned to (for example, pressing the key below the volume control key will open the visual effects control screen). You have to toggle between the pages by pressing the volume control function key (third function key from the top).<br>
+<b>Note 2:</b> This page functionality is not shown in the image below.<br>
 
 <img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/VolumeControl.jpg" width="500">
 
@@ -131,9 +135,10 @@ The token health screen gives a rough indication of the relative health of each 
 You can enter the token health screen by pressing the 6th function button from the top.<br>
 <br>
 Each column, including the control keys, correspond with a token in the combat tracker. They are horizontally ordered by initiative, and colored to indicate hostility, just like the combat tracker. The amount of LEDs that are on, represent the relative health of the token, so an empty bar means the token has 0 health, while a full bar means the token has full health. A blinking column indicates whose turn it is.<br>
-If there are more than 8 tokens in the initiative tracker, you can press the same function key again to go to the next 8 tokens, which changes the color of the function key to indicate this, going from green, to blue, to purple, to yellow. A total of 32 tokens can be displayed.<br>
-<br>
-<b>Note:</b> The health tracker might not work in your system. I have confirmed compatibility with DnD5e and pathfinder 2e.
+If there are more than 8 tokens in the initiative tracker, you can press the same function key again to go to the next 8 tokens, which changes the color of the function key to indicate this. Above the health tracker function key, up to 4 function keys will start blinking or fading, this indicates how many pages are available (determined by the amount of function keys that are lit), and the blinking led indicates on which page you currently are. A total of 32 tokens can be displayed. <br>
+<b>Note 1:</b> Pressing any of the blinking or fading function keys will take you out of the health tracker screen, and into the screen that key is assigned to (for example, pressing the key above the health tracker function key will open the combat tracker screen). You have to toggle between the pages by pressing the health tracker function key (6th function key from the top).<br>
+<b>Note 2:</b> This page functionality is not shown in the image below.<br>
+<b>Note 3:</b> The health tracker might not work in your system. I have confirmed compatibility with DnD5e and pathfinder 2e. If your system isn't compatible, please let me know.
 
 <img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/HPTracker.jpg" width="500">
 
