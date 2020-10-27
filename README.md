@@ -11,7 +11,11 @@ Material Keys currently has 7 different functions:<br>
 <li><a href="https://github.com/CDeenen/MaterialKeys#token-health-tracker">Token Health Tracker</a></li>
 <li><a href="https://github.com/CDeenen/MaterialKeys#macro-board">Macro Board</a></li>
 </ul>
-Each of these functions are discussed in detail below.
+Each of these functions are discussed in detail below.<br>
+<br>
+This video shows all the features, and how to set everything up.<br>
+
+[![Youtube Video](https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/YoutubeMatKeys.png)](https://youtu.be/GIuCK13fYUw "YoutubeVid")
 
 # Using the Module
 Besides the Material Keys module and the Launchpad, you will also need to use a companion app, called MIDI Bridge. MIDI Bridge is a simple app that will bridge the communication between the Launchpad and Foundry, since Foundry does not support USB devices natively. The app can be downloaded <a href="https://github.com/CDeenen/MaterialKeys/releases">here</a>.<br>
@@ -33,10 +37,6 @@ Using the Audio Effects Soundboard, you can easily play audio tracks.<br>
 You could, for example, set up some keys to play battle effects, such as clashing swords, arrow hits, or explosions. Another thing you could do is to create an atmosphere, by setting some keys to play, for example, weather sounds.<br>
 You can enter the Audio Effects Soundboard by pressing the first Function key from the top.<br>
 Once you've set up the soundboard, pressing a key will play the pre-set sound and change the LED to indicate the sound is playing. Pressing the key again will stop the sound.<br>
-<br>
-<b>Outdated video showing the Audio Effects Soundboard (will be updated)</b>
-
-[![Youtube Video](https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/YoutubeAudioFx.png)](https://youtu.be/7dLJlhtw0DY "Audio Fx Soundboard")
 
 ### Soundboard Configuration
 The Audio Effects Soundboard is set-up in the Soundboard Configuration screen, which can be found in the module settings.<br>
@@ -67,11 +67,6 @@ The screen is divided into 8 columns, where each column represents a playlist. T
 <b>Note 2:</b> This page functionality is not shown in the image below.<br>
 
 <img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/PlaylistControl.jpg" width="500">
-
-<br>
-<b>Outdated video showing the Playlist Control (will be updated)</b>
-
-[![Youtube Video](https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/YoutubePlaylistControl.png)](https://youtu.be/qHnw2HGb6X8 "Audio Fx Soundboard")
 
 ### Playlist Configuration
 The playlist control can be configured in the playlist configuration screen, which can be found in the module settings.<br>
