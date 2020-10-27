@@ -1,5 +1,5 @@
 # Material Keys
-Material Keys is a <a href="https://foundryvtt.com/">Foundry VTT</a> module that allows you to control various features of Foundry using a Novation Launchpad Mk3. The Launchpad is a MIDI controller, that has 80 physical keys, each with an RGB LED.<br>
+Material Keys is a <a href="https://foundryvtt.com/">Foundry VTT</a> module that allows you to control various features of Foundry using a Novation Launchpad Mini Mk3. The Launchpad is a MIDI controller, that has 80 physical keys, each with an RGB LED.<br>
 <br>
 Material Keys currently has 7 different functions:<br>
 <ul>
