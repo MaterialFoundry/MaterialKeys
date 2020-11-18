@@ -1,3 +1,5 @@
+<b>Important note:</b> I switched over to a universal server for the Material Modules. From Material Keys v1.1.0 on you'll need to use that server app: https://github.com/CDeenen/MaterialServer<br>
+<br>
 I created a <a href="https://discord.gg/3hd4G6TkmA">Discord server</a> to discuss this and other hardware-based Foundry modules. feel free to join if you'd like to be updated on this module.<br>
 <br>
 # Material Keys
