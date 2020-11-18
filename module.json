@@ -1,0 +1,23 @@
+{
+    "name": "MaterialKeys",
+    "title": "Material Keys",
+    "description": "Material Keys is a module that allows you to use a Novation Launchpad Mini to control certain features of Foundry.",
+    "version": "1.1.0",
+    "author": "CDeenen",
+    "esmodules": [
+      "./MaterialKeys.js"
+    ],
+    "socket": true,
+    "minimumCoreVersion": "0.7.5",
+    "compatibleCoreVersion": "0.7.7",
+    "languages": [
+      {
+        "lang": "en",
+        "name": "English",
+        "path": "lang/en.json"
+      }
+    ],
+    "url": "https://github.com/CDeenen/MaterialKeys",
+    "manifest": "https://raw.githubusercontent.com/CDeenen/MaterialKeys/master/module.json",
+    "download": "https://github.com/CDeenen/MaterialKeys/archive/master.zip"
+  }

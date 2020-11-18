@@ -17,13 +17,13 @@ Each of these functions are discussed in detail below.<br>
 <br>
 This video shows all the features, and how to set everything up.<br>
 
-[![Youtube Video](https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/YoutubeMatKeys.png)](https://youtu.be/GIuCK13fYUw "YoutubeVid")
+[![Youtube Video](https://github.com/CDeenen/MaterialKeys/blob/master/img/YoutubeMatKeys.png)](https://youtu.be/GIuCK13fYUw "YoutubeVid")
 
 # Using the Module
-Besides the Material Keys module and the Launchpad, you will also need to use a companion app, called MIDI Bridge. MIDI Bridge is a simple app that will bridge the communication between the Launchpad and Foundry, since Foundry does not support USB devices natively. The app can be downloaded <a href="https://github.com/CDeenen/MaterialKeys/releases">here</a>.<br>
-Connection between the app and both Foundry and the Launchpad should be automatic, if not, you can find more details <a href="https://github.com/CDeenen/MaterialKeys/blob/main/App/README.md">here</a>.<br>
+Besides the Material Keys module and the Launchpad, you will also need to use a companion app, called Material Server. Material Server is a simple app that will bridge the communication between the Launchpad and Foundry, since Foundry does not support USB devices natively. The app can be downloaded <a href="https://github.com/CDeenen/MaterialServer/releases">here</a>.<br>
+Connection between the app and both Foundry and the Launchpad should be automatic, if not, you can find more details <a href="https://github.com/CDeenen/MaterialServer/blob/master/README.md">here</a>.<br>
 <br>
-The module needs to be enabled, and the correct MIDI bridge address must be set for the module to work. Please see the section on the <a href=" ">module settings</a> below.<br>
+The module needs to be enabled, and the correct Material Server address must be set for the module to work. Please see the section on the <a href=" ">module settings</a> below.<br>
 <br>
 3 different key types can be found on the Launchpad:
 <ul>
@@ -32,7 +32,7 @@ The module needs to be enabled, and the correct MIDI bridge address must be set 
 <li><b>Main keys: </b>The other 64 keys that form the majority of keys</li>
 </ul>
 
-<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/Keys.png" width="500">
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/img/Keys.png" width="500">
 
 ## Audio Effects Soundboard
 Using the Audio Effects Soundboard, you can easily play audio tracks.<br>
@@ -52,12 +52,12 @@ In the top right, you set the playlist from which you will select the sounds. On
 <li><b>Volume:</b> Sets the playback volume. This volume is relative to the 'Interface' volume</li>
 </ul>
 
-<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/SoundboardConfiguration.png" width="1000">
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/img/SoundboardConfiguration.png" width="1000">
 
 The LED color is represented by a number. This number corresponds with a factory programmed color, as can be seen in the image below. Besides filling in a number, you could also press the palette button next to the number field, which allows the Launchpad to display all the available colors. There are 2 groups of 64 colors, and by pressing the fading green function key (rightmost key), you can switch between the groups. The currently selected color will be fading, and pressing a key will send the color of that key to the Soundboard Configuration screen.<br>
 An empty color field will be interpreted as a 0, which means that the LED will be off.
 
-<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/FactoryColors.png" width="1000">
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/img/FactoryColors.png" width="1000">
 
 ## Playlist Control
 The playlist control screen gives easy control over up to 8 playlists. For each of these playlists, up to 32 tracks can be directly controlled.<br>
@@ -68,7 +68,7 @@ The screen is divided into 8 columns, where each column represents a playlist. T
 <b>Note 1:</b> Pressing any of the blinking or fading function keys will take you out of the playlist control screen, and into the screen that key is assigned to (for example, pressing the key below the playlist function key will open the playlist volume control screen). You have to toggle between the pages by pressing the playlist control function key (second function key from the top).<br>
 <b>Note 2:</b> This page functionality is not shown in the image below.<br>
 
-<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/PlaylistControl.jpg" width="500">
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/img/PlaylistControl.jpg" width="500">
 
 ### Playlist Configuration
 The playlist control can be configured in the playlist configuration screen, which can be found in the module settings.<br>
@@ -78,7 +78,7 @@ The playlist control can be configured in the playlist configuration screen, whi
 <br>
 <b>Playlists:</b> Here you can select which playlists correspond to which column in the Playlist Control screen.
 
-<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/PlaylistConfiguration.png" width="500">
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/img/PlaylistConfiguration.png" width="500">
 
 ### Playlist Volume Control
 The playlist volume control screen gives control over the volume of the tracks that have been set up in the Playlist Control.<br>
@@ -89,7 +89,7 @@ The main keys are again divided into 8 columns, but here each column represents 
 <b>Note 1:</b> Pressing any of the blinking or fading function keys will take you out of the volume control screen, and into the screen that key is assigned to (for example, pressing the key below the volume control key will open the visual effects control screen). You have to toggle between the pages by pressing the volume control function key (third function key from the top).<br>
 <b>Note 2:</b> This page functionality is not shown in the image below.<br>
 
-<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/VolumeControl.jpg" width="500">
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/img/VolumeControl.jpg" width="500">
 
 ## Visual Effects Control
 The visual effects control screen gives you control over certain visual effects. For most of these effects, the <a href="https://foundryvtt.com/packages/fxmaster/">FXMaster</a> module is required. The visual effects control has 2 tabs.<br>
@@ -101,14 +101,14 @@ There are 3 sections on this tab, separated by empty keys.<br>
 <b>Color overlay:</b> (FXMaster required) The second section, containing a column of colored keys, creates an overlay of that color. So, pressing the green key gives the scene a green overlay.<br>
 <b>Extended color overlay:</b> (FXMaster required) The third section, containing 3 columns of red, green and blue keys, give further control over these colored overlays. Pressing the main keys in this section set the amount of red, green or blue in the overlay, by pressing the correspondingly colored keys. The 3 control (topmost) keys display this color, and pressing one of those keys clears the overlay.
 
-<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/VisualFx1.jpg" width="500">
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/img/VisualFx1.jpg" width="500">
 
 ### Tab 2
 Tab 2 contains 2 sections, both requiring FXMaster:<br>
 <b>Weather effects:</b> The keys on the left control the FXMaster weather effects. The keys are colored in a way to approximate the weather effect, for example blue for rain, or grey for fog. You can switch on as many of the effects as you like, where fading keys indicate that that effects is on. Pressing one of the red keys in the bottom disables all weather effects.<br>
 <b>Filters:</b> To the right of the weather effects, there are 4 buttons. They control the FXMaster filters. From the top to the bottom: Underwater Filter, Predator Filter, Old Film Filter and Bloom Filter. Filters that are on are indicated by a fading key. The red key at the bottom disables all filters.
 
-<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/VisualFx2.jpg" width="500">
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/img/VisualFx2.jpg" width="500">
 
 ## Combat Tracker
 The combat tracker screen gives a rough indication of the initiative order, and it can be used to start or stop the combat and go to the next or previous turn.<br>
@@ -125,7 +125,7 @@ If no tokens are in Foundry's combat tracker, all buttons will fade, indicating 
 One one or more tokens are in the combat tracker, the start/stop button will stop fading, indicating that it can be pressed to start the combat.<br>
 Once combat has started, all buttons stop fading, and the color of the buttons change. The start/stop button now turns red to indicate that it is now the stop combat button, and the next/previous buttons turn green.
 
-<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/CombatTracker.jpg" width="500">
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/img/CombatTracker.jpg" width="500">
 
 ## Token Health Tracker
 The token health screen gives a rough indication of the relative health of each token in the combat tracker.<br>
@@ -137,7 +137,7 @@ If there are more than 8 tokens in the initiative tracker, you can press the sam
 <b>Note 2:</b> This page functionality is not shown in the image below.<br>
 <b>Note 3:</b> The health tracker might not work in your system. I have confirmed compatibility with DnD5e and pathfinder 2e. If your system isn't compatible, please let me know.
 
-<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/HPTracker.jpg" width="500">
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/img/HPTracker.jpg" width="500">
 
 ## Macro Board
 The macro board allows you to run macro's. You can use chat or script macro's, and when you have <a href="https://foundryvtt.com/packages/furnace/">The Furnace</a> installed, you can use advanced macro's with arguments.<br>
@@ -153,12 +153,12 @@ The Macro Configuration screen is divided into 64 boxes, each representing a key
 <li><b>Color:</b> This sets the color of the corresponding macro key. See below for information on what the color number represents</li>
 </ul>
 
-<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/MacroConfiguration.png" width="1000">
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/img/MacroConfiguration.png" width="1000">
 
 The LED color is represented by a number. This number corresponds with a factory programmed color, as can be seen in the image below. Besides filling in a number, you could also press the palette button next to the number field, which allows the Launchpad to display all the available colors. There are 2 groups of 64 colors, and by pressing the fading green function key (rightmost key), you can switch between the groups. The currently selected color will be fading, and pressing a key will send the color of that key to the Soundboard Configuration screen.<br>
 An empty color field will be interpreted as a 0, which means that the LED will be off.
 
-<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/FactoryColors.png" width="1000">
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/img/FactoryColors.png" width="1000">
 
 # Module Settings
 In the module settings screen, you can find some settings, and 3 buttons:<br>
@@ -171,19 +171,19 @@ Below those buttons, you will find the following settings:<br>
 <ul>
 <li><b>Enable Module:</b> Enables the module</li>
 <li><b>Brightness:</b> Sets the LED brightness of the Launchpad</li>
-<li><b>MIDI Bridge Address:</b> Sets the IP address of the MIDI bridge, see below</li>
+<li><b>Material Server Address:</b> Sets the IP address of the Material Server, see below</li>
 </ul>
 
-<img src="https://github.com/CDeenen/MaterialKeys/blob/master/Module/img/ModuleSettings.png" width="500">
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/img/ModuleSettings.png" width="500">
 
-### MIDI Bridge Address
+### Material Server Address
 You need to fill in the IP address of the companion app. When running this app from the same computer as the Foundry client, you should be able to get away with using:<br>
 localhost:3001<br>
-Otherwise, fill in the IP address that the MIDI Bridge app outputs when it starts up.<br>
-More details on the app can be found <a href="https://github.com/CDeenen/MaterialKeys/blob/main/App/README.md">here</a>.
+Otherwise, fill in the IP address that the Material Server app outputs when it starts up.<br>
+More details on the app can be found <a href="https://github.com/CDeenen/MaterialServer/blob/master/README.md">here</a>.
 
 # Software Versions & Module Incompatibilities
-<b>Foundry VTT:</b> Tested on 0.7.5 (not fully compatible with 0.6.6)<br>
+<b>Foundry VTT:</b> Tested on 0.7.7 (not fully compatible with 0.6.6)<br>
 <b>Module Incompatibilities:</b> None known<br>
 
 # Feedback
