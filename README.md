@@ -1,4 +1,4 @@
-I created a <a href="https://discord.gg/3hd4G6TkmA">Discord server</a> to discuss this and other hardware-based Foundry modules. feel free to join if you'd like to be updated on this module.<br>
+I created a <a href="https://discord.gg/3hd4G6TkmA">Discord server</a> to discuss this and other hardware-based Foundry modules. Feel free to join if you'd like to be updated on this module.<br>
 <br>
 # Material Keys
 Material Keys is a <a href="https://foundryvtt.com/">Foundry VTT</a> module that allows you to control various features of Foundry using a Novation Launchpad Mini Mk3. The Launchpad is a MIDI controller, that has 80 physical keys, each with an RGB LED.<br>
