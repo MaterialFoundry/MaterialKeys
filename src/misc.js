@@ -95,7 +95,7 @@ export class soundboardConfigForm extends FormApplication {
      * Provide data to the template
      */
     getData() {
-        const playlistId = game.settings.get(MODULE.moduleName,'soundboardSettings').playlist;
+        let playlistId = game.settings.get(MODULE.moduleName,'soundboardSettings').playlist;
         if (this.updatePlaylist) playlistId = this.playlist;
         this.updatePlaylist = false;
         let playlist = 'none';
@@ -193,6 +193,9 @@ export class soundboardConfigForm extends FormApplication {
         if (playlistSelect.length > 0) {
             playlistSelect.on("change", event => {
                 this.playlist = event.target.value;
+                let settings = game.settings.get(MODULE.moduleName,'soundboardSettings');
+                settings.playlist = this.playlist;
+                game.settings.set(MODULE.moduleName,'soundboardSettings');
                 this.updatePlaylist = true;
                 this.render();
             });
@@ -212,7 +215,7 @@ export class soundboardConfigForm extends FormApplication {
         });
         if (soundSelect.length > 0) {
             soundSelect.on("change",event => {
-                const id = event.target.id.replace('soundSelect','');
+                let id = event.target.id.replace('soundSelect','');
                 const column = id%10-1;
                 const row = 8-Math.floor(id/10);
                 id = row*8+column;

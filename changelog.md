@@ -1,4 +1,9 @@
 # Changelog Material Keys Module
+### v1.1.1 - 26-11-2020
+<ul>
+<li>Fixed issue where new soundboard sound wouldn't save</li>
+</li>
+
 ### v1.1.0 - 17-11-2020
 <ul>
 <li>Massive code cleanup</li>
