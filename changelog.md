@@ -7,7 +7,7 @@
 <li>All changes made to the configuration screens are now immediately saved</li>
 <li>Removed save button from configuration screens because they have become redundant</li>
 <li>Added a 'clear all' button to macro config and soundboard config screens</li>
-</li>
+</ul>
 
 <b>Note:</b> Due to these changes, you might have to reconfigure (parts of) the playlist, soundboard and macro board configurations. I'm sorry about that.
 
