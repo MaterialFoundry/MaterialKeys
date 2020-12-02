@@ -44,17 +44,16 @@ export const registerSettings = function() {
     });
 
     /**
-     * Playlist soundboard
+     * Playlists
      */
-    game.settings.register(MODULE.moduleName,'playlistMethod', {
-        name: "Playlist play method",
+    game.settings.register(MODULE.moduleName, 'playlists', {
+        name: "selectedPlaylists",
         scope: "world",
-        config: false,
-        type:Number,
-        default:0,
-        choices:["Default","One track per playlist","One track in total"],
+        type: Object,
+        default: {},
+        config: false
     });
-
+    
     game.settings.registerMenu(MODULE.moduleName, 'playlistConfigMenu',{
         name: "MaterialKeys.Sett.PlaylistConfig",
         label: "MaterialKeys.Sett.PlaylistConfig",
@@ -62,14 +61,9 @@ export const registerSettings = function() {
         restricted: true
     });
 
-    game.settings.register(MODULE.moduleName, 'selectedPlaylists', {
-        name: "selectedPlaylists",
-        scope: "world",
-        type: Object,
-        default: {a: "None",b: "None",c: "none",d: "none",e: "none",f: "none",g: "none",h: "none"},
-        config: false
-    });
-
+    /**
+     * Soundboard
+     */
     game.settings.registerMenu(MODULE.moduleName, 'soundboardConfigMenu',{
         name: "MaterialKeys.Sett.SoundboardConfig",
         label: "MaterialKeys.Sett.SoundboardConfig",
@@ -85,6 +79,9 @@ export const registerSettings = function() {
         config: false
     });
   
+    /**
+     * Macro board
+     */
     game.settings.registerMenu(MODULE.moduleName, 'macroConfigMenu',{
         name: "MaterialKeys.Sett.MacroConfig",
         label: "MaterialKeys.Sett.MacroConfig",
@@ -94,13 +91,6 @@ export const registerSettings = function() {
 
     game.settings.register(MODULE.moduleName, 'macroSettings', {
         name: "macroSettings",
-        scope: "world",
-        type: Object,
-        config: false
-    });
-
-    game.settings.register(MODULE.moduleName, 'macroArgs', {
-        name: "macroArgs",
         scope: "world",
         type: Object,
         config: false

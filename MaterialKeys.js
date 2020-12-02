@@ -20,7 +20,7 @@ let wsInterval;                 //Interval timer to detect disconnections
 let WSconnected = false;
 
 //Other global variables
-let enableModule;
+export let enableModule;
 let activeSounds = [];
         
 /**

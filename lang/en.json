@@ -14,14 +14,8 @@
     "MaterialKeys.Sett.MidiAddr": "Material Server address",
     "MaterialKeys.Sett.MidiAddrHint": "Fill in the IP address and port of the Material Server",
 
-    "MaterialKeys.Playlist.Clear": "Clear data",
-    "MaterialKeys.Playlist.Playmethod.Header": "Play Method",
-    "MaterialKeys.Playlist.Playmethod.Label": "Method",
-    "MaterialKeys.Playlist.Playmethod.Unrestricted": "Unrestricted",
-    "MaterialKeys.Playlist.Playmethod.OneTrackPlaylist": "One track per playlist",
-    "MaterialKeys.Playlist.Playmethod.OneTrackTotal": "One track in total",
-    "MaterialKeys.Playlist.Playlists": "Playlists",
-    "MaterialKeys.Playlist.Playlist": "Playlist",
+
+
     "MaterialKeys.Playlist.None": "None",
     "MaterialKeys.Playlist.Save": "Save",
     "MaterialKeys.Soundboard.Volume": "Volume",
@@ -38,7 +32,29 @@
     "MaterialKeys.Soundboard.Repeat": "Repeat",
     "MaterialKeys.Soundboard.Hold": "Hold",
 
-    "MaterialKeys.Macro.Macro": "Macro",
-    "MaterialKeys.Macro.FurnaceArgs": "Furnace arguments"
+    "MaterialKeys.Macro": "Macro",
+    "MaterialKeys.FurnaceArgs": "Furnace arguments",
+
+    "MaterialKeys.None": "None",
+    "MaterialKeys.FilePicker": "File Picker",
+    "MaterialKeys.Playlists": "Playlists",
+    "MaterialKeys.Playlist": "Playlist",
+    "MaterialKeys.Name": "Name",
+    "MaterialKeys.Sound": "Sound",
+    "MaterialKeys.PlaybackSettings": "Playback Settings",
+    "MaterialKeys.ClearAll": "Clear All",
+    "MaterialKeys.ClearData": "Clear All Data",
+    "MaterialKeys.ClearDataContent": "This will clear all data.<br>This is irreversible!<br><br>Do you want to continue?",
+    "MaterialKeys.Yes": "Yes",
+    "MaterialKeys.No": "No",
+    "MaterialKeys.Save": "Save",
+    "MaterialKeys.Unrestricted": "Unrestricted",
+    "MaterialKeys.OneTrack": "One track",
+    "MaterialKeys.OneTrackPlaylist": "One track per playlist",
+    "MaterialKeys.OneTrackTotal": "One track in total",
+    "MaterialKeys.DefaultPlayMode": "Default play mode",
+    "MaterialKeys.PlayMode": "Play Mode",
+    "MaterialKeys.Settings": "Settings",
+    "MaterialKeys.Color": "Color"
 }
 

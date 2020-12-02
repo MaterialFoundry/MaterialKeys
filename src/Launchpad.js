@@ -305,41 +305,29 @@ export class Launchpad{
     }
 
     async colorPickerUpdate(value){
-        console.log(value);
         this.colorPickerActive = false;
         if (document.getElementById("macro-config") != null) {
             document.getElementById("color"+this.colorPickerKey).value=value;
-            let row = 8 - Math.floor(this.colorPickerKey/10);
-            let column = this.colorPickerKey % 10 - 1;
-            let led = 8*row + column;
-            let color = game.settings.get(MODULE.moduleName,'macroSettings').color;
-            color[led] = value.toString();
             let settings = game.settings.get(MODULE.moduleName,'macroSettings');
-                settings.color = color;
-                await game.settings.set(MODULE.moduleName,'macroSettings',settings);
+            settings.color[this.colorPickerKey-1] = value;
+            await game.settings.set(MODULE.moduleName,'macroSettings',settings);
             this.setMode(this.keyMode);
         }
         
         else if (document.getElementById("soundboard-config") != null) {
-            let row = 8 - Math.floor(this.colorPickerKey/10);
-            let column = this.colorPickerKey % 10 - 1;
-            let led = 8*row + column;
-            
             if (this.colorPickerMode == 0){
                 document.getElementById("colorOff"+this.colorPickerKey).value=value;
-                let color = game.settings.get(MODULE.moduleName,'soundboardSettings').colorOff;
-                color[led] = value.toString();
                 let settings = game.settings.get(MODULE.moduleName,'soundboardSettings');
-                settings.colorOff = color;
+                settings.colorOff[this.colorPickerKey-1] = value;
                 await game.settings.set(MODULE.moduleName,'soundboardSettings',settings);
+                soundboard.update();
             }
             else {
-                document.getElementById("colorOn"+this.colorPickerKey).value=value;  
-                let color = game.settings.get(MODULE.moduleName,'soundboardSettings').colorOn;
-                color[led] = value.toString();
+                document.getElementById("colorOn"+this.colorPickerKey).value=value;
                 let settings = game.settings.get(MODULE.moduleName,'soundboardSettings');
-                settings.colorOn = color;
+                settings.colorOn[this.colorPickerKey-1] = value;
                 await game.settings.set(MODULE.moduleName,'soundboardSettings',settings);
+                soundboard.update();
             }
             this.setMode(this.keyMode);
         }

@@ -1,4 +1,16 @@
 # Changelog Material Keys Module
+### v1.2.0 - 02-12-2020
+<ul>
+<li>Fixed some issues with saving the soundboard config</li>
+<li>In the soundboard config screen, added option to select a playlist for each sound individually</li>
+<li>In the soundboard config screen, added option to pick a sound using the file picker, including support for wildcard names</li>
+<li>All changes made to the configuration screens are now immediately saved</li>
+<li>Removed save button from configuration screens because they have become redundant</li>
+<li>Added a 'clear all' button to macro config and soundboard config screens</li>
+</li>
+
+<b>Note:</b> Due to these changes, you might have to reconfigure (parts of) the playlist, soundboard and macro board configurations. I'm sorry about that.
+
 ### v1.1.1 - 26-11-2020
 <ul>
 <li>Fixed issue where new soundboard sound wouldn't save</li>

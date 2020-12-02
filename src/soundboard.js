@@ -56,29 +56,48 @@ export class SoundboardControl{
         launchpad.updateLEDs(); 
     }
 
-    playSound(soundNr,repeat,play){  
-        const trackId = game.settings.get(MODULE.moduleName,'soundboardSettings').sounds[soundNr];
+    async playSound(soundNr,repeat,play){  
+        const soundBoardSettings = game.settings.get(MODULE.moduleName,'soundboardSettings');
+        let playlistId;
+        if (soundBoardSettings.selectedPlaylists != undefined) playlistId = soundBoardSettings.selectedPlaylists[soundNr];
+        let src;
+
+        if (playlistId == "" || playlistId == undefined) return;
+        if (playlistId == 'none') return;
+        else if (playlistId == 'FP') {
+            src = soundBoardSettings.src[soundNr];
+            const ret = await FilePicker.browse("data", src, {wildcard:true});
+            const files = ret.files;
+            if (files.length == 1) src = files;
+            else {
+                let value = Math.floor(Math.random() * Math.floor(files.length));
+                src = files[value];
+            }
+        }
+        else {
+            const soundId = soundBoardSettings.sounds[soundNr];
+            const sounds = game.playlists.entities.find(p => p._id == playlistId).data.sounds;
+            if (sounds == undefined) return;
+            const sound = sounds.find(p => p._id == soundId);
+            if (sound == undefined) return;
+            src = sound.path;
+        }
+   
         let volume = game.settings.get(MODULE.moduleName,'soundboardSettings').volume[soundNr]/100;
         volume = AudioHelper.inputToVolume(volume);
-        if (trackId == "" || trackId == undefined) return;
-        const payload = {
+        
+        let payload = {
             "msgType": "playSound", 
             "trackNr": soundNr,
+            "src": src,
             "repeat": repeat,
             "play": play,
             "volume": volume
         };
         game.socket.emit(`module.MaterialKeys`, payload);
+
         if (play){
-            const playlistId = game.settings.get(MODULE.moduleName,'soundboardSettings').playlist;
-            const sounds = game.playlists.entities.find(p => p._id == playlistId).data.sounds;
-            const sound = sounds.find(p => p._id == trackId);
-            if (sound == undefined){
-                this.activeSounds[soundNr] = false;
-                return;
-            }
             volume *= game.settings.get("core", "globalInterfaceVolume");
-            const src = sound.path;
 
             let howl = new Howl({src, volume, loop: repeat, onend: (id)=>{
                 if (repeat == false){
@@ -95,6 +114,7 @@ export class SoundboardControl{
         }
         else {
             this.activeSounds[soundNr].stop();
+            this.activeSounds[soundNr] = false;
         }
         this.update();
     }

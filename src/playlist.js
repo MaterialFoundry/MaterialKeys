@@ -10,31 +10,17 @@ export class PlaylistControl{
         const playlistNr = (key % 10)-1;
         const playlist = this.getPlaylist(playlistNr);
         if (playlist == undefined) return;
-        const playMode = game.settings.get(MODULE.moduleName,'playlistMethod');
+
         const trackNr = 8-Math.floor(key/10);
 
         if (trackNr == -1){
-            if (playlist.playing == true)
-                await playlist.stopAll();
-            else 
-                await playlist.playAll();
+            await this.playPlaylist(playlist,playlistNr);
         }
         else {
             const screen = launchpad.keyMode - 70;
             const track = playlist.sounds[trackNr+8*screen];
-            const playing = track.playing;
-            if (playing == false){
-                if (playMode == 1) await playlist.stopAll();
-                else if (playMode == 2){
-                    for (let i=0; i<8; i++){
-                        let playlistTemp = this.getPlaylist(i);
-                        if (playlistTemp != undefined) await playlistTemp.stopAll();
-                    }
-                        
-                }
-            } 
-            await playlist.updateEmbeddedEntity("PlaylistSound", {_id: track._id, playing: !playing});
-            playlist.update({playing: !playing});
+            if (track != undefined)
+                this.playTrack(track,playlist,playlistNr);
         }
         this.playlistUpdate();
     }
@@ -83,6 +69,56 @@ export class PlaylistControl{
             }
         }
         launchpad.updateLEDs();
+    }
+
+    async playPlaylist(playlist,playlistNr){
+        if (playlist.playing) {
+            playlist.stopAll();
+            return;
+        }
+        let mode = game.settings.get(MODULE.moduleName,'playlists').playlistMode[playlistNr];
+        if (mode == 0) {
+            mode = game.settings.get(MODULE.moduleName,'playlists').playMode;
+            if (mode == 2) await this.stopAll();
+        }
+        playlist.playAll();
+    }
+    
+    async playTrack(track,playlist,playlistNr){
+        let play;
+        if (track.playing)
+            play = false;
+        else {
+            play = true;
+            let mode = game.settings.get(MODULE.moduleName,'playlists').playlistMode[playlistNr];
+            if (mode == 0) {
+                mode = game.settings.get(MODULE.moduleName,'playlists').playMode;
+                if (mode == 1) await playlist.stopAll();
+                else if (mode == 2) await this.stopAll();
+            }
+            else if (mode == 2) await playlist.stopAll();
+        }
+        await playlist.updateEmbeddedEntity("PlaylistSound", {_id: track._id, playing: play});
+        playlist.update({playing: play});
+    }
+
+    stopAll(force=false){
+        if (force){
+            let playing = game.playlists.playing;
+            for (let i=0; i<playing.length; i++){
+                playing[i].stopAll();
+            }
+        }
+        else {
+            let playing = game.playlists.playing;
+            let settings = game.settings.get(MODULE.moduleName,'playlists');
+            let selectedPlaylists = settings.selectedPlaylist;
+            for (let i=0; i<playing.length; i++){
+                const playlistNr = selectedPlaylists.findIndex(p => p == playing[i]._id);
+                const mode = settings.playlistMode[playlistNr];
+                if (mode == 0) playing[i].stopAll();
+            }
+        }
     }
 
     volumeKeyPress(key){
@@ -156,7 +192,7 @@ export class PlaylistControl{
     }
 
     getPlaylist(num){
-        const playlistId = game.settings.get(MODULE.moduleName,'selectedPlaylists')[num];
+        const playlistId = game.settings.get(MODULE.moduleName,'playlists').selectedPlaylist[num];
         const playlist = game.playlists.entities.find(p => p._id == playlistId);
         return playlist;
     }

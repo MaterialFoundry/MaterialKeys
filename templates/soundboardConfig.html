@@ -4,20 +4,9 @@
             border: 1px solid black ;
             border-radius: 5px ; 
             width: 100px;
-            height: 225px;
+            height: 360px;
         }
     </style>
-    <div class="form-group">
-        <label>{{localize "MaterialKeys.Playlist.Playlist"}}&nbsp;&nbsp;&nbsp;</label>
-        <select name="playlist" class="playlist-select" default="" style="max-width:200px;">
-            {{#select playlist}}
-                <option value="">{{localize "MaterialKeys.Playlist.None"}}</option>
-                {{#each playlists}}
-                <option value="{{this._id}}">{{this.name}}</option>
-                {{/each}}
-            {{/select}}
-        </select>
-    </div>
     {{#each soundData}}
         <div class="form-group">
             {{#each this.dataThis}}
@@ -25,22 +14,49 @@
                     <div style="text-align:center;">                    
                         {{localize "MaterialKeys.Soundboard.Sound"}} {{this.iteration}}
                     </div>
+                    <div style="text-align:center;">                    
+                        {{localize "MaterialKeys.Name"}}
+                    </div>
+                    <input type="text" name="namebox" value="{{this.name}}" id="name{{this.iteration}}" style="width:100%;" >
+
+                    <div style="text-align:center;">                    
+                        {{localize "MaterialKeys.Playlist"}}
+                    </div>
                     <div>
-                        <select name="sounds" class="sounds-select" default="" style="width:132px;" id="soundSelect{{this.iteration}}">
+                        <select name="playlist" class="playlist-select" default="" style="width:100%;" id="playlists{{this.iteration}}">
+                            {{#select this.selectedPlaylist}}
+                                {{#each playlists}}
+                                <option value="{{this.id}}">{{this.name}}</option>
+                                {{/each}}
+                            {{/select}}
+                        </select>
+                    </div>
+
+                    <div style="text-align:center;">                    
+                        {{localize "MaterialKeys.Sound"}}
+                    </div>
+                    <div class="form-fields" style={{this.styleSS}}>
+                        <select name="sounds" class="sounds-select" default="" style="width:100%;" id="soundSelect{{this.iteration}}">
                             {{#select this.sound}}
-                                <option value="">{{localize "MaterialKeys.Playlist.None"}}</option>
+                                <option value="">{{localize "MaterialKeys.None"}}</option>
                                 {{#each sounds}}
                                 <option value="{{this._id}}">{{this.name}}</option>
                                 {{/each}}
                             {{/select}}
                         </select>
                     </div>
+                    <div class="form-fields" style={{this.styleFP}}>
+                        <button type="button" class="file-picker" data-type="audio" data-target="src{{this.iteration}}" title="Browse Files" tabindex="-1">
+                            <i class="fas fa-file-import fa-fw"></i>
+                        </button>
+                        <input class="image" type="text" name="src{{this.iteration}}" name2="soundSrc" id="srcPath{{this.iteration}}" placeholder="path/audio.mp3" value={{this.srcPath}}>
+                    </div>
                     <div style="text-align:center;">                    
                         {{localize "MaterialKeys.Soundboard.Color"}}
                     </div>
                     <div class="form-group options">
                         <label>{{localize "MaterialKeys.Soundboard.Mode"}}</label>
-                        <select name="toggle" style="flex:1">
+                        <select name="toggle" id="toggle{{this.iteration}}"  style="flex:1">
                             {{#select this.toggle}}
                             <option value="0">{{localize "MaterialKeys.Soundboard.Color"}}</option>
                             <option value="1">{{localize "MaterialKeys.Soundboard.Blink"}}</option>
@@ -63,10 +79,12 @@
                             <i class="fas fa-palette"></i>
                         </button>  
                     </div>
-                    
+                    <div style="text-align:center;">                    
+                        {{localize "MaterialKeys.PlaybackSettings"}}
+                    </div>
                     <div class="form-group options">
                         <label>{{localize "MaterialKeys.Soundboard.Playback"}}</label>
-                        <select name="mode" style="flex:1">
+                        <select name="mode" id="playmode{{this.iteration}}"  style="flex:1">
                             {{#select this.mode}}
                             <option value="0">{{localize "MaterialKeys.Soundboard.Once"}}</option>
                             <option value="1">{{localize "MaterialKeys.Soundboard.Repeat"}}</option>
@@ -83,8 +101,10 @@
             {{/each}}
         </div>
     {{/each}}
-    <button type="submit" name="submit">
-        <i class="far fa-save"></i> {{localize "MaterialKeys.Playlist.Save"}}
-    </button>
-
+    <div style="text-align:left;">                    
+        <button type="clear all" name="clearAll" style="width:25%;">
+            <i class="far fa-delete"></i> {{localize "MaterialKeys.ClearAll"}}
+        </button>
+    </div>
+    
 </form>

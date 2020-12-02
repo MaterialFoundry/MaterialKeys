@@ -13,12 +13,12 @@
             {{#each this.dataThis}}
                 <div class="boxed" style="padding: 5px; margin:2px">
                     <div style="text-align:center;">                    
-                        {{localize "MaterialKeys.Macro.Macro"}} {{this.iteration}}
+                        {{localize "MaterialKeys.Macro"}} {{this.iteration}}
                     </div>
                     <div>
-                        <select name="macros" class="macros-select" default="" style="max-width:132px;">
+                        <select name="macros" class="macros-select" id="macros{{this.iteration}}" default="" style="max-width:132px;">
                             {{#select this.macro}}
-                                <option value="">{{localize "MaterialKeys.Playlist.None"}}</option>
+                                <option value="">{{localize "MaterialKeys.None"}}</option>
                                 {{#each macros}}
                                 <option value="{{this._id}}">{{this.name}}</option>
                                 {{/each}}
@@ -26,14 +26,14 @@
                         </select>
                     </div>
                     {{#if this.furnace}}
-                        <label>{{localize "MaterialKeys.Macro.FurnaceArgs"}}</label>
-                        <input type="text" name="args" value="{{this.args}}">
+                        <label>{{localize "MaterialKeys.FurnaceArgs"}}</label>
+                        <input type="text" name="args" id="args{{this.iteration}}" value="{{this.args}}">
                     {{/if}}
                     
                     <div class="flex-container" style="display:flex;flex-direction:row;padding-top:10px"">  
-                        <label style="flex:1">{{localize "MaterialKeys.Soundboard.Color"}}</label>
+                        <label style="flex:1">{{localize "MaterialKeys.Color"}}</label>
                         <input type="number" id="color{{this.iteration}}" name="color" style="flex:4" min="0" max="127" value={{this.color}}>
-                        <button type="button" name="colorPicker" value={{this.iteration}} style="flex:1;height:28px">
+                        <button type="button" name="colorPicker" id="color{{this.iteration}}" value={{this.iteration}} style="flex:1;height:28px">
                             <i class="fas fa-palette"></i>
                         </button>  
                     </div>
@@ -41,8 +41,10 @@
             {{/each}}
         </div>
     {{/each}}
-    <button type="submit" name="submit">
-        <i class="far fa-save"></i> {{localize "MaterialKeys.Playlist.Save"}}
-    </button>
+    <div style="text-align:left;">                    
+        <button type="clear all" name="clearAll" style="width:25%;">
+            <i class="far fa-delete"></i> {{localize "MaterialKeys.ClearAll"}}
+        </button>
+    </div>
 
 </form>
