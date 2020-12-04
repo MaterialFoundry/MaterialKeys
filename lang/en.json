@@ -32,6 +32,9 @@
     "MaterialKeys.Soundboard.Repeat": "Repeat",
     "MaterialKeys.Soundboard.Hold": "Hold",
 
+    "MaterialKeys.SBcheatSheet": "Soundboard Cheat Sheet",
+    "MaterialKeys.MBcheatSheet": "Macro Cheat Sheet",
+
     "MaterialKeys.Macro": "Macro",
     "MaterialKeys.FurnaceArgs": "Furnace arguments",
 

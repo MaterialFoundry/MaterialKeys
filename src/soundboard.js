@@ -18,18 +18,14 @@ export class SoundboardControl{
         
         if (state == false){
             //if 'hold'
-            if (mode == 2){
-                
-                //this.soundBoardPlaying[soundNr] = false;
+            if (mode == 2)
                 this.playSound(soundNr,false,false);
-            }
         }
         else {
             let repeat = false;
             if (mode > 0) repeat = true;
             let play = false;
             if (this.activeSounds[soundNr] == false) play = true;
-            //this.soundBoardPlaying[soundNr] = !this.soundBoardPlaying[soundNr];
             this.playSound(soundNr,repeat,play);
         }
     }

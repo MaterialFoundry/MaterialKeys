@@ -10,11 +10,14 @@ export class MacroBoard{
         const column = (key % 10)-1;
         const row = 8-Math.floor(key/10);
         const nr = column+row*8;
+        this.executeMacro(nr);
+    }
 
+    executeMacro(nr){
         const macroId = game.settings.get(MODULE.moduleName,'macroSettings').macros[nr];
         const macro = game.macros.get(macroId);
         if (macro == null) return;
-        const args = game.settings.get(MODULE.moduleName,'macroArgs')[nr];
+        const args = game.settings.get(MODULE.moduleName,'macroSettings').args[nr];
         let furnaceEnabled = false;
         const furnace = game.modules.get("furnace");
         if (furnace != undefined && furnace.active) furnaceEnabled = true;

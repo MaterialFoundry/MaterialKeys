@@ -5,6 +5,7 @@ import {SoundboardControl} from "./src/soundboard.js";
 import {VisualFx} from "./src/visualFx.js";
 import {CombatTracker} from "./src/combatTracker.js";
 import {MacroBoard} from "./src/macroBoard.js";
+import {soundboardCheatSheet,macroCheatSheet} from "./src/misc.js";
 export const moduleName = "MaterialKeys";
 export const launchpad = new Launchpad();
 export const playlistControl = new PlaylistControl();
@@ -50,19 +51,32 @@ async function analyzeWSmessage(msg){
     }
 };
 
-export function playTrack(soundNr,play,repeat,volume){
+export async function playTrack(soundNr,play,repeat,volume){
     if (play){
         const trackId = game.settings.get(moduleName,'soundboardSettings').sounds[soundNr];
-        const playlistId = game.settings.get(moduleName,'soundboardSettings').playlist;
-        const sounds = game.playlists.entities.find(p => p._id == playlistId).data.sounds;
-        const sound = sounds.find(p => p._id == trackId);
-        if (sound == undefined){
-            activeSounds[soundNr] = false;
-            return;
+        const playlistId = game.settings.get(moduleName,'soundboardSettings').selectedPlaylists[soundNr];
+        let src;
+        if (playlistId == 'FP'){
+            src = game.settings.get(moduleName,'soundboardSettings').src[soundNr];
+            const ret = await FilePicker.browse("data", src, {wildcard:true});
+            const files = ret.files;
+            if (files.length == 1) src = files;
+            else {
+                let value = Math.floor(Math.random() * Math.floor(files.length));
+                src = files[value];
+            }
         }
+        else {
+            const sounds = game.playlists.entities.find(p => p._id == playlistId).data.sounds;
+            const sound = sounds.find(p => p._id == trackId);
+            if (sound == undefined){
+                activeSounds[soundNr] = false;
+                return;
+            }
+            src = sound.path;
+        }
+        
         volume *= game.settings.get("core", "globalInterfaceVolume");
-        const src = sound.path;
-
         let howl = new Howl({src, volume, loop: repeat, onend: (id)=>{
             if (repeat == false){
                 activeSounds[soundNr] = false;
@@ -117,7 +131,7 @@ Hooks.once('ready', ()=>{
     for (let i=0; i<64; i++)
             activeSounds[i] = false;
         game.socket.on(`module.MaterialKeys`, (payload) =>{
-            //console.log(payload);
+           // console.log(payload);
             if (payload.msgType != "playSound") return;
             playTrack(payload.trackNr,payload.play,payload.repeat,payload.volume);
     });
@@ -158,6 +172,45 @@ Hooks.on('closeApplication', (form)=>{
         playlistControl.volumeUpdate();
     }
 });
+
+Hooks.on("renderSettings", (app, html) => {
+
+    /**
+     * Create label and button in setup screen
+     */
+        const label = $(
+            `<div id="MaterialKeys">
+                    <h4>Material Keys</h4>
+                </div>
+                `
+        );
+        const btnSoundboard = $(
+            `<button id="MaterialKeys_SBcheatsheet" data-action="MaterialKeys_SBcheatsheet" title="Material Keys: "+${game.i18n.localize("MaterialKeys.SBcheatSheet")}>
+                <i></i> ${game.i18n.localize("MaterialKeys.SBcheatSheet")}
+            </button>`
+        );
+        const btnMacroboard = $(
+            `<button id="MaterialKeys_SBcheatsheet" data-action="MaterialKeys_MBcheatsheet" title="Material Keys: "+${game.i18n.localize("MaterialKeys.MBcheatSheet")}>
+                <i></i> ${game.i18n.localize("MaterialKeys.MBcheatSheet")}
+            </button>`
+        );
+
+        const setupButton = html.find("button[data-action='setup']");
+        setupButton.after(label);
+        label.after(btnMacroboard);
+        label.after(btnSoundboard);
+        
+    
+        btnSoundboard.on("click", event => {
+            let dialog = new soundboardCheatSheet();
+            dialog.render(true)
+        });
+
+        btnMacroboard.on("click", event => {
+            let dialog = new macroCheatSheet();
+            dialog.render(true)
+        });
+    });
 
 /**
  * Start a new websocket

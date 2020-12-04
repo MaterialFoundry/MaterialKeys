@@ -1,4 +1,11 @@
 # Changelog Material Keys Module
+### v1.2.1 - 04-12-2020
+<ul>
+<li>Fixed issue where soundboard sounds would not play for players if a sound was picked using the file picker</li>
+<li>In soundboard and macroboard configuration, color fields now have a background color that represents the color on the Launchpad</li>
+<li>Soundboard and Macro Cheat Sheets added in the Game Settings tab. Cheat sheet shows an 8x8 grid with the name of the sound/macro and the background color. Sounds/macros can be activated from the cheat sheet, even if the module is disabled in the module settings (so it can be used without a Launchpad connected)</li>
+</ul>
+
 ### v1.2.0 - 02-12-2020
 <ul>
 <li>Fixed some issues with saving the soundboard config</li>
@@ -7,7 +14,7 @@
 <li>All changes made to the configuration screens are now immediately saved</li>
 <li>Removed save button from configuration screens because they have become redundant</li>
 <li>Added a 'clear all' button to macro config and soundboard config screens</li>
-</ul>
+</li>
 
 <b>Note:</b> Due to these changes, you might have to reconfigure (parts of) the playlist, soundboard and macro board configurations. I'm sorry about that.
 

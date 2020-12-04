@@ -1,5 +1,6 @@
 import * as MODULE from "../MaterialKeys.js";
 import {playlistControl,soundboard,visualFx,combatTracker,macroBoard} from "../MaterialKeys.js";
+import {getColor} from "./misc.js";
 
 export class Launchpad{
     constructor() {
@@ -307,7 +308,9 @@ export class Launchpad{
     async colorPickerUpdate(value){
         this.colorPickerActive = false;
         if (document.getElementById("macro-config") != null) {
-            document.getElementById("color"+this.colorPickerKey).value=value;
+            let element = document.getElementById("color"+this.colorPickerKey);
+            element.value=value;
+            element.style="flex:4; background-color:"+getColor(value);
             let settings = game.settings.get(MODULE.moduleName,'macroSettings');
             settings.color[this.colorPickerKey-1] = value;
             await game.settings.set(MODULE.moduleName,'macroSettings',settings);
@@ -316,14 +319,18 @@ export class Launchpad{
         
         else if (document.getElementById("soundboard-config") != null) {
             if (this.colorPickerMode == 0){
-                document.getElementById("colorOff"+this.colorPickerKey).value=value;
+                let element = document.getElementById("colorOff"+this.colorPickerKey);
+                element.value=value;
+                element.style="flex:4; background-color:"+getColor(value);  
                 let settings = game.settings.get(MODULE.moduleName,'soundboardSettings');
                 settings.colorOff[this.colorPickerKey-1] = value;
                 await game.settings.set(MODULE.moduleName,'soundboardSettings',settings);
                 soundboard.update();
             }
             else {
-                document.getElementById("colorOn"+this.colorPickerKey).value=value;
+                let element = document.getElementById("colorOn"+this.colorPickerKey);
+                element.value=value;
+                element.style="flex:4; background-color:"+getColor(value);
                 let settings = game.settings.get(MODULE.moduleName,'soundboardSettings');
                 settings.colorOn[this.colorPickerKey-1] = value;
                 await game.settings.set(MODULE.moduleName,'soundboardSettings',settings);

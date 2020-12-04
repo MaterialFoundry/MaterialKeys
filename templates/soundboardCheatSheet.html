@@ -1,0 +1,24 @@
+<form autocomplete="off" onsubmit="event.preventDefault()">
+    {{#each soundData}}
+        <div class="form-group">
+            {{#each this.dataThis}}             
+                    <button type="button" name="soundBox" id="soundBox{{this.iteration}}" style="
+                        padding: 2px; 
+                        margin:2px; 
+                        background-color:{{this.color}}; 
+                        word-wrap:break-word; 
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        width:60px;
+                        height:60px;
+                        "> 
+                        <i class=""></i> {{this.name}}
+                    </button>
+                
+            {{/each}}
+        </div>
+    {{/each}}
+   
+    
+</form>
