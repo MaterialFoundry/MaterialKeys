@@ -163,10 +163,16 @@ export class soundboardConfigForm extends FormApplication {
                     if (settings.sounds[iteration] != undefined && settings.sounds[iteration] != "") {
                         selectedPlaylist = game.settings.get(MODULE.moduleName,'soundboardSettings').playlist;
                         const pl = game.playlists.entities.find(p => p._id == selectedPlaylist);
-                        selectedPlaylist = pl._id;
-                        settings.selectedPlaylists[iteration]=selectedPlaylist;
-                        this.updateSettings(settings);
-                        sounds = pl.sounds;
+                        if (pl == undefined){
+                            selectedPlaylist = 'none';
+                            sounds = [];
+                        }
+                        else {
+                            sounds = pl.sounds;
+                            selectedPlaylist = pl._id;
+                            settings.selectedPlaylists[iteration]=selectedPlaylist;
+                        } 
+                        this.updateSettings(settings); 
                     }
                     else
                         selectedPlaylist = 'none';
@@ -175,8 +181,14 @@ export class soundboardConfigForm extends FormApplication {
                 else if (settings.selectedPlaylists[iteration] == 'FP') selectedPlaylist = 'FP';
                 else {
                     const pl = game.playlists.entities.find(p => p._id == settings.selectedPlaylists[iteration]);
-                    selectedPlaylist = pl._id;
-                    sounds = pl.sounds;
+                    if (pl == undefined){
+                        selectedPlaylist = 'none';
+                        sounds = [];
+                    }
+                    else {
+                        sounds = pl.sounds;
+                        selectedPlaylist = pl._id;
+                    } 
                 }
                 let styleSS = "";
                 let styleFP ="display:none";

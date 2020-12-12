@@ -1,4 +1,9 @@
 # Changelog Material Keys Module
+### v1.2.2 - 12-12-2020
+<ul>
+<li>Fixed issue where deleting a playlist would cause an error preventing the Soundboard Configuration to show up</li>
+</li>
+
 ### v1.2.1 - 04-12-2020
 <ul>
 <li>Fixed issue where soundboard sounds would not play for players if a sound was picked using the file picker</li>
