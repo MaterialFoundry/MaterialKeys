@@ -2,6 +2,7 @@
 ### v1.2.2 - 12-12-2020
 <ul>
 <li>Fixed issue where deleting a playlist would cause an error preventing the Soundboard Configuration to show up</li>
+<li>Confirmed Foundry 0.7.8 compatibility</li>
 </li>
 
 ### v1.2.1 - 04-12-2020
