@@ -338,5 +338,27 @@ export class Launchpad{
             }
             this.setMode(this.keyMode);
         }
+        else if (document.getElementById("playlist-config") != null) {
+            if (this.colorPickerMode == 0){
+                let element = document.getElementById("colorOff");
+                element.value=value;
+                element.style="flex:4; background-color:"+getColor(value);  
+                let settings = game.settings.get(MODULE.moduleName,'playlists');
+                settings.colorOff = value;
+                await game.settings.set(MODULE.moduleName,'playlists',settings);
+                playlistControl.playlistUpdate();
+            }
+            else {
+                let element = document.getElementById("colorOn");
+                element.value=value;
+                element.style="flex:4; background-color:"+getColor(value);
+                let settings = game.settings.get(MODULE.moduleName,'playlists');
+                settings.colorOn = value;
+                await game.settings.set(MODULE.moduleName,'playlists',settings);
+                playlistControl.playlistUpdate();
+            }
+            if (Math.floor(this.keyMode/10) == 7) this.keyMode = 7;
+            this.setMode(this.keyMode);
+        }
     }
 }

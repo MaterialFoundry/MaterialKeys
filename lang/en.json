@@ -5,6 +5,7 @@
     "MaterialKeys.Notifications.WSDisconnect": "Disconnected from the Material Server, attempting to reconnect",
     "MaterialKeys.Notifications.WSCantConnect": "Can't connect to the Material Server, retrying",
 
+    "MaterialKeys.Sett.Help": "Help",
     "MaterialKeys.Sett.PlaylistConfig": "Playlist Configuration",
     "MaterialKeys.Sett.SoundboardConfig": "Soundboard Configuration",
     "MaterialKeys.Sett.MacroConfig": "Macro Configuration",
@@ -18,6 +19,8 @@
 
     "MaterialKeys.Playlist.None": "None",
     "MaterialKeys.Playlist.Save": "Save",
+    "MaterialKeys.PlayingColor": "Playing Color",
+    "MaterialKeys.StoppedColor": "Stopped Color",
     "MaterialKeys.Soundboard.Volume": "Volume",
 
     "MaterialKeys.Soundboard.Sound": "Sound",

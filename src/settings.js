@@ -43,6 +43,16 @@ export const registerSettings = function() {
         onChange: x => window.location.reload()
     });
 
+    /*
+     * Create the Help button
+     */
+    game.settings.registerMenu(MODULE.moduleName, 'helpMenu',{
+        name: "MaterialKeys.Sett.Help",
+        label: "MaterialKeys.Sett.Help",
+        type: helpMenu,
+        restricted: false
+    });
+
     /**
      * Playlists
      */
@@ -96,3 +106,45 @@ export const registerSettings = function() {
         config: false
     });
 }
+
+export class helpMenu extends FormApplication {
+    constructor(data, options) {
+        super(data, options);
+    }
+  
+    /**
+     * Default Options for this FormApplication
+     */
+    static get defaultOptions() {
+        return mergeObject(super.defaultOptions, {
+            id: "helpMenu",
+            title: "Material Keys: "+game.i18n.localize("MaterialKeys.Sett.Help"),
+            template: "./modules/MaterialKeys/templates/helpMenu.html",
+            width: "500px"
+        });
+    }
+  
+    /**
+     * Provide data to the template
+     */
+    getData() {
+      
+        return {
+           
+        } 
+    }
+  
+    /**
+     * Update on form submit
+     * @param {*} event 
+     * @param {*} formData 
+     */
+    async _updateObject(event, formData) {
+  
+    }
+  
+    activateListeners(html) {
+        super.activateListeners(html);
+        
+    }
+  }

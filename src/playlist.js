@@ -44,6 +44,10 @@ export class PlaylistControl{
         launchpad.setLED(39,type,color);
 
         const screen = launchpad.keyMode - 70;
+
+        let settings = game.settings.get(MODULE.moduleName,'playlists');
+        const colorOn = settings.colorOn ? settings.colorOn : 87;
+        const colorOff = settings.colorOff ? settings.colorOff : 72;
         
         for (let i=0; i<8; i++){
             const playlist = this.getPlaylist(i);
@@ -56,16 +60,16 @@ export class PlaylistControl{
                     if (tracksRemaining > j){
                         led = 81-10*j+i;
                         if (playlist.data.sounds[j+8*screen].playing)
-                            launchpad.setLED(led,0,87);
+                            launchpad.setLED(led,0,colorOn);
                         else
-                            launchpad.setLED(led,0,72);
+                            launchpad.setLED(led,0,colorOff);
                     }
                 }
                 led = 91+i;
                 if (playlist.playing == true)
-                    launchpad.setLED(led,0,87);
+                    launchpad.setLED(led,0,colorOn);
                 else
-                    launchpad.setLED(led,0,72);
+                    launchpad.setLED(led,0,colorOff);
             }
         }
         launchpad.updateLEDs();
@@ -158,6 +162,10 @@ export class PlaylistControl{
         color = (maxTracks>24)? 74 : 0;
         launchpad.setLED(29,type,color);
 
+        let settings = game.settings.get(MODULE.moduleName,'playlists');
+        const colorOn = settings.colorOn ? settings.colorOn : 87;
+        const colorOff = settings.colorOff ? settings.colorOff : 72;
+
         for (let i=0; i<8; i++){
             const playlist = this.getPlaylist(i);
             if (playlist != undefined){
@@ -165,9 +173,9 @@ export class PlaylistControl{
                 let mode = 0;
                 if (this.playlistVolumeSelector == i) mode = 2;
                 if (playlist.playing == true)
-                    launchpad.setLED(led,mode,87);
+                    launchpad.setLED(led,mode,colorOn);
                 else
-                    launchpad.setLED(led,mode,72);  
+                    launchpad.setLED(led,mode,colorOff);  
             } 
         }
         
@@ -178,8 +186,8 @@ export class PlaylistControl{
                 const track = playlist.data.sounds[i+8*screen];
                 if (track == undefined) continue;
                 const volume = AudioHelper.volumeToInput(track.volume)*7;
-                let color = 72;
-                if (track.playing) color = 87;
+                let color = colorOff;
+                if (track.playing) color = colorOn;
                 for (let j=0; j<8; j++){
                     let led = 11+10*j+i;
                     if (j>volume) 

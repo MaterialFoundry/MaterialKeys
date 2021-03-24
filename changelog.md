@@ -1,9 +1,21 @@
 # Changelog Material Keys Module
+### v1.2.3 - 24-03-2021
+<ul>
+<li>Added a help menu that can be accessed from the module settings</li>
+<li>Added option to change the play/stop color for the playlist and volume control (setting can be found in the Playlist Configuration)</li>
+<li>Fixed issue where the soundboard would not load sounds from a playlist</li>
+<li>Fixed issue where macro's would not execute</li>
+<li>Fixed issue where Furnace arguments would not be saved in the Macro Configuration</li>
+<li>HP Tracker didn't update when damage was dealt</li>
+</ul>
+
+<b>Compatible Material Server version:</b><br>
+v1.0.2 (unchanged): https://github.com/CDeenen/MaterialServer/releases <br>
+
 ### v1.2.2 - 12-12-2020
 <ul>
 <li>Fixed issue where deleting a playlist would cause an error preventing the Soundboard Configuration to show up</li>
-<li>Confirmed Foundry 0.7.8 compatibility</li>
-</li>
+</ul>
 
 ### v1.2.1 - 04-12-2020
 <ul>

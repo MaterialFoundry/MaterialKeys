@@ -25,6 +25,8 @@ export class playlistConfigForm extends FormApplication {
      */
     getData() {
         let settings = game.settings.get(MODULE.moduleName,'playlists');
+        if (settings.colorOn == undefined) settings.colorOn = 87;
+        if (settings.colorOff == undefined) settings.colorOff = 72;
         let selectedPlaylists = settings.selectedPlaylist;
         if (selectedPlaylists == undefined) selectedPlaylists = [];
         let selectedPlaylistMode = settings.playlistMode;
@@ -50,11 +52,15 @@ export class playlistConfigForm extends FormApplication {
             selectedPlaylist: selectedPlaylists,
             playlistMode: selectedPlaylistMode
         }
-
+   
         return {
             playlists: game.playlists.entities,
             playlistData: playlistData,
-            playMode: playMode
+            playMode: playMode,
+            colorOn:settings.colorOn,
+            colorOff:settings.colorOff,
+            colorOnRGB: getColor(settings.colorOn),
+            colorOffRGB: getColor(settings.colorOff)
         } 
     }
 
@@ -73,6 +79,10 @@ export class playlistConfigForm extends FormApplication {
         const playMode = html.find("select[name='playMode']");
         const selectedPlaylist = html.find("select[name='selectedPlaylist']");
         const playlistMode = html.find("select[name='playlistMode']");
+        const colorPickerOn = html.find("button[name='colorPickerOn']");
+        const colorPickerOnNr = html.find("input[name='colorOn']");
+        const colorPickerOff = html.find("button[name='colorPickerOff']");
+        const colorPickerOffNr = html.find("input[name='colorOff']");
 
         playMode.on("change", event => {
             this.data.playMode=event.target.value;
@@ -89,6 +99,31 @@ export class playlistConfigForm extends FormApplication {
             let id = event.target.id.replace('playlistMode','');
             this.data.playlistMode[id-1]=event.target.value;
             this.updateSettings(this.data);
+        });
+
+        colorPickerOn.on('click',(event) => {
+            let color = document.getElementById("colorOn").value;
+            if ((color < 0 && color > 127) || color == "") color = 0;
+            launchpad.colorPicker(null,1,color); 
+        });
+
+        colorPickerOnNr.on('change',(event) => {
+            let settings = game.settings.get(MODULE.moduleName,'playlists');
+            settings.colorOn=event.target.value;
+            this.updateSettings(settings,true);
+        });
+
+        colorPickerOff.on('click',(event) => {
+            let color = document.getElementById("colorOff").value;
+            if ((color < 0 && color > 127) || color == "") color = 0;
+            launchpad.colorPicker(null,0,color);
+            
+        });
+
+        colorPickerOffNr.on('change',(event) => {
+            let settings = game.settings.get(MODULE.moduleName,'playlists');
+            settings.colorOff=event.target.value;
+            this.updateSettings(settings,true);
         });
     }
     async updateSettings(settings){
@@ -199,7 +234,6 @@ export class soundboardConfigForm extends FormApplication {
                 
                 const dataThis = {
                     iteration: iteration+1,
-                    playlists: playlists,
                     selectedPlaylist: selectedPlaylist,
                     sound: settings.sounds[iteration],
                     sounds: sounds,
@@ -219,13 +253,14 @@ export class soundboardConfigForm extends FormApplication {
                 iteration++;
             }
             const data = {
-                dataThis: soundsThis,
+                dataThis: soundsThis
             };
             soundData.push(data);
         }
         
         return {
-            soundData: soundData
+            soundData: soundData,
+            playlists
         } 
     }
 
@@ -261,10 +296,55 @@ export class soundboardConfigForm extends FormApplication {
         });
 
         playlistSelect.on("change", event => {
-            let id = event.target.id.replace('playlists','')-1;
+            //Get the sound number
+            const iteration = event.target.id.replace('playlists','');
+
+            //Get the selected playlist and the sounds of that playlist
+            let selectedPlaylist;
+            //let sounds = [];
+            if (event.target.value==undefined) selectedPlaylist = 'none';
+            else if (event.target.value == 'none') selectedPlaylist = 'none';
+            else if (event.target.value == 'FP') {
+                selectedPlaylist = 'FP';
+
+                //Show the file picker
+                document.querySelector(`#fp${iteration}`).style='';
+                
+                //Hide the sound selector
+                document.querySelector(`#ss${iteration}`).style='display:none';
+            }
+            else {
+                //Hide the file picker
+                document.querySelector(`#fp${iteration}`).style='display:none';
+                
+                //Show the sound selector
+                document.querySelector(`#ss${iteration}`).style='';
+
+                const pl = game.playlists.entities.find(p => p._id == event.target.value);
+                selectedPlaylist = pl._id;
+
+                //Get the sound select element
+                let SSpicker = document.getElementById(`soundSelect${iteration}`);
+
+                //Empty ss element
+                SSpicker.options.length=0;
+
+                //Create new options and append them
+                let optionNone = document.createElement('option');
+                optionNone.value = "";
+                optionNone.innerHTML = game.i18n.localize("MaterialKeys.None");
+                SSpicker.appendChild(optionNone);
+
+                for (let i=0; i<pl.sounds.length; i++){
+                    let newOption = document.createElement('option');
+                    newOption.value = pl.sounds[i]._id;
+                    newOption.innerHTML = pl.sounds[i].name;
+                    SSpicker.appendChild(newOption);
+                }
+            }
             let settings = game.settings.get(MODULE.moduleName,'soundboardSettings');
-            settings.selectedPlaylists[id]=event.target.value;
-            this.updateSettings(settings,true);
+            settings.selectedPlaylists[iteration-1]=event.target.value;
+            this.updateSettings(settings);
         });
         
         soundSelect.on("change",event => {
@@ -500,7 +580,10 @@ export class macroConfigForm extends FormApplication {
         args.on("change", event => {
             let id = event.target.id.replace('args','');
             let settings = game.settings.get(MODULE.moduleName,'macroSettings');
-            settings.args[id-1]=event.target.value;
+            let args = settings.args;
+            if (args == undefined) args = [];
+            args[id-1]=event.target.value;
+            settings.args = args;
             this.updateSettings(settings);
         });
 

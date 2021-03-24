@@ -118,6 +118,18 @@ Hooks.on('renderCombatTracker', (a,b,combat)=>{
     }
 });
 
+Hooks.on('updateActor', ()=>{
+    if (enableModule == false) return;
+    if (WSconnected){
+        combatTracker.trackerUpdate(game.combat);
+        if (game.combat != null)
+            combatTracker.updateTokens(game.combat);
+        else
+            combatTracker.updateTokens(null);
+            combatTracker.hpUpdate(game.combat);
+    }
+})
+
 Hooks.once('init', ()=>{
     //CONFIG.debug.hooks = true;
     registerSettings(); //in ./src/settings.js

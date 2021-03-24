@@ -17,19 +17,24 @@ export class MacroBoard{
         const macroId = game.settings.get(MODULE.moduleName,'macroSettings').macros[nr];
         const macro = game.macros.get(macroId);
         if (macro == null) return;
-        const args = game.settings.get(MODULE.moduleName,'macroSettings').args[nr];
-        let furnaceEnabled = false;
-        const furnace = game.modules.get("furnace");
-        if (furnace != undefined && furnace.active) furnaceEnabled = true;
-        if (furnaceEnabled == false) macro.execute();
-        else {
-            const chatData = {
-                user: game.user._id,
-                speaker: ChatMessage.getSpeaker(),
-                content: "/'" + macro.name + "' " + args
-              };
-            ChatMessage.create(chatData, {});
+        if (game.settings.get(MODULE.moduleName,'macroSettings').args != undefined) {
+            const args = game.settings.get(MODULE.moduleName,'macroSettings').args[nr];
+            let furnaceEnabled = false;
+            const furnace = game.modules.get("furnace");
+            if (furnace != undefined && furnace.active) furnaceEnabled = true;
+            if (furnaceEnabled) {
+                const chatData = {
+                    user: game.user._id,
+                    speaker: ChatMessage.getSpeaker(),
+                    content: "/'" + macro.name + "' " + args
+                  };
+                ChatMessage.create(chatData, {});
+                return;
+            }
         }
+
+        macro.execute();
+        
     }
 
     update(){
