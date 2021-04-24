@@ -1,5 +1,4 @@
-import * as MODULE from "../MaterialKeys.js";
-import {playlistControl,soundboard,visualFx,combatTracker,macroBoard} from "../MaterialKeys.js";
+import {moduleName,playlistControl,soundboard,visualFx,combatTracker,macroBoard,sendWS} from "../MaterialKeys.js";
 import {getColor} from "./misc.js";
 
 export class Launchpad{
@@ -198,7 +197,7 @@ export class Launchpad{
             type: "LED",
             data: msg
         }
-        MODULE.sendWS(JSON.stringify(data));
+        sendWS(JSON.stringify(data));
     }
     
     setLED(led,type,color,color2=0,color3=0){
@@ -260,7 +259,7 @@ export class Launchpad{
             type: "Brightness",
             data: brightness
         }
-        MODULE.sendWS(JSON.stringify(data));
+        sendWS(JSON.stringify(data));
     }
 
     colorPicker(key,mode,target = 0,screen = 0){
@@ -302,7 +301,7 @@ export class Launchpad{
             type: "LED",
             data: msg
         }
-        MODULE.sendWS(JSON.stringify(data));
+        sendWS(JSON.stringify(data));
     }
 
     async colorPickerUpdate(value){
@@ -311,9 +310,9 @@ export class Launchpad{
             let element = document.getElementById("color"+this.colorPickerKey);
             element.value=value;
             element.style="flex:4; background-color:"+getColor(value);
-            let settings = game.settings.get(MODULE.moduleName,'macroSettings');
+            let settings = game.settings.get(moduleName,'macroSettings');
             settings.color[this.colorPickerKey-1] = value;
-            await game.settings.set(MODULE.moduleName,'macroSettings',settings);
+            await game.settings.set(moduleName,'macroSettings',settings);
             this.setMode(this.keyMode);
         }
         
@@ -322,18 +321,18 @@ export class Launchpad{
                 let element = document.getElementById("colorOff"+this.colorPickerKey);
                 element.value=value;
                 element.style="flex:4; background-color:"+getColor(value);  
-                let settings = game.settings.get(MODULE.moduleName,'soundboardSettings');
+                let settings = game.settings.get(moduleName,'soundboardSettings');
                 settings.colorOff[this.colorPickerKey-1] = value;
-                await game.settings.set(MODULE.moduleName,'soundboardSettings',settings);
+                await game.settings.set(moduleName,'soundboardSettings',settings);
                 soundboard.update();
             }
             else {
                 let element = document.getElementById("colorOn"+this.colorPickerKey);
                 element.value=value;
                 element.style="flex:4; background-color:"+getColor(value);
-                let settings = game.settings.get(MODULE.moduleName,'soundboardSettings');
+                let settings = game.settings.get(moduleName,'soundboardSettings');
                 settings.colorOn[this.colorPickerKey-1] = value;
-                await game.settings.set(MODULE.moduleName,'soundboardSettings',settings);
+                await game.settings.set(moduleName,'soundboardSettings',settings);
                 soundboard.update();
             }
             this.setMode(this.keyMode);
@@ -342,19 +341,19 @@ export class Launchpad{
             if (this.colorPickerMode == 0){
                 let element = document.getElementById("colorOff");
                 element.value=value;
-                element.style="flex:4; background-color:"+getColor(value);  
-                let settings = game.settings.get(MODULE.moduleName,'playlists');
+                element.style="flex:7; background-color:"+getColor(value);  
+                let settings = game.settings.get(moduleName,'playlists');
                 settings.colorOff = value;
-                await game.settings.set(MODULE.moduleName,'playlists',settings);
+                await game.settings.set(moduleName,'playlists',settings);
                 playlistControl.playlistUpdate();
             }
             else {
                 let element = document.getElementById("colorOn");
                 element.value=value;
-                element.style="flex:4; background-color:"+getColor(value);
-                let settings = game.settings.get(MODULE.moduleName,'playlists');
+                element.style="flex:7; background-color:"+getColor(value);
+                let settings = game.settings.get(moduleName,'playlists');
                 settings.colorOn = value;
-                await game.settings.set(MODULE.moduleName,'playlists',settings);
+                await game.settings.set(moduleName,'playlists',settings);
                 playlistControl.playlistUpdate();
             }
             if (Math.floor(this.keyMode/10) == 7) this.keyMode = 7;

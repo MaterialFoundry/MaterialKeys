@@ -3,15 +3,18 @@
         .boxed {
             border: 1px solid black ;
             border-radius: 5px ; 
-            width: 100px;
+            max-width: 145px;
+            width:10%;
+            margin:2px;
+            padding:5px;
             height: {{height}}px;
         }
     </style>
 
     {{#each macroData}}
-        <div class="form-group">
+        <div class="form-group" stype="width:100%">
             {{#each this.dataThis}}
-                <div class="boxed" style="padding: 5px; margin:2px">
+                <div class="boxed">
                     <div style="text-align:center;">                    
                         {{localize "MaterialKeys.Macro"}} {{this.iteration}}
                     </div>
@@ -20,7 +23,7 @@
                             {{#select this.macro}}
                                 <option value="">{{localize "MaterialKeys.None"}}</option>
                                 {{#each macros}}
-                                <option value="{{this._id}}">{{this.name}}</option>
+                                <option value="{{this.id}}">{{this.name}}</option>
                                 {{/each}}
                             {{/select}}
                         </select>
@@ -32,8 +35,8 @@
                     
                     <div class="flex-container" style="display:flex;flex-direction:row;padding-top:10px"">  
                         <label style="flex:1">{{localize "MaterialKeys.Color"}}</label>
-                        <input type="number" id="color{{this.iteration}}" name="color" style="flex:4; background-color:{{this.colorRGB}};" min="0" max="127" value={{this.color}}>
-                        <button type="button" name="colorPicker" id="color{{this.iteration}}" value={{this.iteration}} style="flex:1;height:28px">
+                        <input type="number" id="color{{this.iteration}}" name="color" style="flex:4; background-color:{{this.colorRGB}};margin-left:5px" min="0" max="127" value={{this.color}}>
+                        <button type="button" name="colorPicker" id="colorBtn{{this.iteration}}" value={{this.iteration}} style="flex:1;height:28px">
                             <i class="fas fa-palette"></i>
                         </button>  
                     </div>

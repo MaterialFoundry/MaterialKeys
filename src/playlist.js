@@ -1,5 +1,5 @@
-import * as MODULE from "../MaterialKeys.js";
-import {launchpad} from "../MaterialKeys.js";
+import {moduleName, launchpad} from "../MaterialKeys.js";
+import {compatibleCore} from "./misc.js";
 
 export class PlaylistControl{
     constructor(){
@@ -18,7 +18,7 @@ export class PlaylistControl{
         }
         else {
             const screen = launchpad.keyMode - 70;
-            const track = playlist.sounds[trackNr+8*screen];
+            const track = (compatibleCore("0.8.1")) ? playlist.sounds.contents[trackNr+8*screen] : playlist.data.sounds[trackNr+8*screen];
             if (track != undefined)
                 this.playTrack(track,playlist,playlistNr);
         }
@@ -45,7 +45,7 @@ export class PlaylistControl{
 
         const screen = launchpad.keyMode - 70;
 
-        let settings = game.settings.get(MODULE.moduleName,'playlists');
+        let settings = game.settings.get(moduleName,'playlists');
         const colorOn = settings.colorOn ? settings.colorOn : 87;
         const colorOff = settings.colorOff ? settings.colorOff : 72;
         
@@ -53,13 +53,16 @@ export class PlaylistControl{
             const playlist = this.getPlaylist(i);
             let led;
             if (playlist != undefined){
-                const nrOfTracks = playlist.data.sounds.length;
+                const nrOfTracks = (compatibleCore("0.8.1")) ? playlist.data.sounds.size : playlist.data.sounds.length;
                 let tracksRemaining = nrOfTracks - 8*screen;
                 if (tracksRemaining < 0) tracksRemaining = 0;
+                
                 for (let j=0; j<8; j++){
                     if (tracksRemaining > j){
+                        const track = (compatibleCore("0.8.1")) ? playlist.sounds.contents[j+8*screen] : playlist.data.sounds[j+8*screen];
+
                         led = 81-10*j+i;
-                        if (playlist.data.sounds[j+8*screen].playing)
+                        if (track.playing)
                             launchpad.setLED(led,0,colorOn);
                         else
                             launchpad.setLED(led,0,colorOff);
@@ -80,9 +83,9 @@ export class PlaylistControl{
             playlist.stopAll();
             return;
         }
-        let mode = game.settings.get(MODULE.moduleName,'playlists').playlistMode[playlistNr];
+        let mode = game.settings.get(moduleName,'playlists').playlistMode[playlistNr];
         if (mode == 0) {
-            mode = game.settings.get(MODULE.moduleName,'playlists').playMode;
+            mode = game.settings.get(moduleName,'playlists').playMode;
             if (mode == 2) await this.stopAll();
         }
         playlist.playAll();
@@ -94,15 +97,18 @@ export class PlaylistControl{
             play = false;
         else {
             play = true;
-            let mode = game.settings.get(MODULE.moduleName,'playlists').playlistMode[playlistNr];
+            let mode = game.settings.get(moduleName,'playlists').playlistMode[playlistNr];
             if (mode == 0) {
-                mode = game.settings.get(MODULE.moduleName,'playlists').playMode;
+                mode = game.settings.get(moduleName,'playlists').playMode;
                 if (mode == 1) await playlist.stopAll();
                 else if (mode == 2) await this.stopAll();
             }
             else if (mode == 2) await playlist.stopAll();
         }
-        await playlist.updateEmbeddedEntity("PlaylistSound", {_id: track._id, playing: play});
+        if (compatibleCore("0.8.1") && play) await playlist.playSound(track);
+        else if (compatibleCore("0.8.1")) await playlist.stopSound(track);
+        else await playlist.updateEmbeddedEntity("PlaylistSound", {_id: track._id, playing: play});
+        
         playlist.update({playing: play});
     }
 
@@ -115,17 +121,17 @@ export class PlaylistControl{
         }
         else {
             let playing = game.playlists.playing;
-            let settings = game.settings.get(MODULE.moduleName,'playlists');
+            let settings = game.settings.get(moduleName,'playlists');
             let selectedPlaylists = settings.selectedPlaylist;
             for (let i=0; i<playing.length; i++){
-                const playlistNr = selectedPlaylists.findIndex(p => p == playing[i]._id);
+                const playlistNr = selectedPlaylists.findIndex(p => p == playing[i].id);
                 const mode = settings.playlistMode[playlistNr];
                 if (mode == 0) playing[i].stopAll();
             }
         }
     }
 
-    volumeKeyPress(key){
+    async volumeKeyPress(key){
         if (Math.floor(launchpad.keyMode/10) != 6) return;
         const column = (key % 10)-1;
         let row = 8-Math.floor(key/10);
@@ -137,11 +143,12 @@ export class PlaylistControl{
         }
         const screen = launchpad.keyMode - 60;
         const playlist = this.getPlaylist(this.playlistVolumeSelector);
-        const track = playlist._data.sounds[column+8*screen];
+        const track = (compatibleCore("0.8.1")) ? playlist.sounds.contents[column+8*screen] : playlist.data.sounds[column+8*screen];
         if (track == undefined) return;
         row /= 7;
         const volume = AudioHelper.inputToVolume(1-row);
-        playlist.updateEmbeddedEntity("PlaylistSound", {_id: track._id, volume: volume});
+        if (compatibleCore("0.8.1")) track.debounceVolume(volume);
+        else await playlist.updateEmbeddedEntity("PlaylistSound", {_id: track._id, volume: volume});
     }
 
     volumeUpdate(){
@@ -162,7 +169,7 @@ export class PlaylistControl{
         color = (maxTracks>24)? 74 : 0;
         launchpad.setLED(29,type,color);
 
-        let settings = game.settings.get(MODULE.moduleName,'playlists');
+        let settings = game.settings.get(moduleName,'playlists');
         const colorOn = settings.colorOn ? settings.colorOn : 87;
         const colorOff = settings.colorOff ? settings.colorOff : 72;
 
@@ -183,9 +190,10 @@ export class PlaylistControl{
         const playlist = this.getPlaylist(this.playlistVolumeSelector);
         if (playlist != undefined){
             for (let i=0; i<8; i++){
-                const track = playlist.data.sounds[i+8*screen];
+                const track = (compatibleCore("0.8.1")) ? playlist.sounds.contents[i+8*screen] : playlist.data.sounds[i+8*screen];
                 if (track == undefined) continue;
-                const volume = AudioHelper.volumeToInput(track.volume)*7;
+                const trackVolume = (compatibleCore("0.8.1")) ? track.volume/game.settings.get("core", "globalPlaylistVolume") : track.volume;
+                const volume = (compatibleCore("0.8.1")) ? Math.ceil(AudioHelper.volumeToInput(trackVolume)*7) : AudioHelper.volumeToInput(trackVolume)*7;
                 let color = colorOff;
                 if (track.playing) color = colorOn;
                 for (let j=0; j<8; j++){
@@ -200,9 +208,10 @@ export class PlaylistControl{
     }
 
     getPlaylist(num){
-        const playlistId = game.settings.get(MODULE.moduleName,'playlists').selectedPlaylist[num];
-        const playlist = game.playlists.entities.find(p => p._id == playlistId);
-        return playlist;
+        let selectedPlaylists = game.settings.get(moduleName,'playlists').selectedPlaylist;
+        if (selectedPlaylists != undefined) 
+            return game.playlists.get(selectedPlaylists[num]);
+        else return undefined;
     }
     
     getMaxTracks(){
@@ -210,7 +219,7 @@ export class PlaylistControl{
         for (let i=0; i<8; i++){
             const playlist = this.getPlaylist(i);
             if (playlist != undefined){
-                const nrOfTracks = playlist.data.sounds.length;
+                const nrOfTracks = (compatibleCore("0.8.1")) ? playlist.data.sounds.size : playlist.data.sounds.length;
                 if (nrOfTracks > maxTracks) maxTracks = nrOfTracks;
             }
         }

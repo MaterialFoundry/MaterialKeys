@@ -1,4 +1,11 @@
 # Changelog Material Keys Module
+### v1.2.4 - 24-04-2021
+<ul>
+<li>Made compatible with Foundry 0.8.1</li>
+<li>In Playlist Configuration, "Playing/Stopping Color" would not update the background color when the number was changed in the textbox</li>
+</ul>
+
+
 ### v1.2.3 - 24-03-2021
 <ul>
 <li>Added a help menu that can be accessed from the module settings</li>

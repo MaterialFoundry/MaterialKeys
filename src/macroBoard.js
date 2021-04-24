@@ -1,5 +1,4 @@
-import * as MODULE from "../MaterialKeys.js";
-import {launchpad} from "../MaterialKeys.js";
+import {moduleName,launchpad} from "../MaterialKeys.js";
 
 export class MacroBoard{
     constructor(){
@@ -14,11 +13,11 @@ export class MacroBoard{
     }
 
     executeMacro(nr){
-        const macroId = game.settings.get(MODULE.moduleName,'macroSettings').macros[nr];
+        const macroId = game.settings.get(moduleName,'macroSettings').macros[nr];
         const macro = game.macros.get(macroId);
         if (macro == null) return;
-        if (game.settings.get(MODULE.moduleName,'macroSettings').args != undefined) {
-            const args = game.settings.get(MODULE.moduleName,'macroSettings').args[nr];
+        if (game.settings.get(moduleName,'macroSettings').args != undefined) {
+            const args = game.settings.get(moduleName,'macroSettings').args[nr];
             let furnaceEnabled = false;
             const furnace = game.modules.get("furnace");
             if (furnace != undefined && furnace.active) furnaceEnabled = true;
@@ -42,8 +41,8 @@ export class MacroBoard{
         launchpad.setMainLEDs(0,0);
 
         for (let i=0; i<64; i++){
-            const color = game.settings.get(MODULE.moduleName,'macroSettings').color[i];
-                         
+            const color = game.settings.get(moduleName,'macroSettings').color[i];
+
             const row = 8-Math.floor(i/8);
             const column = i % 8 + 1;
             const led = row*10+column;

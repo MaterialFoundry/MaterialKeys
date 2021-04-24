@@ -1,4 +1,4 @@
-import * as MODULE from "../MaterialKeys.js";
+import {moduleName,launchpad} from "../MaterialKeys.js";
 import { playlistConfigForm, soundboardConfigForm, macroConfigForm } from "./misc.js";
 
 
@@ -8,7 +8,7 @@ export const registerSettings = function() {
      */
 
     //Enabled the module
-    game.settings.register(MODULE.moduleName,'Enable', {
+    game.settings.register(moduleName,'Enable', {
         name: "MaterialKeys.Sett.Enable",
         scope: "world",
         config: true,
@@ -17,7 +17,7 @@ export const registerSettings = function() {
         onChange: x => window.location.reload()
     });
 
-    game.settings.register(MODULE.moduleName, "brightness", {
+    game.settings.register(moduleName, "brightness", {
         name: "MaterialKeys.Sett.Brightness",
         hint: "MaterialKeys.Sett.Brightness_Hint",
         scope: "world",
@@ -26,14 +26,14 @@ export const registerSettings = function() {
         range: {min: 0, max: 127, step: 1},
         default: 127,
         onChange: () => {
-            MODULE.launchpad.setBrightness(game.settings.get(MODULE.moduleName,'brightness'))
+            launchpad.setBrightness(game.settings.get(moduleName,'brightness'))
         }
       });
 
     /**
      * Sets the name of the target client (who has the TV connected)
      */
-    game.settings.register(MODULE.moduleName,'address', {
+    game.settings.register(moduleName,'address', {
         name: "MaterialKeys.Sett.MidiAddr",
         hint: "MaterialKeys.Sett.MidiAddrHint",
         scope: "world",
@@ -46,7 +46,7 @@ export const registerSettings = function() {
     /*
      * Create the Help button
      */
-    game.settings.registerMenu(MODULE.moduleName, 'helpMenu',{
+    game.settings.registerMenu(moduleName, 'helpMenu',{
         name: "MaterialKeys.Sett.Help",
         label: "MaterialKeys.Sett.Help",
         type: helpMenu,
@@ -56,7 +56,7 @@ export const registerSettings = function() {
     /**
      * Playlists
      */
-    game.settings.register(MODULE.moduleName, 'playlists', {
+    game.settings.register(moduleName, 'playlists', {
         name: "selectedPlaylists",
         scope: "world",
         type: Object,
@@ -64,7 +64,7 @@ export const registerSettings = function() {
         config: false
     });
     
-    game.settings.registerMenu(MODULE.moduleName, 'playlistConfigMenu',{
+    game.settings.registerMenu(moduleName, 'playlistConfigMenu',{
         name: "MaterialKeys.Sett.PlaylistConfig",
         label: "MaterialKeys.Sett.PlaylistConfig",
         type: playlistConfigForm,
@@ -74,14 +74,14 @@ export const registerSettings = function() {
     /**
      * Soundboard
      */
-    game.settings.registerMenu(MODULE.moduleName, 'soundboardConfigMenu',{
+    game.settings.registerMenu(moduleName, 'soundboardConfigMenu',{
         name: "MaterialKeys.Sett.SoundboardConfig",
         label: "MaterialKeys.Sett.SoundboardConfig",
         type: soundboardConfigForm,
         restricted: true
     });
 
-    game.settings.register(MODULE.moduleName, 'soundboardSettings', {
+    game.settings.register(moduleName, 'soundboardSettings', {
         name: "soundboardSettings",
         scope: "world",
         type: Object,
@@ -92,14 +92,14 @@ export const registerSettings = function() {
     /**
      * Macro board
      */
-    game.settings.registerMenu(MODULE.moduleName, 'macroConfigMenu',{
+    game.settings.registerMenu(moduleName, 'macroConfigMenu',{
         name: "MaterialKeys.Sett.MacroConfig",
         label: "MaterialKeys.Sett.MacroConfig",
         type: macroConfigForm,
         restricted: true
     });
 
-    game.settings.register(MODULE.moduleName, 'macroSettings', {
+    game.settings.register(moduleName, 'macroSettings', {
         name: "macroSettings",
         scope: "world",
         type: Object,

@@ -51,48 +51,6 @@ async function analyzeWSmessage(msg){
     }
 };
 
-export async function playTrack(soundNr,play,repeat,volume){
-    if (play){
-        const trackId = game.settings.get(moduleName,'soundboardSettings').sounds[soundNr];
-        const playlistId = game.settings.get(moduleName,'soundboardSettings').selectedPlaylists[soundNr];
-        let src;
-        if (playlistId == 'FP'){
-            src = game.settings.get(moduleName,'soundboardSettings').src[soundNr];
-            const ret = await FilePicker.browse("data", src, {wildcard:true});
-            const files = ret.files;
-            if (files.length == 1) src = files;
-            else {
-                let value = Math.floor(Math.random() * Math.floor(files.length));
-                src = files[value];
-            }
-        }
-        else {
-            const sounds = game.playlists.entities.find(p => p._id == playlistId).data.sounds;
-            const sound = sounds.find(p => p._id == trackId);
-            if (sound == undefined){
-                activeSounds[soundNr] = false;
-                return;
-            }
-            src = sound.path;
-        }
-        
-        volume *= game.settings.get("core", "globalInterfaceVolume");
-        let howl = new Howl({src, volume, loop: repeat, onend: (id)=>{
-            if (repeat == false){
-                activeSounds[soundNr] = false;
-            }
-        },
-        onstop: (id)=>{
-            activeSounds[soundNr] = false;
-        }});
-        howl.play();
-        activeSounds[soundNr] = howl;
-   }
-   else {
-       activeSounds[soundNr].stop();
-   }
-}
-
 Hooks.on('renderPlaylistDirectory', (playlistDirectory)=>{
     if (enableModule == false) return;
     if (WSconnected) {
@@ -142,10 +100,10 @@ Hooks.once('ready', ()=>{
     
     for (let i=0; i<64; i++)
             activeSounds[i] = false;
-        game.socket.on(`module.MaterialKeys`, (payload) =>{
-           // console.log(payload);
-            if (payload.msgType != "playSound") return;
-            playTrack(payload.trackNr,payload.play,payload.repeat,payload.volume);
+
+    game.socket.on(`module.MaterialKeys`, (payload) =>{
+        // console.log(payload);
+        if (payload.msgType == "playSound") soundboard.playSound(payload.trackNr,payload.src,payload.play,payload.repeat,payload.volume); 
     });
     if (game.user.isGM == false) return;
     const soundBoardSettings = game.settings.get(moduleName,'soundboardSettings');
@@ -273,36 +231,4 @@ function resetWS(){
 
 export function sendWS(txt){
     if (WSconnected) ws.send(txt);
-}
-
-function checkCombat(){
-    if (game.combat) 
-        return game.combat.started;
-    else return false; 
-}
-
-export function getFromJSONArray(data,i){
-    if (i>8) return 'nul';
-    let val;
-    if (i == 0) val = data.a;
-    else if (i == 1) val = data.a;
-    else if (i == 2) val = data.c;
-    else if (i == 3) val = data.d;
-    else if (i == 4) val = data.e;
-    else if (i == 5) val = data.f;
-    else if (i == 6) val = data.g;
-    else if (i == 7) val = data.h;
-    return val;
-}
-
-export function setToJSONArray(data,i,val){
-    if (i>8) return 'nul';
-    if (i == 0) data.a = val;
-    else if (i == 1) data.b = val;
-    else if (i == 2) data.c = val;
-    else if (i == 3) data.d = val;
-    else if (i == 4) data.e = val;
-    else if (i == 5) data.f = val;
-    else if (i == 6) data.g = val;
-    else if (i == 7) data.h = val;
 }

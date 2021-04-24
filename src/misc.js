@@ -1,5 +1,14 @@
-import * as MODULE from "../MaterialKeys.js";
-import {launchpad,soundboard,macroBoard,playlistControl} from "../MaterialKeys.js";
+import {moduleName,enableModule,launchpad,soundboard,macroBoard,playlistControl} from "../MaterialKeys.js";
+
+export function compatibleCore(compatibleVersion){
+    let coreVersion = game.data.version;
+    coreVersion = coreVersion.split(".");
+    compatibleVersion = compatibleVersion.split(".");
+    if (compatibleVersion[0] > coreVersion[0]) return false;
+    if (compatibleVersion[1] > coreVersion[1]) return false;
+    if (compatibleVersion[2] > coreVersion[2]) return false;
+    return true;
+}
 
 export class playlistConfigForm extends FormApplication {
     constructor(data, options) {
@@ -24,7 +33,7 @@ export class playlistConfigForm extends FormApplication {
      * Provide data to the template
      */
     getData() {
-        let settings = game.settings.get(MODULE.moduleName,'playlists');
+        let settings = game.settings.get(moduleName,'playlists');
         if (settings.colorOn == undefined) settings.colorOn = 87;
         if (settings.colorOff == undefined) settings.colorOff = 72;
         let selectedPlaylists = settings.selectedPlaylist;
@@ -34,6 +43,8 @@ export class playlistConfigForm extends FormApplication {
         let playMode = settings.playMode;
         if (playMode == undefined) playMode = 0;
         let playlistData = [];
+
+        const playlistArray = compatibleCore("0.8.1") ? game.playlists.contents : game.playlists.entities;
         
         for (let i=0; i<8; i++){
             if (selectedPlaylists[i] == undefined) selectedPlaylists[i] = 'none';
@@ -42,7 +53,7 @@ export class playlistConfigForm extends FormApplication {
                 iteration: i+1,
                 playlist: selectedPlaylists[i],
                 playlistMode: selectedPlaylistMode[i],
-                playlists: game.playlists.entities
+                playlists: playlistArray
             }
             playlistData.push(dataThis);
         }
@@ -54,7 +65,7 @@ export class playlistConfigForm extends FormApplication {
         }
    
         return {
-            playlists: game.playlists.entities,
+            playlists: playlistArray,
             playlistData: playlistData,
             playMode: playMode,
             colorOn:settings.colorOn,
@@ -70,8 +81,6 @@ export class playlistConfigForm extends FormApplication {
      * @param {*} formData 
      */
     async _updateObject(event, formData) {
-       // await game.settings.set(MODULE.moduleName,'selectedPlaylists', formData["selectedPlaylist"]);
-       // await game.settings.set(MODULE.moduleName,'playlistMethod',formData["playMethod"]);
     }
 
     activateListeners(html) {
@@ -108,9 +117,11 @@ export class playlistConfigForm extends FormApplication {
         });
 
         colorPickerOnNr.on('change',(event) => {
-            let settings = game.settings.get(MODULE.moduleName,'playlists');
+            let settings = game.settings.get(moduleName,'playlists');
             settings.colorOn=event.target.value;
+            document.getElementById("colorOn").style="flex:7; background-color:"+getColor(event.target.value); 
             this.updateSettings(settings,true);
+
         });
 
         colorPickerOff.on('click',(event) => {
@@ -121,14 +132,15 @@ export class playlistConfigForm extends FormApplication {
         });
 
         colorPickerOffNr.on('change',(event) => {
-            let settings = game.settings.get(MODULE.moduleName,'playlists');
+            let settings = game.settings.get(moduleName,'playlists');
             settings.colorOff=event.target.value;
+            document.getElementById("colorOff").style="flex:7; background-color:"+getColor(event.target.value); 
             this.updateSettings(settings,true);
         });
     }
     async updateSettings(settings){
-        await game.settings.set(MODULE.moduleName,'playlists', settings);
-        if (MODULE.enableModule) {
+        await game.settings.set(moduleName,'playlists', settings);
+        if (enableModule) {
             playlistControl.playlistUpdate();
             playlistControl.volumeUpdate();
         }
@@ -154,7 +166,6 @@ export class soundboardConfigForm extends FormApplication {
             title: "Material Keys: "+game.i18n.localize("MaterialKeys.Sett.SoundboardConfig"),
             template: "./modules/MaterialKeys/templates/soundboardConfig.html",
             classes: ["sheet"],
-            width: 1400,
             height: 720
         });
     }
@@ -168,13 +179,14 @@ export class soundboardConfigForm extends FormApplication {
      * Provide data to the template
      */
     getData() {
-        let settings = game.settings.get(MODULE.moduleName,'soundboardSettings');
+        let settings = game.settings.get(moduleName,'soundboardSettings');
         let playlists = [];
         playlists.push({id:"none",name:game.i18n.localize("MaterialKeys.None")});
         playlists.push({id:"FP",name:game.i18n.localize("MaterialKeys.FilePicker")})
-        for (let i=0; i<game.playlists.entities.length; i++){
-            playlists.push({id:game.playlists.entities[i]._id,name:game.playlists.entities[i].name});
-        }
+        const playlistArray = compatibleCore("0.8.1") ? game.playlists.contents : game.playlists.entities;
+        for (let playlist of playlistArray) 
+            playlists.push({id: playlist.id, name: playlist.name})
+
         if (settings.sounds == undefined) settings.sounds = [];
         if (settings.colorOn == undefined) settings.colorOn = [];
         if (settings.colorOff == undefined) settings.colorOff = [];
@@ -196,8 +208,8 @@ export class soundboardConfigForm extends FormApplication {
                 if (settings.volume[iteration] == undefined) settings.volume[iteration] = 50;
                 if (settings.selectedPlaylists[iteration]==undefined) {
                     if (settings.sounds[iteration] != undefined && settings.sounds[iteration] != "") {
-                        selectedPlaylist = game.settings.get(MODULE.moduleName,'soundboardSettings').playlist;
-                        const pl = game.playlists.entities.find(p => p._id == selectedPlaylist);
+                        selectedPlaylist = game.settings.get(moduleName,'soundboardSettings').playlist;
+                        const pl = playlistArray.find(p => p.id == selectedPlaylist);
                         if (pl == undefined){
                             selectedPlaylist = 'none';
                             sounds = [];
@@ -215,15 +227,29 @@ export class soundboardConfigForm extends FormApplication {
                 else if (settings.selectedPlaylists[iteration] == 'none' || settings.selectedPlaylists[iteration] == '') selectedPlaylist = 'none';
                 else if (settings.selectedPlaylists[iteration] == 'FP') selectedPlaylist = 'FP';
                 else {
-                    const pl = game.playlists.entities.find(p => p._id == settings.selectedPlaylists[iteration]);
+                    const pl = playlistArray.find(p => p.id == settings.selectedPlaylists[iteration]);
                     if (pl == undefined){
                         selectedPlaylist = 'none';
                         sounds = [];
                     }
                     else {
-                        sounds = pl.sounds;
-                        selectedPlaylist = pl._id;
-                    } 
+                        //Add the sound name and id to the sounds array
+                        if (compatibleCore("0.8.1"))
+                            for (let sound of pl.sounds.contents)
+                                sounds.push({
+                                    name: sound.name,
+                                    id: sound.id
+                                });
+                        else {
+                            for (let sound of pl.sounds)
+                                sounds.push({
+                                    name: sound.name,
+                                    id: sound._id
+                                });
+                        }        
+                        //Get the playlist id
+                        selectedPlaylist = pl.id;
+                    }  
                 }
                 let styleSS = "";
                 let styleFP ="display:none";
@@ -290,7 +316,7 @@ export class soundboardConfigForm extends FormApplication {
 
         nameField.on("change",event => {
             let id = event.target.id.replace('name','')-1;
-            let settings = game.settings.get(MODULE.moduleName,'soundboardSettings');
+            let settings = game.settings.get(moduleName,'soundboardSettings');
             settings.name[id]=event.target.value;
             this.updateSettings(settings);
         });
@@ -320,8 +346,9 @@ export class soundboardConfigForm extends FormApplication {
                 //Show the sound selector
                 document.querySelector(`#ss${iteration}`).style='';
 
-                const pl = game.playlists.entities.find(p => p._id == event.target.value);
-                selectedPlaylist = pl._id;
+                const playlistArray = compatibleCore("0.8.1") ? game.playlists.contents : game.playlists.entities;
+                const pl = playlistArray.find(p => p.id == event.target.value)
+                selectedPlaylist = pl.id;
 
                 //Get the sound select element
                 let SSpicker = document.getElementById(`soundSelect${iteration}`);
@@ -335,35 +362,43 @@ export class soundboardConfigForm extends FormApplication {
                 optionNone.innerHTML = game.i18n.localize("MaterialKeys.None");
                 SSpicker.appendChild(optionNone);
 
-                for (let i=0; i<pl.sounds.length; i++){
-                    let newOption = document.createElement('option');
-                    newOption.value = pl.sounds[i]._id;
-                    newOption.innerHTML = pl.sounds[i].name;
-                    SSpicker.appendChild(newOption);
-                }
+                if (compatibleCore("0.8.1"))
+                    for (let sound of pl.sounds.contents) {
+                        let newOption = document.createElement('option');
+                        newOption.value = sound.id;
+                        newOption.innerHTML = sound.name;
+                        SSpicker.appendChild(newOption);
+                    } 
+                else 
+                    for (let sound of pl.sounds) {
+                        let newOption = document.createElement('option');
+                        newOption.value = sound._id;
+                        newOption.innerHTML = sound.name;
+                        SSpicker.appendChild(newOption);
+                    }
             }
-            let settings = game.settings.get(MODULE.moduleName,'soundboardSettings');
+            let settings = game.settings.get(moduleName,'soundboardSettings');
             settings.selectedPlaylists[iteration-1]=event.target.value;
             this.updateSettings(settings);
         });
         
         soundSelect.on("change",event => {
             let id = event.target.id.replace('soundSelect','')-1;
-            let settings = game.settings.get(MODULE.moduleName,'soundboardSettings');
+            let settings = game.settings.get(moduleName,'soundboardSettings');
             settings.sounds[id]=event.target.value;
             this.updateSettings(settings);
         });
         
         soundFP.on("change",event => {
             let id = event.target.id.replace('srcPath','')-1;
-            let settings = game.settings.get(MODULE.moduleName,'soundboardSettings');
+            let settings = game.settings.get(moduleName,'soundboardSettings');
             settings.src[id]=event.target.value;
             this.updateSettings(settings);
         });
 
         colorToggle.on("change",event => {
             let id = event.target.id.replace('toggle','')-1;
-            let settings = game.settings.get(MODULE.moduleName,'soundboardSettings');
+            let settings = game.settings.get(moduleName,'soundboardSettings');
             settings.toggle[id]=event.target.value;
             this.updateSettings(settings);
         });
@@ -377,7 +412,7 @@ export class soundboardConfigForm extends FormApplication {
 
         colorPickerOnNr.on('change',(event) => {
             let id = event.target.id.replace('colorOn','')-1;
-            let settings = game.settings.get(MODULE.moduleName,'soundboardSettings');
+            let settings = game.settings.get(moduleName,'soundboardSettings');
             settings.colorOn[id]=event.target.value;
             this.updateSettings(settings,true);
         });
@@ -392,21 +427,21 @@ export class soundboardConfigForm extends FormApplication {
 
         colorPickerOffNr.on('change',(event) => {
             let id = event.target.id.replace('colorOff','')-1;
-            let settings = game.settings.get(MODULE.moduleName,'soundboardSettings');
+            let settings = game.settings.get(moduleName,'soundboardSettings');
             settings.colorOff[id]=event.target.value;
             this.updateSettings(settings,true);
         });
         
         playMode.on("change",event => {
             let id = event.target.id.replace('playmode','')-1;
-            let settings = game.settings.get(MODULE.moduleName,'soundboardSettings');
+            let settings = game.settings.get(moduleName,'soundboardSettings');
             settings.mode[id]=event.target.value;
             this.updateSettings(settings);
         });
 
         volumeSlider.on('change', event => {
             let id = event.target.id.replace('volume','')-1;
-            let settings = game.settings.get(MODULE.moduleName,'soundboardSettings');
+            let settings = game.settings.get(moduleName,'soundboardSettings');
             settings.volume[id]=event.target.value;
             this.updateSettings(settings); 
         });
@@ -434,7 +469,6 @@ export class soundboardConfigForm extends FormApplication {
     }
     async updateSettings(settings,render=false){
         if (settings == 'clear'){
-            console.log("Clearing soundboard configuration")
             let colorOff = [];
             let colorOn = [];
             let mode = [];
@@ -467,9 +501,9 @@ export class soundboardConfigForm extends FormApplication {
                 volume: volume
             };
         }
-        await game.settings.set(MODULE.moduleName,'soundboardSettings',settings);
-        if (MODULE.enableModule) {
-            launchpad.setMode(MODULE.launchpad.keyMode);
+        await game.settings.set(moduleName,'soundboardSettings',settings);
+        if (enableModule) {
+            launchpad.setMode(launchpad.keyMode);
             soundboard.update();
         }
         if (render) this.render();
@@ -494,7 +528,6 @@ export class macroConfigForm extends FormApplication {
             title: "Material Keys: "+game.i18n.localize("MaterialKeys.Sett.MacroConfig"),
             template: "./modules/MaterialKeys/templates/macroConfig.html",
             classes: ["sheet"],
-            width: 1400,
             height: 720
         });
     }
@@ -503,7 +536,7 @@ export class macroConfigForm extends FormApplication {
      * Provide data to the template
      */
     getData() {
-        let settings = game.settings.get(MODULE.moduleName,'macroSettings');
+        let settings = game.settings.get(moduleName,'macroSettings');
         if (settings.macros == undefined) settings.macros = [];
         if (settings.color == undefined) settings.color = [];
         if (settings.args == undefined) settings.args = [];
@@ -525,7 +558,7 @@ export class macroConfigForm extends FormApplication {
                     macro: settings.macros[iteration],
                     color: settings.color[iteration],
                     colorRGB: getColor(settings.color[iteration]),
-                    macros:game.macros,
+                    macros: game.macros,
                     args: settings.args[iteration],
                     furnace: furnaceEnabled
                 }
@@ -549,16 +582,16 @@ export class macroConfigForm extends FormApplication {
      * @param {*} formData 
      */
     async _updateObject(event, formData) {
-       await game.settings.set(MODULE.moduleName,'macroSettings',{
+       await game.settings.set(moduleName,'macroSettings',{
             macros: formData["macros"],
             color: formData["color"]
        });
 
         let furnace = game.modules.get("furnace");
         if (furnace != undefined && furnace.active) 
-            await game.settings.set(MODULE.moduleName,'macroArgs', formData["args"]);
+            await game.settings.set(moduleName,'macroArgs', formData["args"]);
        
-       launchpad.setMode(MODULE.launchpad.keyMode);
+       launchpad.setMode(launchpad.keyMode);
        macroBoard.update();
     }
 
@@ -572,14 +605,14 @@ export class macroConfigForm extends FormApplication {
 
         macro.on("change", event => {
             let id = event.target.id.replace('macros','');
-            let settings = game.settings.get(MODULE.moduleName,'macroSettings');
+            let settings = game.settings.get(moduleName,'macroSettings');
             settings.macros[id-1]=event.target.value;
             this.updateSettings(settings);
         });
 
         args.on("change", event => {
             let id = event.target.id.replace('args','');
-            let settings = game.settings.get(MODULE.moduleName,'macroSettings');
+            let settings = game.settings.get(moduleName,'macroSettings');
             let args = settings.args;
             if (args == undefined) args = [];
             args[id-1]=event.target.value;
@@ -598,7 +631,7 @@ export class macroConfigForm extends FormApplication {
             let id = event.target.id.replace('color','')-1;
             let j = Math.floor(id/8);
             let i = id % 8;
-            let settings = game.settings.get(MODULE.moduleName,'macroSettings');
+            let settings = game.settings.get(moduleName,'macroSettings');
             settings.color[id]=event.target.value;
             this.updateSettings(settings,true);
         });
@@ -627,7 +660,6 @@ export class macroConfigForm extends FormApplication {
 
     async updateSettings(settings,render=false){
         if (settings == 'clear'){
-            console.log("Clearing macro board configuration")
             let color = [];
             let args = [];
             let macros = [];
@@ -642,8 +674,8 @@ export class macroConfigForm extends FormApplication {
                 macros: macros
             };
         }
-        await game.settings.set(MODULE.moduleName,'macroSettings',settings);
-        if (MODULE.enableModule) macroBoard.update();
+        await game.settings.set(moduleName,'macroSettings',settings);
+        if (enableModule) macroBoard.update();
         if (render) this.render();
     }
 }
@@ -667,7 +699,7 @@ export class soundboardCheatSheet extends FormApplication {
     }
 
     getData() {
-        let settings = game.settings.get(MODULE.moduleName,'soundboardSettings');
+        let settings = game.settings.get(moduleName,'soundboardSettings');
 
         if (settings.colorOn == undefined) settings.colorOn = [];
         if (settings.colorOff == undefined) settings.colorOff = [];
@@ -702,12 +734,12 @@ export class soundboardCheatSheet extends FormApplication {
 
         soundBox.on('click',(event) => {
             let id = event.target.id.replace('soundBox','')-1;
-            const mode = game.settings.get(MODULE.moduleName,'soundboardSettings').mode[id];
+            const mode = game.settings.get(moduleName,'soundboardSettings').mode[id];
             let repeat = false;
             if (mode > 0) repeat = true;
             let play = false;
             if (soundboard.activeSounds[id] == false) play = true;
-            soundboard.playSound(id,repeat,play);
+            soundboard.prePlaySound(id,repeat,play);
         });
     }
 }
@@ -730,7 +762,7 @@ export class macroCheatSheet extends FormApplication {
     }
 
     getData() {
-        let settings = game.settings.get(MODULE.moduleName,'macroSettings');
+        let settings = game.settings.get(moduleName,'macroSettings');
         if (settings.macros == undefined) settings.macros = [];
         if (settings.color == undefined) settings.color = [];
         let macroData = [];

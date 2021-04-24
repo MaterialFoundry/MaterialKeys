@@ -3,12 +3,12 @@
         .boxed {
             border: 1px solid black ;
             border-radius: 5px ; 
-            width: 100px;
+            width: 166px;
             height: 360px;
         }
     </style>
     {{#each soundData}}
-        <div class="form-group">
+        <div class="form-group" style="width:100%">
             {{#each this.dataThis}}
                 <div class="boxed" style="padding: 5px; margin:2px">
                     <div style="text-align:center;">                    
@@ -40,7 +40,7 @@
                             {{#select this.sound}}
                                 <option value="">{{localize "MaterialKeys.None"}}</option>
                                 {{#each sounds}}
-                                <option value="{{this._id}}">{{this.name}}</option>
+                                <option value="{{this.id}}">{{this.name}}</option>
                                 {{/each}}
                             {{/select}}
                         </select>

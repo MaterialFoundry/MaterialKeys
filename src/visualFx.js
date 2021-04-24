@@ -1,4 +1,3 @@
-import * as MODULE from "../MaterialKeys.js";
 import {launchpad} from "../MaterialKeys.js";
 
 export class VisualFx{

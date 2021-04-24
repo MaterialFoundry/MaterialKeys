@@ -1,5 +1,5 @@
-import * as MODULE from "../MaterialKeys.js";
 import {launchpad} from "../MaterialKeys.js";
+import {compatibleCore} from "./misc.js";
 
 export class CombatTracker{
     constructor(){
@@ -10,7 +10,7 @@ export class CombatTracker{
     updateTokens(combat){
         if (launchpad.keyMode != 4) return;
         if (combat != null){
-            let combatants = combat.combatants;
+            let combatants = (compatibleCore("0.8.1")) ? combat.combatants.contents : combat.combatants;
             if (combatants.length > 0){
                 let initiativeOrder = combat.turns;
                 let oldCombatants = 0;
@@ -27,15 +27,15 @@ export class CombatTracker{
                     }     
                 }
                 for (let i=0; i<initiativeOrder.length; i++){
-                    let token = initiativeOrder[i].token;
-                    //console.log("token: ",token);
-                    //console.log("initiativeOrder: ",initiativeOrder);
+                    let token = (compatibleCore("0.8.1")) ? initiativeOrder[i].token.data : initiativeOrder[i].token;
                     let color;
-                    if (token.disposition == 1) color = 87;
-                    else if (token.disposition == 0) color = 74;
-                    else if (token.disposition == -1) color = 72;
+                    const disposition = token.disposition;
+                    if (disposition == 1) color = 87;
+                    else if (disposition == 0) color = 74;
+                    else if (disposition == -1) color = 72;
                     let type = 0;
-                    if (combat.started && token._id == combat.combatant.tokenId) type =2;
+                    const currentCombatantId = (compatibleCore("0.8.1")) ? combat.combatant.token.id : combat.combatant.tokenId;
+                    if (combat.started && token._id == currentCombatantId) type = 2;
                     let j = i;
                     if (i>7) j = i-18;
                     if (i>15) j = i-36;
@@ -82,15 +82,15 @@ export class CombatTracker{
             if (selected < 0) selected += 18;
             if (selected < 0) selected += 18;
             
-            let token = game.combat.turns[selected].token;
+            let token = (compatibleCore("0.8.1")) ? game.combat.turns[selected].token.data : game.combat.turns[selected].token;
             if (token != undefined){
                 let tokenId = token._id;
                 let tokens = canvas.tokens.children[0].children;
                 for (let i=0; i<tokens.length; i++){
-                    if (tokens[i].id == tokenId){
-                        tokens[i].name;
+                    if (tokens[i].id == tokenId) {
                         tokens[i].control();
-                    }    
+                        break;
+                    }
                 }
                 canvas.animatePan({x: token.x, y: token.y, speed: 2000});
             }
@@ -100,7 +100,7 @@ export class CombatTracker{
     trackerUpdate(combat){
         if (launchpad.keyMode != 4) return;
         if (combat != undefined){
-            let combatants = combat.combatants;
+            let combatants = (compatibleCore("0.8.1")) ? combat.combatants.contents : combat.combatants;
             if (combatants.length > 0){
                 if (combat.started)
                     this.combatState = 2; 
@@ -118,6 +118,7 @@ export class CombatTracker{
         let color = 87;
         let modeArrows = 2;
         let colorArrows = 72;
+
         if (this.combatState == 0){
             launchpad.setMainLEDs(0,0);
         }
@@ -146,15 +147,16 @@ export class CombatTracker{
         if (Math.floor(launchpad.keyMode/10) != 3) return;
         let page = launchpad.keyMode % 10-1;
         let selected = key % 10 - 1 + 8 * page;
-        let token = game.combat.turns[selected].token;
+
+        let token = (compatibleCore("0.8.1")) ? game.combat.turns[selected].token.data : game.combat.turns[selected].token;
         if (token != undefined){
             let tokenId = token._id;
             let tokens = canvas.tokens.children[0].children;
             for (let i=0; i<tokens.length; i++){
-                if (tokens[i].id == tokenId){
-                    tokens[i].name;
+                if (tokens[i].id == tokenId) {
                     tokens[i].control();
-                }    
+                    break;
+                }
             }
             canvas.animatePan({x: token.x, y: token.y, speed: 2000});
         }
@@ -163,7 +165,12 @@ export class CombatTracker{
     hpUpdate(combat){
         if (Math.floor(launchpad.keyMode/10) != 3) return;
         let hpTrackerPages;
-        if (game.combat) hpTrackerPages = Math.ceil(game.combat.combatants.length/8);
+        let combatants;
+        if (game.combat) {
+            combatants = (compatibleCore("0.8.1")) ? game.combat.combatants.contents : game.combat.combatants;
+            hpTrackerPages = Math.ceil(combatants/8);
+        }
+        
         let color;
         let type;
         type = (launchpad.keyMode == 31)? 1 : 2;
@@ -180,7 +187,6 @@ export class CombatTracker{
         launchpad.setLED(49,type,color);
 
         let page = launchpad.keyMode % 10-1;
-        let combatants = combat.combatants;
         
         launchpad.setMainLEDs(0,0);
         if (combatants.length > 0){
@@ -189,15 +195,16 @@ export class CombatTracker{
             for (let i=0; i<8; i++){
                 let nr = i+8*page;
                 if (nr >= initiativeOrder.length) break;
-                let token = initiativeOrder[nr].token;
+                let token = (compatibleCore("0.8.1")) ? initiativeOrder[i].token.data : initiativeOrder[i].token;
                 let color;
-
-                if (token.disposition == 1) color = 87;
-                else if (token.disposition == 0) color = 74;
-                else if (token.disposition == -1) color = 72;
+                const disposition = token.disposition;
+                if (disposition == 1) color = 87;
+                else if (disposition == 0) color = 74;
+                else if (disposition == -1) color = 72;
                 
                 let type = 0;
-                if (combat.started && token._id == combat.combatant.tokenId) type = 2;
+                const currentCombatantId = (compatibleCore("0.8.1")) ? combat.combatant.token.id : combat.combatant.tokenId;
+                if (combat.started && token.id == currentCombatantId) type = 2;
                 let j = i;
                 if (i>7) j = i-18;
                 if (j>15) j = i-28;
