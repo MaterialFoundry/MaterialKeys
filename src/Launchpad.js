@@ -1,18 +1,21 @@
 import {moduleName,playlistControl,soundboard,visualFx,combatTracker,macroBoard,sendWS} from "../MaterialKeys.js";
 import {getColor} from "./misc.js";
+import {setEmulatorLED} from "./forms/emulator.js";
 
 export class Launchpad{
     constructor() {
-        this.keyMode = 8;
+        this.keyMode = 0;
         this.ledBufferColor = [];
         this.ledBufferColor2 = [];
         this.ledBufferColor3 = [];
-        this.ledBufferType = []
+        this.ledBufferType = [];
+        this.ledBufferName = [];
         for (let i=0; i<100; i++){
             this.ledBufferColor[i] = 0;
             this.ledBufferColor2[i] = 0;
             this.ledBufferColor3[i] = 0;
             this.ledBufferType[i] = 0;
+            this.ledBufferName[i] = '';
         }
         this.colorPickerActive = false;
         this.colorPickerSel = 0;
@@ -43,19 +46,19 @@ export class Launchpad{
             }
             return;
         }
-
+        
         //Set keymode
         if (key % 10 == 9){
             if (state == 0) return;
             this.setMode(Math.floor(key/10));
         }
         //Macro board
-        else if (this.keyMode == 2){
+        else if (Math.floor(this.keyMode/10) == 2){
             if (state == 0) return;
             macroBoard.keyPress(key);
         }
         //Audio Fx soudboard
-        else if (this.keyMode == 8){
+        else if (Math.floor(this.keyMode/10) == 8){
             soundboard.keyPress(key,state);
         }
         //Playlist soundboard
@@ -85,7 +88,8 @@ export class Launchpad{
         }
     }
 
-    setMode(mode){
+    setMode(mode,iterate=true){
+        if (mode > 10) mode = Math.floor(mode/10);
         this.setMainLEDs(0,0);
         /*
          * No function yet on 1
@@ -97,8 +101,18 @@ export class Launchpad{
          * Macro board
          */
         if (mode == 2){
-            this.keyMode = mode;
-            this.setControlKeys(mode,87,0);
+            if (Math.floor(this.keyMode/10) != 2 || iterate == false) this.keyMode = 20;
+            else this.keyMode++;
+
+            const maxMacros = game.settings.get('MaterialKeys','macroSettings').macros.length;
+            if (this.keyMode > 19 + Math.ceil(maxMacros/64) || this.keyMode > 23) this.keyMode = 20;
+            let color;
+            if (this.keyMode == 20) color = 87;
+            else if (this.keyMode == 21) color = 79;
+            else if (this.keyMode == 22) color = 53;
+            else if (this.keyMode == 23) color = 74;
+            this.setControlKeys(mode,color,0);
+
             macroBoard.update();
         }
         /*
@@ -177,8 +191,17 @@ export class Launchpad{
          * Audio Fx soundboard
          */
         else if (mode == 8){
-            this.keyMode = mode;
-            this.setControlKeys(mode,87,0);
+            if (Math.floor(this.keyMode/10) != 8 || iterate == false) this.keyMode = 80;
+            else this.keyMode++;
+
+            const maxSounds = game.settings.get(moduleName,'soundboardSettings').volume.length;
+            if (this.keyMode > 79 + Math.ceil(maxSounds/64) || this.keyMode > 83) this.keyMode = 80;
+            let color;
+            if (this.keyMode == 80) color = 87;
+            else if (this.keyMode == 81) color = 79;
+            else if (this.keyMode == 82) color = 53;
+            else if (this.keyMode == 83) color = 74;
+            this.setControlKeys(mode,color,0);
             soundboard.update();
         }
         this.updateLEDs();
@@ -191,6 +214,7 @@ export class Launchpad{
             msg += i+","+this.ledBufferType[i]+","+this.ledBufferColor[i];
             if (this.ledBufferType[i] == 1) msg += ","+this.ledBufferColor2[i];
             else if (this.ledBufferType[i] == 3) msg += ","+this.ledBufferColor2[i]+","+this.ledBufferColor3[i];
+            setEmulatorLED(i,this.ledBufferType[i],this.ledBufferColor[i],this.ledBufferColor2[i],this.ledBufferColor3[i],this.ledBufferName[i])
         }
         const data = {
             target: "MIDI",
@@ -200,28 +224,31 @@ export class Launchpad{
         sendWS(JSON.stringify(data));
     }
     
-    setLED(led,type,color,color2=0,color3=0){
+    setLED(led,type,color,color2=0,color3=0,name=""){
         this.ledBufferColor[led] = color;
         this.ledBufferColor2[led] = color2;
         this.ledBufferColor3[led] = color3;
         this.ledBufferType[led] = type;
+        this.ledBufferName[led] = name;
     }
     
-    setMainLEDs(color,type){
+    setMainLEDs(color,type,name=""){
         for (let i=11; i<99; i++) {
             if (i % 10 == 9) continue;
             this.ledBufferColor[i] = color;
             this.ledBufferType[i] = type;
+            this.ledBufferName[i] = name;
         }
     }
     
-    setControlKeys(keyMode,color,type){
+    setControlKeys(keyMode,color,type,name=""){
         for (let i=0; i<8; i++) {
             const led = i*10+19;
             let newColor = 0;
             if (i == keyMode-1) newColor = color; 
             this.ledBufferColor[led] = newColor;
             this.ledBufferType[led] = type;
+            this.ledBufferName[led] = name;
         }
     }
     
@@ -313,7 +340,7 @@ export class Launchpad{
             let settings = game.settings.get(moduleName,'macroSettings');
             settings.color[this.colorPickerKey-1] = value;
             await game.settings.set(moduleName,'macroSettings',settings);
-            this.setMode(this.keyMode);
+            this.setMode(this.keyMode,false);
         }
         
         else if (document.getElementById("soundboard-config") != null) {
@@ -335,7 +362,7 @@ export class Launchpad{
                 await game.settings.set(moduleName,'soundboardSettings',settings);
                 soundboard.update();
             }
-            this.setMode(this.keyMode);
+            this.setMode(this.keyMode,false);
         }
         else if (document.getElementById("playlist-config") != null) {
             if (this.colorPickerMode == 0){
@@ -357,7 +384,7 @@ export class Launchpad{
                 playlistControl.playlistUpdate();
             }
             if (Math.floor(this.keyMode/10) == 7) this.keyMode = 7;
-            this.setMode(this.keyMode);
+            this.setMode(this.keyMode,false);
         }
     }
 }

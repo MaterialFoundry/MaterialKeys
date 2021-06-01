@@ -1,4 +1,27 @@
 # Changelog Material Keys Module
+### v1.2.5 - 02-06-2021
+Fixes:
+<ul>
+<li>Fixed compatibility issues with Foundry 0.8.6</li>
+</ul>
+
+Additions:
+<ul>
+<li>Added a 'Stop All' button to the soundboard (topleft key)</li>
+<li>Added a Launchpad emulator (under Game Settings) that replaces the Soundboard and Macro cheat sheets. It can run parallel to a real Launchpad, or it can be used to use MK without hardware Launchpad. It displays additional info, such as sound/macro/playlist names</li>
+<li>Added a 'Clear Page' and 'Clear All' button to the soundboard and macroboard configuration</li>
+<li>Added import and export buttons to the soundboard and macroboard configuration (only imports/exports metadata, not the actual audio files or the macros)</li>
+<li>The number of connection error messages you will get is now configurable in the module settings</li>
+<li></li>
+</ul>
+
+Other:
+<ul>
+<li>Major change to the soundboard and macroboard configuration. It is now displayed as pages of 16 sounds or 32 macros each, you can browse through the pages using the arrow keys at the top.</li>
+<li>The amount of sounds and macros you can have in the soundboard/macroboard has been expanded to 256 for each, giving 4 full pages/screens.</li>
+</ul>
+
+
 ### v1.2.4 - 24-04-2021
 <ul>
 <li>Made compatible with Foundry 0.8.1</li>

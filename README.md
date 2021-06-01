@@ -1,15 +1,15 @@
 # Material Keys
-Material Keys is a <a href="https://foundryvtt.com/">Foundry VTT</a> module that allows you to control various features of Foundry using a Novation Launchpad Mini Mk3. The Launchpad is a MIDI controller, that has 80 physical keys, each with an RGB LED.<br>
+Material Keys is a <a href="https://foundryvtt.com/">Foundry VTT</a> module that allows you to control various features of Foundry using a Novation Launchpad Mini Mk3 or through the built-in <a href="https://github.com/CDeenen/MaterialKeys#emulator">emulator</a>. The Launchpad is a MIDI controller, that has 80 physical keys, each with an RGB LED.<br>
 <br>
 Material Keys currently has 7 different functions:<br>
 <ul>
-<li><a href="https://github.com/CDeenen/MaterialKeys#audio-effects-soundboard">Audio Effects Soundboard</a></li>
+<li><a href="https://github.com/CDeenen/MaterialKeys#soundboard">Soundboard</a></li>
 <li><a href="https://github.com/CDeenen/MaterialKeys#playlist-control">Playlist Control</a></li>
 <li><a href="https://github.com/CDeenen/MaterialKeys#playlist-volume-control">Playlist Volume Control</a></li>
 <li><a href="https://github.com/CDeenen/MaterialKeys#visual-effects-control">Visual Effects Control</a></li>
 <li><a href="https://github.com/CDeenen/MaterialKeys#combat-tracker">Combat Tracker</a></li>
 <li><a href="https://github.com/CDeenen/MaterialKeys#token-health-tracker">Token Health Tracker</a></li>
-<li><a href="https://github.com/CDeenen/MaterialKeys#macro-board">Macro Board</a></li>
+<li><a href="https://github.com/CDeenen/MaterialKeys#macroboard">Macroboard</a></li>
 </ul>
 Each of these functions are discussed in detail below.<br>
 <br>
@@ -49,23 +49,31 @@ Below those buttons, you will find the following settings:<br>
         you're using for Foundry, this can be localhost:3001). This is not necessarily the IP address of Foundry! It is the IP 
         address of the computer that's running Material Server. The default value will work for 99% of people, only change it if 
         you know what you're doing. More info on Material Server can be found <a href="https://github.com/CDeenen/MaterialServer/blob/master/README.md">here</a></li>
+    <li><b>Number of Connection Warnings</b> - Sets the number of times you will get a warning when Material Deck cannot connect to Material Server. Will be unlimited if set to 0.</li>
 </ul>
 
 <img src="https://github.com/CDeenen/MaterialKeys/blob/master/img/ModuleSettings.png" width="500">
 
 # Using Material Keys
 
-## Audio Effects Soundboard
-Using the Audio Effects Soundboard, you can easily play audio tracks.<br>
+## Soundboard
+Using the Soundboard, you can easily play audio tracks.<br>
 You could, for example, set up some keys to play battle effects, such as clashing swords, arrow hits, or explosions. Another thing you could do is to create an atmosphere, by setting some keys to play, for example, weather sounds.<br>
-You can enter the Audio Effects Soundboard by pressing the first Function key from the top.<br>
+You can enter the Soundboard by pressing the first Function key from the top.<br>
 Once you've set up the soundboard, pressing a key will play the pre-set sound and change the LED to indicate the sound is playing. Pressing the key again will stop the sound.<br>
+<br>
+The red button on the top left (left-most Control key) will stop all currently playing sounds.
+<br>
 
 ### Soundboard Configuration
-The Audio Effects Soundboard is set-up in the Soundboard Configuration screen, which can be found in the module settings.<br>
-In the top right, you set the playlist from which you will select the sounds. Once you've done that you can configure each individual key. The rest of the Soundboard Configuration screen is divided into 64 boxes, each representing a key, ordered as you find them on the Launchpad (For example, Sound 1 corresponds with the top left key).<br>
+The Soundboard is set-up in the Soundboard Configuration screen, which can be found in the module settings.<br>
+The screen is divided into boxes, each labeled 'Sound #', where each represents a single sound and its settings. This screen will be refered to as a page.
+By pressing the arrows at the top right and top left, you can go to the next or previous page. Sound 1 is the top left main key, Sound 2 is the one to the right of that, etc.<br>
+You can set up a total of 256 sounds. Since there are only 64 keys on the Launchpad, you have to access the next 64 sounds by pressing the first Function key from the top.
+<br>
+For each sound there are multiple options:
 <ul>
-<li><b>Name:</b> (Optionally) set a name for the sound. This is only used in the 'Soundboard Cheat Sheet' (see below).</li>
+<li><b>Name:</b> (Optional) Set a name for the sound. This is only used in the emulator (see below).</li>
 <li><b>Playlist:</b> Sets the playlist from which you want to select a sound. If you select 'File Picker', a file picker will appear instead of the sound selection drop-down menu.</li>
 <li><b>Sound:</b> This is either a drop-down menu where you can select a sound from the selected playlist, or a file picker.
     When using the file picker, it is possible to use wildcard names, this means that you can randomly play a sound from a selection. To do this, navigate to the folder that 
@@ -78,17 +86,18 @@ In the top right, you set the playlist from which you will select the sounds. On
 <li><b>Playback:</b> Sets the playback mode. The sound can either play once ('Once'), be played on repeat ('Repeat'), or only be played as long as the key is pressed ('Hold').</li>
 <li><b>Volume:</b> Sets the playback volume. This volume is relative to the 'Interface' volume set in the 'Audio Playlists' tab in the Foundry sidebar.</li>
 </ul>
+<br>
+At the bottom you have the following buttons:
+<ul>
+    <li><b>Clear Page</b> - Clears all the sounds on the current page. Please note that this is irreversible.</li>
+    <li><b>Clear All</b> - Clears all the sounds. Please note that this is irreversible.</li>
+    <li><b>Import</b> - Import the soundboard from a file. This will override your current soundboard, and is irreversible.</li>
+    <li><b>Export</b> - Export your soundboard to a file.</li>
+</ul>
+When importing and exporting, you only import/export the metadata, not the actual audio files. This means that you need to have the same audio files in the same relative location in both the source and target Foundry client,
+or you might run into issues.
 
 <img src="https://github.com/CDeenen/MaterialKeys/blob/master/img/SoundboardConfiguration.png" width="1000">
-
-### Soundboard Cheat Sheet
-In the 'Game Settings' tab in the sidebar you'll find the 'Soundboard Cheat Sheet' button. This opens a grid with 64 buttons that represents the Launchpad.<br>
-This cheat sheet gives a quick overview of the sounds that have been set up, with their name and color.<br>
-<br>
-Besides being an easy way to remember what sounds you set to which key, you can also trigger sounds from the cheat sheet. Simply press one of the buttons on the cheat sheet.<br>
-This also works when Material Keys is disabled in the module settings, so you could use this when you have no Launchpad available.
-
-<img src="https://github.com/CDeenen/MaterialKeys/blob/master/img/SoundboardCheatSheet.png" width="500">
 
 ### Color Selection
 The LED color is represented by a number. This number corresponds with a factory programmed color, as can be seen in the image below. Besides filling in a number, you could also press the palette button next to the number field, which allows the Launchpad to display all the available colors. There are 2 groups of 64 colors, and by pressing the fading green function key (rightmost key), you can switch between the groups. The currently selected color will be fading, and pressing a key will send the color of that key to the Soundboard Configuration screen.<br>
@@ -193,33 +202,49 @@ If there are more than 8 tokens in the initiative tracker, you can press the sam
 
 <img src="https://github.com/CDeenen/MaterialKeys/blob/master/img/HPTracker.jpg" width="500">
 
-## Macro Board
-The macro board allows you to trigger macro's. You can use chat or script macro's, and when you have <a href="https://foundryvtt.com/packages/furnace/">The Furnace</a> installed, you can use advanced macro's with arguments.<br>
-You can enter the Macro Board by pressing the 7th function button from the top.<br>
-Once you've set up the macro board, pressing a key will run the pre-set macro.<br>
+## Macroboard
+The macroboard allows you to trigger macro's. You can use chat or script macro's, and when you have <a href="https://foundryvtt.com/packages/furnace/">The Furnace</a> installed, you can use advanced macros with arguments.<br>
+You can enter the Macroboard by pressing the 7th function button from the top.<br>
+Once you've set up the macroboard, pressing a key will trigger the pre-set macro.<br>
+        <br>
 
-### Macro Board Configuration
-The macro board configuration is similar to the audio effects soundboard. You can access it from the module settings screen, by pressing the Macro Configuration button.<br>
-The Macro Configuration screen is divided into 64 boxes, each representing a key, ordered as you find them on the Launchpad (For example, Sound 81 corresponds with the top left key).<br>
+### Macroboard Configuration
+The macroboard is set-up in the Macro Configuration screen, which can be found in the module settings.<br>
+The screen is divided into boxes, each labeled 'Macro #', where each represents a single sound and its settings. This screen will be refered to as a page.
+By pressing the arrows at the top right and top left, you can go to the next or previous page. Macro 1 is the top left main key, Macro 2 is the one to the right of that, etc.<br>
+You can set up a total of 256 macros. Since there are only 64 keys on the Launchpad, you have to access the next 64 macros by pressing the 7th Function key from the top.
+<br>
+For each sound there are multiple options:
 <ul>
 <li><b>Macro:</b> Using the drop-down menu you can select the desired macro</li>
 <li><b>Furnace Arguments:</b> (The Furnace required) Here you can enter arguments for Furnace macro's. Normally, to run a Furnace macro, you'd call "/my-macro-name argument1 argument2 argument3", in this box, you only have to enter "argument1 argument2 argument3". Please refer to the Furnace documentation for more info on using Furnace macro's.</li>
 <li><b>Color:</b> This sets the color of the corresponding macro key. See the Soundboard section for information on what the color number represents</li>
 </ul>
+<br>
+At the bottom you have the following buttons:
+<ul>
+    <li><b>Clear Page</b> - Clears all the macros on the current page. Please note that this is irreversible.</li>
+    <li><b>Clear All</b> - Clears all the macros. Please note that this is irreversible.</li>
+    <li><b>Import</b> - Import the macroboard from a file. This will override your current macroboard, and is irreversible.</li>
+    <li><b>Export</b> - Export your macroboard to a file.</li>
+</ul>
+When importing and exporting, you only import/export the metadata, not the actual macros. This means that you need to have the same macros in the same relative location in both the source and target Foundry client,
+or you might run into issues.
+<br>
 
 <img src="https://github.com/CDeenen/MaterialKeys/blob/master/img/MacroConfiguration.png" width="1000">
 
-### Macro Cheat Sheet
-In the 'Game Settings' tab in the sidebar you'll find the 'Macro Cheat Sheet' button. This opens a grid with 64 buttons that represents the Launchpad.<br>
-This cheat sheet gives a quick overview of the macros that have been set up, with their name and color.<br>
+## Emulator
+Material Keys has a built-in Launchpad emulator. This emulator has the same buttons as a Launchpad Mini or Launchpad X. It mirrors what is displayed on your physical Launchpad (if there is any connected),
+and the buttons can be pressed as if it were a real Launchpad. The emulator does show some extra information, such as sound/macro/playlist/token names. It can be useful as a quick reference, in case you have forgotten
+what sounds/playlists/macros you have assigned to the launchpad.<br>
 <br>
-Besides being an easy way to remember what macros you set to which key, you can also trigger macros from the cheat sheet. Simply press one of the buttons on the cheat sheet.<br>
-This also works when Material Keys is disabled in the module settings, so you could use this when you have no Launchpad available.
+You can access the emulator in the sidebar, under the 'Game Settings'.
 
-<img src="https://github.com/CDeenen/MaterialKeys/blob/master/img/MacroCheatSheet.png" width="350">
+<img src="https://github.com/CDeenen/MaterialKeys/blob/master/img/Emulator.png" width="500">
 
 # Software Versions & Module Incompatibilities
-<b>Foundry VTT:</b> Tested on 0.7.7 (not fully compatible with 0.6.6)<br>
+<b>Foundry VTT:</b> Tested on 0.7.7 - 0.8.6 (not fully compatible with 0.6.6)<br>
 <b>Module Incompatibilities:</b> None known<br>
 
 # Feedback

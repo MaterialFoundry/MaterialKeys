@@ -118,7 +118,10 @@ export class VisualFx{
 
         if (launchpad.keyMode == 5){
             if (fxmasterEnabled){
+                launchpad.setLED(49,1,87,0,0,game.i18n.localize("MaterialKeys.Emulator.Overlays"));
+                launchpad.setLED(39,2,72,0,0,game.i18n.localize("MaterialKeys.Emulator.WeatherFilters"));
                 const fxmaster = canvas.scene.getFlag("fxmaster", "filters");
+                launchpad.setLED(93,0,0,0,0,game.i18n.localize("MaterialKeys.Emulator.Colorize"));
                 let red = 1;
                 let green = 1;
                 let blue = 1;
@@ -136,7 +139,7 @@ export class VisualFx{
                     }
                 }
                 launchpad.setLED(95,3,Math.ceil(red*127),Math.ceil(green*127),Math.ceil(blue*127));
-                launchpad.setLED(96,3,Math.ceil(red*127),Math.ceil(green*127),Math.ceil(blue*127));
+                launchpad.setLED(96,3,Math.ceil(red*127),Math.ceil(green*127),Math.ceil(blue*127),game.i18n.localize("MaterialKeys.Emulator.Clear"));
                 launchpad.setLED(97,3,Math.ceil(red*127),Math.ceil(green*127),Math.ceil(blue*127));
                 
                 red = Math.ceil(red*8);
@@ -168,10 +171,12 @@ export class VisualFx{
     
                 //Colorize effects
                 const colorizeLedColor = [53,45,37,27,21,13,9,5];
+                const colorizeLabel = ['Magenta','DBlue','LBlue','DGreen','LGreen','Yellow','Orange','Red'];
                 for (let i=1; i<9; i++){
                     const state = (this.colorizeState == i) ? 2 : 0;
                     const led = 10*i + 3;
-                    launchpad.setLED(led,state,colorizeLedColor[i-1]);
+                    const txt = game.i18n.localize(`MaterialKeys.Emulator.Colors.${colorizeLabel[i-1]}`)
+                    launchpad.setLED(led,state,colorizeLedColor[i-1],0,0,txt);
                 }
             }
             /*
@@ -179,16 +184,20 @@ export class VisualFx{
             */
             const darkness = Math.floor(7-canvas.scene.data.darkness*7);
             const darknessColor = [7,17,27,47,67,87,107,127];
+            launchpad.setLED(91,0,0,0,0,game.i18n.localize("MaterialKeys.Emulator.Darkness"));
             for (let i=0; i<8; i++){
+                const txt = `${Math.ceil(i*100/7)}%`;
                 let color = darknessColor[i];
                 if (darkness < i) 
                     color = 0;
                 const led = 11 + 10*i;
-                launchpad.setLED(led,3,color,color,color);
+                launchpad.setLED(led,3,color,color,color,txt);
             }
         }
 
         else if (launchpad.keyMode == 51 && fxmasterEnabled){
+            launchpad.setLED(49,2,87,0,0,game.i18n.localize("MaterialKeys.Emulator.Overlays"));
+            launchpad.setLED(39,1,72,0,0,game.i18n.localize("MaterialKeys.Emulator.WeatherFilters"));
             //Weather effects
             for (let i=0; i<11; i++)
                 this.visualFxState[i] = false;
@@ -212,8 +221,13 @@ export class VisualFx{
                     else if (weather.label === 'Topdown Rain') this.visualFxState[12] = true;
                 }
             }
+            
             //VisualFx leds
             const fxLedColor = [127,79,90,90,3,71,84,79,81,99,97,1,79];
+            const weatherLabel = [CONFIG.weatherEffects.leaves.label,CONFIG.weatherEffects.rain.label,CONFIG.weatherEffects.snow.label,CONFIG.weatherEffects.snowstorm.label
+                ,CONFIG.weatherEffects.bubbles.label,CONFIG.weatherEffects.clouds.label,CONFIG.weatherEffects.embers.label,CONFIG.weatherEffects.rainsimple.label,
+                CONFIG.weatherEffects.stars.label,CONFIG.weatherEffects.crows.label,CONFIG.weatherEffects.bats.label,CONFIG.weatherEffects.fog.label,
+                CONFIG.weatherEffects.raintop.label]
             let stopState = 0;
             for (let i=0; i<13; i++){
                 const state = this.visualFxState[i] ? 2 : 0;
@@ -222,10 +236,10 @@ export class VisualFx{
                 if (i < 5) led = 71-10*i;
                 else if (i < 9) led = 72-10*(i-5);
                 else led = 73-10*(i-9);
-                launchpad.setLED(led,state,fxLedColor[i]);
+                launchpad.setLED(led,state,fxLedColor[i],0,0,game.i18n.localize(weatherLabel[i]));
             }
             launchpad.setLED(11,stopState,72);
-            launchpad.setLED(12,stopState,72);
+            launchpad.setLED(12,stopState,72,0,0,game.i18n.localize("MaterialKeys.Emulator.Clear"));
             launchpad.setLED(13,stopState,72);
             
             //Filters
@@ -243,14 +257,18 @@ export class VisualFx{
                 }
             }
             stopState = 0;
-            const filterLedColor = [79,71,1,3]
+            const filterLedColor = [79,71,1,3];
+            const filterLabels = ["CONTROLS.Underwater","CONTROLS.Predator","CONTROLS.OldFilm","CONTROLS.Bloom"]
             for (let i=0; i<4; i++){
                 let mode = 0;
                 if (this.visualFxFilters[i]) mode = 2;
                 if (mode) stopState = 2;
-                launchpad.setLED(65-10*i,mode,filterLedColor[i]);
+                launchpad.setLED(65-10*i,mode,filterLedColor[i],0,0,game.i18n.localize(filterLabels[i]));
             }
-            launchpad.setLED(15,stopState,72);
+            launchpad.setLED(15,stopState,72,0,0,game.i18n.localize("MaterialKeys.Emulator.Clear"));
+
+            launchpad.setLED(92,0,0,0,0,game.i18n.localize("MaterialKeys.Emulator.WeatherEffects"));
+            launchpad.setLED(95,0,0,0,0,game.i18n.localize("MaterialKeys.Emulator.Filters"));
         }
         launchpad.updateLEDs();  
     }

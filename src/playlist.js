@@ -29,19 +29,24 @@ export class PlaylistControl{
         if (Math.floor(launchpad.keyMode/10) != 7) return;
         let color;
         let type;
+        let txt;
         const maxTracks = this.getMaxTracks();
         type = (launchpad.keyMode == 70)? 1 : 2;
         color = (maxTracks>8)? 87 : 0;
-        launchpad.setLED(69,type,color);
+        txt = (maxTracks>8)? `${game.i18n.localize("MaterialKeys.Emulator.Page")} 1` : '';
+        launchpad.setLED(69,type,color,0,0,txt);
         type = (launchpad.keyMode == 71)? 1 : 2;
         color = (maxTracks>8)? 79 : 0;
-        launchpad.setLED(59,type,color);
+        txt = (maxTracks>8)? `${game.i18n.localize("MaterialKeys.Emulator.Page")} 2` : '';
+        launchpad.setLED(59,type,color,0,0,txt);
         type = (launchpad.keyMode == 72)? 1 : 2;
         color = (maxTracks>16)? 53 : 0;
-        launchpad.setLED(49,type,color);
+        txt = (maxTracks>16)? `${game.i18n.localize("MaterialKeys.Emulator.Page")} 3` : '';
+        launchpad.setLED(49,type,color,0,0,txt);
         type = (launchpad.keyMode == 73)? 1 : 2;
         color = (maxTracks>24)? 74 : 0;
-        launchpad.setLED(39,type,color);
+        txt = (maxTracks>24)? `${game.i18n.localize("MaterialKeys.Emulator.Page")} 4` : '';
+        launchpad.setLED(39,type,color,0,0,txt);
 
         const screen = launchpad.keyMode - 70;
 
@@ -60,19 +65,20 @@ export class PlaylistControl{
                 for (let j=0; j<8; j++){
                     if (tracksRemaining > j){
                         const track = (compatibleCore("0.8.1")) ? playlist.sounds.contents[j+8*screen] : playlist.data.sounds[j+8*screen];
-
+                        const txt = track.name;
                         led = 81-10*j+i;
                         if (track.playing)
-                            launchpad.setLED(led,0,colorOn);
+                            launchpad.setLED(led,0,colorOn,0,0,txt);
                         else
-                            launchpad.setLED(led,0,colorOff);
+                            launchpad.setLED(led,0,colorOff,0,0,txt);
                     }
                 }
                 led = 91+i;
+                const txt = playlist.name;
                 if (playlist.playing == true)
-                    launchpad.setLED(led,0,colorOn);
+                    launchpad.setLED(led,0,colorOn,0,0,txt);
                 else
-                    launchpad.setLED(led,0,colorOff);
+                    launchpad.setLED(led,0,colorOff,0,0,txt);
             }
         }
         launchpad.updateLEDs();
@@ -155,19 +161,24 @@ export class PlaylistControl{
         if (Math.floor(launchpad.keyMode/10) != 6) return;
         let color;
         let type;
+        let txt;
         const maxTracks = this.getMaxTracks();
         type = (launchpad.keyMode == 60)? 1 : 2;
         color = (maxTracks>8)? 87 : 0;
-        launchpad.setLED(59,type,color);
+        txt = (maxTracks>8)? `${game.i18n.localize("MaterialKeys.Emulator.Page")} 1` : '';
+        launchpad.setLED(59,type,color,0,0,txt);
         type = (launchpad.keyMode == 61)? 1 : 2;
         color = (maxTracks>8)? 79 : 0;
-        launchpad.setLED(49,type,color);
+        txt = (maxTracks>8)? `${game.i18n.localize("MaterialKeys.Emulator.Page")} 2` : '';
+        launchpad.setLED(49,type,color,0,0,txt);
         type = (launchpad.keyMode == 62)? 1 : 2;
         color = (maxTracks>16)? 53 : 0;
-        launchpad.setLED(39,type,color);
+        txt = (maxTracks>16)? `${game.i18n.localize("MaterialKeys.Emulator.Page")} 3` : '';
+        launchpad.setLED(39,type,color,0,0,txt);
         type = (launchpad.keyMode == 63)? 1 : 2;
         color = (maxTracks>24)? 74 : 0;
-        launchpad.setLED(29,type,color);
+        txt = (maxTracks>24)? `${game.i18n.localize("MaterialKeys.Emulator.Page")} 4` : '';
+        launchpad.setLED(29,type,color,0,0,txt);
 
         let settings = game.settings.get(moduleName,'playlists');
         const colorOn = settings.colorOn ? settings.colorOn : 87;
@@ -178,11 +189,12 @@ export class PlaylistControl{
             if (playlist != undefined){
                 const led = 91+i;
                 let mode = 0;
+                const txt = playlist.name;
                 if (this.playlistVolumeSelector == i) mode = 2;
                 if (playlist.playing == true)
-                    launchpad.setLED(led,mode,colorOn);
+                    launchpad.setLED(led,mode,colorOn,0,0,txt);
                 else
-                    launchpad.setLED(led,mode,colorOff);  
+                    launchpad.setLED(led,mode,colorOff,0,0,txt);  
             } 
         }
         
@@ -195,12 +207,15 @@ export class PlaylistControl{
                 const trackVolume = (compatibleCore("0.8.1")) ? track.volume/game.settings.get("core", "globalPlaylistVolume") : track.volume;
                 const volume = (compatibleCore("0.8.1")) ? Math.ceil(AudioHelper.volumeToInput(trackVolume)*7) : AudioHelper.volumeToInput(trackVolume)*7;
                 let color = colorOff;
+                let txt = '';
                 if (track.playing) color = colorOn;
                 for (let j=0; j<8; j++){
                     let led = 11+10*j+i;
                     if (j>volume) 
                         color = 0; 
-                    launchpad.setLED(led,0,color);
+                    if (j == 0) txt = track.name;
+                    else txt = `${Math.ceil(j*100/7)}%`;
+                    launchpad.setLED(led,0,color,0,0,txt);
                 }
             }
         }

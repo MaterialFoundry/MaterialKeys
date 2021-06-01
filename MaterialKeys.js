@@ -5,7 +5,8 @@ import {SoundboardControl} from "./src/soundboard.js";
 import {VisualFx} from "./src/visualFx.js";
 import {CombatTracker} from "./src/combatTracker.js";
 import {MacroBoard} from "./src/macroBoard.js";
-import {soundboardCheatSheet,macroCheatSheet} from "./src/misc.js";
+import {compatibleCore,soundboardCheatSheet,macroCheatSheet} from "./src/misc.js";
+import {newEmulator} from "./src/forms/emulator.js";
 export const moduleName = "MaterialKeys";
 export const launchpad = new Launchpad();
 export const playlistControl = new PlaylistControl();
@@ -23,7 +24,9 @@ let WSconnected = false;
 //Other global variables
 export let enableModule;
 let activeSounds = [];
-        
+
+//CONFIG.debug.hooks = true
+
 /**
  * Analyzes the message received from the IR tracker.
  * If coordinates are received, scale the coordinates to the in-game coordinate system, find the token closest to those coordinates, and either take control of a new token or update the position of the image of that token
@@ -46,7 +49,7 @@ async function analyzeWSmessage(msg){
         else {
             ui.notifications.notify("Material Keys: "+game.i18n.localize("MaterialKeys.Notifications.MidiConnect")+" "+connectedDevice);
             launchpad.setBrightness(game.settings.get(moduleName,'brightness'));
-            launchpad.setMode(launchpad.keyMode);
+            launchpad.setMode(8,false);
         }
     }
 };
@@ -97,41 +100,11 @@ Hooks.once('ready', ()=>{
     enableModule = (game.settings.get(moduleName,'Enable') && game.user.isGM) ? true : false;
     if (enableModule) 
         startWebsocket();
-    
-    for (let i=0; i<64; i++)
-            activeSounds[i] = false;
 
     game.socket.on(`module.MaterialKeys`, (payload) =>{
         // console.log(payload);
         if (payload.msgType == "playSound") soundboard.playSound(payload.trackNr,payload.src,payload.play,payload.repeat,payload.volume); 
     });
-    if (game.user.isGM == false) return;
-    const soundBoardSettings = game.settings.get(moduleName,'soundboardSettings');
-    const macroSettings = game.settings.get(moduleName, 'macroSettings');
-    let array = [];
-    for (let i=0; i<64; i++) array[i] = "";
-    let arrayVolume = [];
-    for (let i=0; i<64; i++) arrayVolume[i] = "50";
-    let arrayZero = [];
-    for (let i=0; i<64; i++) arrayZero[i] = "0";
-
-    if (macroSettings.color == undefined){
-        game.settings.set(moduleName,'macroSettings',{
-            macros: array,
-            color: arrayZero
-        });
-    }
-    if (soundBoardSettings.colorOff == undefined){
-        game.settings.set(moduleName,'soundboardSettings',{
-            playlist: "",
-            sounds: array,
-            colorOn: arrayZero,
-            colorOff: arrayZero,
-            mode: arrayZero,
-            toggle: arrayZero,
-            volume: arrayVolume
-        });
-    }
 });
 
 Hooks.on('closeApplication', (form)=>{
@@ -149,9 +122,7 @@ Hooks.on("renderSettings", (app, html) => {
      * Create label and button in setup screen
      */
         const label = $(
-            `<div id="MaterialKeys">
-                    <h4>Material Keys</h4>
-                </div>
+            `<h2>Material Keys</h2>
                 `
         );
         const btnSoundboard = $(
@@ -165,10 +136,17 @@ Hooks.on("renderSettings", (app, html) => {
             </button>`
         );
 
-        const setupButton = html.find("button[data-action='setup']");
+        const btnEmulator = $(
+            `<button id="MaterialKeys_Emulator" data-action="MaterialKeys_Emulator" title="Material Keys: "+${game.i18n.localize("MaterialKeys.Emulator")}>
+                <i></i> ${game.i18n.localize("MaterialKeys.Emulator.Title")}
+            </button>`
+        );
+
+        const setupButton = compatibleCore('0.8.6') ? html.find("button[data-action='setup']") : html.find("div[id='settings-game']");
         setupButton.after(label);
-        label.after(btnMacroboard);
-        label.after(btnSoundboard);
+        //label.after(btnMacroboard);
+        //label.after(btnSoundboard);
+        label.after(btnEmulator);
         
     
         btnSoundboard.on("click", event => {
@@ -179,6 +157,10 @@ Hooks.on("renderSettings", (app, html) => {
         btnMacroboard.on("click", event => {
             let dialog = new macroCheatSheet();
             dialog.render(true)
+        });
+
+        btnEmulator.on("click", event => {
+            newEmulator();
         });
     });
 
@@ -201,13 +183,14 @@ function startWebsocket() {
     }
 
     ws.onopen = function() {
+        messageCount = 0;
         WSconnected = true;
         const msg = {
             target: "server",
             module: "MK"
         }
         sendWS(JSON.stringify(msg));
-        launchpad.setMode(8);
+        //launchpad.setMode(8);
         const address = game.settings.get(moduleName,'address');
         ui.notifications.info("Material Keys: "+game.i18n.localize("MaterialKeys.Notifications.WSConnect")+" "+address);
         wsOpen = true;
@@ -218,13 +201,23 @@ function startWebsocket() {
     clearInterval(wsInterval);
     wsInterval = setInterval(resetWS, 10000);
 }
-
+let messageCount = 0;
 /**
  * Try to reset the websocket if a connection is lost
  */
 function resetWS(){
-    if (wsOpen) ui.notifications.warn("Material Keys: "+game.i18n.localize("MaterialKeys.Notifications.WSDisconnect"));
-    else ui.notifications.warn("Material Keys: "+game.i18n.localize("MaterialKeys.Notifications.WSCantConnect"));
+    const maxMessages = game.settings.get(moduleName, 'nrOfConnMessages');
+    if (maxMessages == 0 || maxMessages > messageCount) {
+        messageCount++;
+        const countString = maxMessages == 0 ? "" : " (" + messageCount + "/" + maxMessages + ")";
+        if (wsOpen) {
+            ui.notifications.warn("Material Keys: "+game.i18n.localize("MaterialKeys.Notifications.WSDisconnect"));
+            wsOpen = false;
+            messageCount = 0;
+        }
+        else ui.notifications.warn("Material Keys: "+game.i18n.localize("MaterialKeys.Notifications.WSCantConnect") + countString);
+    }
+    
     WSconnected = false;
     startWebsocket();
 }

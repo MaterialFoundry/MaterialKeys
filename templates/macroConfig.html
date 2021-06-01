@@ -9,7 +9,24 @@
             padding:5px;
             height: {{height}}px;
         }
+        .navigation {
+            flex:1;
+            max-width: 8%;
+        }
     </style>
+
+    <div class="navigationDiv" style="width:100%; display:flex; flex-direction:row;">
+        <button type="button" class="navigation" id="navPrev" {{prevDisabled}}>
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <p style="width:84%; text-align:center; padding: 0px 0; font-size: 20px"><b>
+            {{localize "MaterialKeys.Macro"}}: {{macroRange}} {{localize "MaterialKeys.Of"}} {{totalMacros}}
+        </b></p>
+        <button type="button" class="navigation" id="navNext">
+            <i class="fas fa-arrow-right"></i>
+        </button>
+    </div>
+    <hr>
 
     {{#each macroData}}
         <div class="form-group" stype="width:100%">
@@ -22,13 +39,13 @@
                         <select name="macros" class="macros-select" id="macros{{this.iteration}}" default="" style="max-width:132px;">
                             {{#select this.macro}}
                                 <option value="">{{localize "MaterialKeys.None"}}</option>
-                                {{#each macros}}
+                                {{#each ../../macros}}
                                 <option value="{{this.id}}">{{this.name}}</option>
                                 {{/each}}
                             {{/select}}
                         </select>
                     </div>
-                    {{#if this.furnace}}
+                    {{#if ../../furnace}}
                         <label>{{localize "MaterialKeys.FurnaceArgs"}}</label>
                         <input type="text" name="args" id="args{{this.iteration}}" value="{{this.args}}">
                     {{/if}}
@@ -44,9 +61,20 @@
             {{/each}}
         </div>
     {{/each}}
-    <div style="text-align:left;">                    
-        <button type="clear all" name="clearAll" style="width:25%;">
-            <i class="far fa-delete"></i> {{localize "MaterialKeys.ClearAll"}}
+    <hr>
+    <div class="navigationDiv" style="width:100%; display:flex; flex-direction:row;">
+        <button type="button" class="navigation" id="clearPage">
+            <i></i>{{localize "MaterialKeys.ClearPage"}}
+        </button>
+        <button type="button" class="navigation" id="clearAll">
+            <i></i>{{localize "MaterialKeys.ClearAll"}}
+        </button>
+        <p style="width:68%;"></p>
+        <button type="button" class="navigation" id="import">
+            <i></i>{{localize "MaterialKeys.Import"}}
+        </button>
+        <button type="button" class="navigation" id="export">
+            <i></i>{{localize "MaterialKeys.Export"}}
         </button>
     </div>
 

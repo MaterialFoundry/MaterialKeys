@@ -1,0 +1,69 @@
+<form autocomplete="off" onsubmit="event.preventDefault()" style="background-color:black">
+    <style>
+        .box {
+            border: 0px solid black ;
+            border-radius: 0px ; 
+            width:70px;
+            min-width:70px;
+            max-width:70px;
+            height:100%;
+            padding: 2px; 
+        }
+
+        .mainKeys {
+            border-radius: 5px ; 
+            margin: 0 auto; 
+            margin-top: 3px;
+            word-break:break-word; 
+            overflow: hidden;
+            line-height: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+        }
+
+        .catLabel {
+            border: 0px solid black ;
+            word-wrap:break-word; 
+            line-height: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: left;
+            width: 60px;
+            height: 60px;
+            color: white;
+            font-size: 12px;
+            pointer-events: none;
+        }
+
+        .row {
+            display: flex;
+            flex-direction: row;
+            height: 70px;
+            width: 100%
+        }
+
+    </style>
+    
+    
+   
+        
+    {{#each keys}}
+    <div class="row">
+        {{#each this.row}}
+        <div class="box" style="background-color:{{this.background}};visibility:{{this.visible}}">         
+            <button class={{this.cls}} type="button" name="mainKeys" id="mainKeys{{this.iteration}}" style="background-color:{{this.color}};visibility:{{this.visible}}"> 
+                <i class="" id="label{{this.iteration}}"></i> {{this.name}}
+            </button>
+        </div>    
+        {{/each}}
+    </div>
+    {{/each}}
+        
+
+    
+</form>

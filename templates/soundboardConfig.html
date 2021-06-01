@@ -6,7 +6,24 @@
             width: 166px;
             height: 360px;
         }
+        .navigation {
+            flex:1;
+        }
     </style>
+
+    <div class="navigation" style="width:100%; display:flex; flex-direction:row;">
+        <button type="button" class="navigation" id="navPrev" {{prevDisabled}}>
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <p style="flex:15; text-align:center; padding: 0px 0; font-size: 20px"><b>
+            {{localize "MaterialKeys.Sounds"}}: {{soundRange}} {{localize "MaterialKeys.Of"}} {{totalSounds}}
+        </b></p>
+        <button type="button" class="navigation" id="navNext">
+            <i class="fas fa-arrow-right"></i>
+        </button>
+    </div>
+    <hr>
+
     {{#each soundData}}
         <div class="form-group" style="width:100%">
             {{#each this.dataThis}}
@@ -101,9 +118,20 @@
             {{/each}}
         </div>
     {{/each}}
-    <div style="text-align:left;">                    
-        <button type="clear all" name="clearAll" style="width:25%;">
-            <i class="far fa-delete"></i> {{localize "MaterialKeys.ClearAll"}}
+    <hr>
+    <div class="navigation" style="width:100%; display:flex; flex-direction:row;">
+        <button type="button" class="navigation" id="clearPage">
+            <i></i>{{localize "MaterialKeys.ClearPage"}}
+        </button>
+        <button type="button" class="navigation" id="clearAll">
+            <i></i>{{localize "MaterialKeys.ClearAll"}}
+        </button>
+        <p style="flex:15;"></p>
+        <button type="button" class="navigation" id="import">
+            <i></i>{{localize "MaterialKeys.Import"}}
+        </button>
+        <button type="button" class="navigation" id="export">
+            <i></i>{{localize "MaterialKeys.Export"}}
         </button>
     </div>
     

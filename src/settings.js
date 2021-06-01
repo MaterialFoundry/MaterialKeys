@@ -1,5 +1,7 @@
 import {moduleName,launchpad} from "../MaterialKeys.js";
-import { playlistConfigForm, soundboardConfigForm, macroConfigForm } from "./misc.js";
+import {macroConfigForm} from "./forms/macroForm.js";
+import {soundboardConfigForm} from "./forms/soundboardForm.js";
+import {playlistConfigForm} from "./forms/playlistForm.js";
 
 
 export const registerSettings = function() {
@@ -41,6 +43,17 @@ export const registerSettings = function() {
         default: "localhost:3001",
         type: String,
         onChange: x => window.location.reload()
+    });
+
+    game.settings.register(moduleName, 'nrOfConnMessages', {
+        name: "MaterialKeys.Sett.NrOfConnMessages",
+        hint: "MaterialKeys.Sett.NrOfConnMessagesHint",
+        default: 5,
+        type: Number,
+        scope: 'client',
+        range: { min: 0, max: 100, step: 1 },
+        config: true
+    
     });
 
     /*

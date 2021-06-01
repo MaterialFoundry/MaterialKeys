@@ -42,11 +42,10 @@ export class CombatTracker{
                     if (i>23) j = i-54;
                     if (i>31) break;
                     let led = 81+j;
-                    
                     if (initiativeOrder[i].defeated)
-                        launchpad.setLED(led,type,3);
+                        launchpad.setLED(led,type,3,0,0,token.name);
                     else
-                        launchpad.setLED(led,type,color);
+                        launchpad.setLED(led,type,color,0,0,token.name);
                 }
                 
                 this.combatantsLengthOld = combatants.length;
@@ -168,23 +167,29 @@ export class CombatTracker{
         let combatants;
         if (game.combat) {
             combatants = (compatibleCore("0.8.1")) ? game.combat.combatants.contents : game.combat.combatants;
-            hpTrackerPages = Math.ceil(combatants/8);
+            hpTrackerPages = Math.ceil(combatants.length/8);
         }
         
         let color;
         let type;
+        let txt;
+        
         type = (launchpad.keyMode == 31)? 1 : 2;
         color = (hpTrackerPages>1)? 87 : 0;
-        launchpad.setLED(79,type,color);
+        txt = (hpTrackerPages>1)? `${game.i18n.localize("MaterialKeys.Emulator.Page")} 1` : '';
+        launchpad.setLED(79,type,color,0,0,txt);
         type = (launchpad.keyMode == 32)? 1 : 2;
         color = (hpTrackerPages>1)? 79 : 0;
-        launchpad.setLED(69,type,color);
+        txt = (hpTrackerPages>1)? `${game.i18n.localize("MaterialKeys.Emulator.Page")} 2` : '';
+        launchpad.setLED(69,type,color,0,0,txt);
         type = (launchpad.keyMode == 33)? 1 : 2;
         color = (hpTrackerPages>2)? 53 : 0;
-        launchpad.setLED(59,type,color);
+        txt = (hpTrackerPages>2)? `${game.i18n.localize("MaterialKeys.Emulator.Page")} 3` : '';
+        launchpad.setLED(59,type,color,0,0,txt);
         type = (launchpad.keyMode == 34)? 1 : 2;
         color = (hpTrackerPages>3)? 74 : 0;
-        launchpad.setLED(49,type,color);
+        txt = (hpTrackerPages>3)? `${game.i18n.localize("MaterialKeys.Emulator.Page")} 4` : '';
+        launchpad.setLED(49,type,color,0,0,txt);
 
         let page = launchpad.keyMode % 10-1;
         
@@ -209,19 +214,22 @@ export class CombatTracker{
                 if (i>7) j = i-18;
                 if (j>15) j = i-28;
                 
-            
                 let led = 91+i;
 
-                if (initiativeOrder[nr].defeated)
-                    launchpad.setLED(led,type,3);
-                else
-                    launchpad.setLED(led,type,color);
-                
                 token = canvas.tokens.children[0].children.find(p => p.id == token._id);
-                let leds = 0;
-
                 let hp = token.actor.data.data.attributes.hp.value;
                 let hpMax = token.actor.data.data.attributes.hp.max;
+                if (hp == null) hp = 0;
+                if (hpMax == null) hpMax = 0;
+                const txt = `${token.name} - ${hp}/${hpMax}`;
+
+                if (initiativeOrder[nr].defeated)
+                    launchpad.setLED(led,type,3,0,0,txt);
+                else
+                    launchpad.setLED(led,type,color,0,0,txt);
+                
+                let leds = 0;
+
                 if (hp == 0 || initiativeOrder[nr].defeated) leds = 0;
                 else leds = Math.ceil(8*hp/hpMax);
 
@@ -229,7 +237,7 @@ export class CombatTracker{
                     let led = 11+10*j+i;
                     if (j>=leds) 
                         color = 0; 
-                    launchpad.setLED(led,type,color);
+                    launchpad.setLED(led,type,color,0,0,`${Math.ceil(j*100/7)}%`);
                 }
             }
             this.combatantsLengthOld = combatants.length;
