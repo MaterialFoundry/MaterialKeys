@@ -4,7 +4,7 @@ import {setEmulatorLED} from "./forms/emulator.js";
 
 export class Launchpad{
     constructor() {
-        this.keyMode = 0;
+        this.keyMode = 80;
         this.ledBufferColor = [];
         this.ledBufferColor2 = [];
         this.ledBufferColor3 = [];

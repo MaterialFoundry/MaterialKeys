@@ -8,7 +8,7 @@ let fadeArray = [];
 export async function newEmulator() {
     emulator = await new emulatorForm();
     await emulator.render(true);
-    //launchpad.setMode(launchpad.keyMode,false);
+    launchpad.setMode(launchpad.keyMode,false);
     setTimeout(function() {launchpad.updateLEDs(); }, 100);
     setInterval(function() {setEmulatorBlink() }, 250);
     setInterval(function() {setEmulatorFade() }, 40);
