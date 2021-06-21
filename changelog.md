@@ -1,4 +1,15 @@
 # Changelog Material Keys Module
+### v1.2.6 - 21-06-2021
+Fixes:
+<ul>
+<li>Fix issue where soundboard wouldn't be saved if the saved settings were empty</li>
+</ul>
+
+Other:
+<ul>
+<li>Confirmed compatibility with Foundry 0.8.7</li>
+</ul>
+
 ### v1.2.5 - 02-06-2021
 Fixes:
 <ul>

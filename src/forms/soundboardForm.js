@@ -149,6 +149,8 @@ export class soundboardConfigForm extends FormApplication {
             };
             soundData.push(data);
         }
+
+        game.settings.set(moduleName,'soundboardSettings',this.settings);
         
         return {
             soundData: soundData,
