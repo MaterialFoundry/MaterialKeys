@@ -1,5 +1,5 @@
 import {moduleName,enableModule,launchpad,macroBoard} from "../../MaterialKeys.js";
-import {compatibleCore, getColor} from "../misc.js";
+import {getColor} from "../misc.js";
 import {exportConfigForm} from "./exportForm.js";
 import {importConfigForm} from "./importForm.js";
 

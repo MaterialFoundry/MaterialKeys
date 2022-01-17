@@ -1,14 +1,18 @@
 import {moduleName,enableModule,launchpad,soundboard,macroBoard,playlistControl} from "../MaterialKeys.js";
 
+/*
 export function compatibleCore(compatibleVersion){
-    let coreVersion = game.data.version;
+    let coreVersion = game.version == undefined ? game.data.version : `0.${game.version}`;
     coreVersion = coreVersion.split(".");
     compatibleVersion = compatibleVersion.split(".");
     if (compatibleVersion[0] > coreVersion[0]) return false;
+    if (compatibleVersion[0] < coreVersion[0]) return true;
     if (compatibleVersion[1] > coreVersion[1]) return false;
+    if (compatibleVersion[1] < coreVersion[1]) return true;
     if (compatibleVersion[2] > coreVersion[2]) return false;
     return true;
-}
+  }
+  */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

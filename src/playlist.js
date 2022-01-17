@@ -1,5 +1,4 @@
 import {moduleName, launchpad} from "../MaterialKeys.js";
-import {compatibleCore} from "./misc.js";
 
 export class PlaylistControl{
     constructor(){
@@ -18,7 +17,7 @@ export class PlaylistControl{
         }
         else {
             const screen = launchpad.keyMode - 70;
-            const track = (compatibleCore("0.8.1")) ? playlist.sounds.contents[trackNr+8*screen] : playlist.data.sounds[trackNr+8*screen];
+            const track = playlist.sounds.contents[trackNr+8*screen];
             if (track != undefined)
                 this.playTrack(track,playlist,playlistNr);
         }
@@ -58,13 +57,13 @@ export class PlaylistControl{
             const playlist = this.getPlaylist(i);
             let led;
             if (playlist != undefined){
-                const nrOfTracks = (compatibleCore("0.8.1")) ? playlist.data.sounds.size : playlist.data.sounds.length;
+                const nrOfTracks = playlist.data.sounds.size;
                 let tracksRemaining = nrOfTracks - 8*screen;
                 if (tracksRemaining < 0) tracksRemaining = 0;
                 
                 for (let j=0; j<8; j++){
                     if (tracksRemaining > j){
-                        const track = (compatibleCore("0.8.1")) ? playlist.sounds.contents[j+8*screen] : playlist.data.sounds[j+8*screen];
+                        const track = playlist.sounds.contents[j+8*screen];
                         const txt = track.name;
                         led = 81-10*j+i;
                         if (track.playing)
@@ -111,9 +110,8 @@ export class PlaylistControl{
             }
             else if (mode == 2) await playlist.stopAll();
         }
-        if (compatibleCore("0.8.1") && play) await playlist.playSound(track);
-        else if (compatibleCore("0.8.1")) await playlist.stopSound(track);
-        else await playlist.updateEmbeddedEntity("PlaylistSound", {_id: track._id, playing: play});
+        if (play) await playlist.playSound(track);
+        else await playlist.stopSound(track);
         
         playlist.update({playing: play});
     }
@@ -149,12 +147,11 @@ export class PlaylistControl{
         }
         const screen = launchpad.keyMode - 60;
         const playlist = this.getPlaylist(this.playlistVolumeSelector);
-        const track = (compatibleCore("0.8.1")) ? playlist.sounds.contents[column+8*screen] : playlist.data.sounds[column+8*screen];
+        const track = playlist.sounds.contents[column+8*screen];
         if (track == undefined) return;
         row /= 7;
         const volume = AudioHelper.inputToVolume(1-row);
-        if (compatibleCore("0.8.1")) track.debounceVolume(volume);
-        else await playlist.updateEmbeddedEntity("PlaylistSound", {_id: track._id, volume: volume});
+        track.debounceVolume(volume);
     }
 
     volumeUpdate(){
@@ -202,10 +199,10 @@ export class PlaylistControl{
         const playlist = this.getPlaylist(this.playlistVolumeSelector);
         if (playlist != undefined){
             for (let i=0; i<8; i++){
-                const track = (compatibleCore("0.8.1")) ? playlist.sounds.contents[i+8*screen] : playlist.data.sounds[i+8*screen];
+                const track = playlist.sounds.contents[i+8*screen];
                 if (track == undefined) continue;
-                const trackVolume = (compatibleCore("0.8.1")) ? track.volume/game.settings.get("core", "globalPlaylistVolume") : track.volume;
-                const volume = (compatibleCore("0.8.1")) ? Math.ceil(AudioHelper.volumeToInput(trackVolume)*7) : AudioHelper.volumeToInput(trackVolume)*7;
+                const trackVolume = track.volume/game.settings.get("core", "globalPlaylistVolume");
+                const volume = Math.ceil(AudioHelper.volumeToInput(trackVolume)*7);
                 let color = colorOff;
                 let txt = '';
                 if (track.playing) color = colorOn;
@@ -234,7 +231,7 @@ export class PlaylistControl{
         for (let i=0; i<8; i++){
             const playlist = this.getPlaylist(i);
             if (playlist != undefined){
-                const nrOfTracks = (compatibleCore("0.8.1")) ? playlist.data.sounds.size : playlist.data.sounds.length;
+                const nrOfTracks = playlist.data.sounds.size;
                 if (nrOfTracks > maxTracks) maxTracks = nrOfTracks;
             }
         }

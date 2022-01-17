@@ -90,6 +90,7 @@
     "MaterialKeys.Emulator.Combat": "Combat Tracker",
     "MaterialKeys.Emulator.Token": "Token Health",
     "MaterialKeys.Emulator.Macro": "Macro-board",
+    "MaterialKeys.Emulator.Soundscape": "Sound-scape",
     "MaterialKeys.Emulator.Page": "Page",
     "MaterialKeys.Emulator.Darkness": "Dark-ness",
     "MaterialKeys.Emulator.Colorize": "Colo-rize",
@@ -106,6 +107,13 @@
     "MaterialKeys.Emulator.Filters": "Filters",
     "MaterialKeys.Emulator.Overlays": "Over-lays",
     "MaterialKeys.Emulator.WeatherFilters": "Wea-ther & Filters",
-    "MaterialKeys.Emulator.StopAll": "Stop All"
+    "MaterialKeys.Emulator.StopAll": "Stop All",
+
+    "MaterialKeys.Soundscape.Volume": "Ch Vol",
+    "MaterialKeys.Soundscape.Channel": "Chan-nel",
+    "MaterialKeys.Soundscape.Master": "Master",
+    "MaterialKeys.Soundscape.Soundboard": "Sound-board",
+    "MaterialKeys.Soundscape.StopSoundboard": "Stop Sound-board",
+    "MaterialKeys.Soundscape.Play": "Play"
 }
 

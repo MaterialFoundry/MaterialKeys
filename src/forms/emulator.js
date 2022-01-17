@@ -120,7 +120,7 @@ class emulatorForm extends FormApplication {
                     else if (i == 4) name = game.i18n.localize("MaterialKeys.Emulator.Combat");
                     else if (i == 3) name = game.i18n.localize("MaterialKeys.Emulator.Token");
                     else if (i == 2) name = game.i18n.localize("MaterialKeys.Emulator.Macro");
-                    else if (i == 1) name = ''
+                    else if (i == 1) name = game.i18n.localize("MaterialKeys.Emulator.Soundscape");
                     cls = 'catLabel';
                     background = '#000000';
                     color = '#000000';

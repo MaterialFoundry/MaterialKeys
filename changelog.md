@@ -1,4 +1,21 @@
 # Changelog Material Keys Module
+### v1.2.7 - 17-01-2022
+Additions:
+<ul>
+<li>Added support for the Soundscape module on the lowest function key</li>
+</ul>
+
+Fixes:
+<ul>
+<li>Some settings would not initialize properly, this should now be fixed</li>
+</ul>
+
+Other:
+<ul>
+<li>Made compatible with Foundry v9</li>
+<li>Dropped compatibility with Foundry v0.7</li>
+</ul>
+
 ### v1.2.6 - 21-06-2021
 Fixes:
 <ul>

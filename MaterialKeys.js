@@ -5,7 +5,8 @@ import {SoundboardControl} from "./src/soundboard.js";
 import {VisualFx} from "./src/visualFx.js";
 import {CombatTracker} from "./src/combatTracker.js";
 import {MacroBoard} from "./src/macroBoard.js";
-import {compatibleCore,soundboardCheatSheet,macroCheatSheet} from "./src/misc.js";
+import {Soundscape} from "./src/soundscape.js";
+import {soundboardCheatSheet,macroCheatSheet} from "./src/misc.js";
 import {newEmulator} from "./src/forms/emulator.js";
 export const moduleName = "MaterialKeys";
 export const launchpad = new Launchpad();
@@ -14,6 +15,7 @@ export const soundboard = new SoundboardControl();
 export const visualFx = new VisualFx();
 export const combatTracker = new CombatTracker();
 export const macroBoard = new MacroBoard();
+export const soundscape = new Soundscape();
 
 //Websocket variables
 var ws;                         //Websocket variable
@@ -53,6 +55,10 @@ async function analyzeWSmessage(msg){
         }
     }
 };
+
+Hooks.on("soundscape", (data) => {
+    soundscape.newData(data);
+});
 
 Hooks.on('renderPlaylistDirectory', (playlistDirectory)=>{
     if (enableModule == false) return;
@@ -96,10 +102,36 @@ Hooks.once('init', ()=>{
     registerSettings(); //in ./src/settings.js
 })
 
-Hooks.once('ready', ()=>{
+Hooks.once('ready', async()=>{
     enableModule = (game.settings.get(moduleName,'Enable') && game.user.isGM) ? true : false;
-    if (enableModule) 
+    if (enableModule) {
         startWebsocket();
+        //Get the settings
+        let soundboardSettings = game.settings.get(moduleName,'soundboardSettings');
+        if (Object.prototype.toString.call(game.settings.get(moduleName,'soundboardSettings')) === "[object String]") {
+            soundboardSettings = {};
+            //Check if all settings are defined
+            if (soundboardSettings.sounds == undefined) soundboardSettings.sounds = [];
+            if (soundboardSettings.colorOn == undefined) soundboardSettings.colorOn = [];
+            if (soundboardSettings.colorOff == undefined) soundboardSettings.colorOff = [];
+            if (soundboardSettings.mode == undefined) soundboardSettings.mode = [];
+            if (soundboardSettings.volume == undefined) soundboardSettings.volume = [];
+            if (soundboardSettings.name == undefined) soundboardSettings.name = [];
+            if (soundboardSettings.selectedPlaylists == undefined) soundboardSettings.selectedPlaylists = [];
+            if (soundboardSettings.src == undefined) soundboardSettings.src = [];
+            if (soundboardSettings.toggle == undefined) soundboardSettings.toggle = [];
+            game.settings.set(moduleName,'soundboardSettings',soundboardSettings)
+        }
+
+        let macroSettings = game.settings.get(moduleName,'macroSettings');
+        if (Object.prototype.toString.call(game.settings.get(moduleName,'macroSettings')) === "[object String]") {
+            macroSettings = {};
+            if (macroSettings.macros == undefined) macroSettings.macros = [];
+            if (macroSettings.color == undefined) macroSettings.color = [];
+            if (macroSettings.args == undefined) macroSettings.args = [];
+            game.settings.set(moduleName,'macroSettings',macroSettings)
+        }
+    }
 
     game.socket.on(`module.MaterialKeys`, (payload) =>{
         // console.log(payload);
@@ -142,7 +174,7 @@ Hooks.on("renderSettings", (app, html) => {
             </button>`
         );
 
-        const setupButton = compatibleCore('0.8.6') ? html.find("button[data-action='setup']") : html.find("div[id='settings-game']");
+        const setupButton = html.find("button[data-action='setup']");
         setupButton.after(label);
         //label.after(btnMacroboard);
         //label.after(btnSoundboard);

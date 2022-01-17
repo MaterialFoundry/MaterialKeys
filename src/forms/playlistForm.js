@@ -1,5 +1,5 @@
 import {moduleName,enableModule,launchpad,playlistControl} from "../../MaterialKeys.js";
-import {compatibleCore, getColor} from "../misc.js";
+import {getColor} from "../misc.js";
 
 export class playlistConfigForm extends FormApplication {
     constructor(data, options) {
@@ -35,7 +35,7 @@ export class playlistConfigForm extends FormApplication {
         if (playMode == undefined) playMode = 0;
         let playlistData = [];
 
-        const playlistArray = compatibleCore("0.8.1") ? game.playlists.contents : game.playlists.entities;
+        const playlistArray = game.playlists.contents;
         
         for (let i=0; i<8; i++){
             if (selectedPlaylists[i] == undefined) selectedPlaylists[i] = 'none';

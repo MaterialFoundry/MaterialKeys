@@ -1,5 +1,4 @@
 import {launchpad} from "../MaterialKeys.js";
-import {compatibleCore} from "./misc.js";
 
 export class CombatTracker{
     constructor(){
@@ -10,7 +9,7 @@ export class CombatTracker{
     updateTokens(combat){
         if (launchpad.keyMode != 4) return;
         if (combat != null){
-            let combatants = (compatibleCore("0.8.1")) ? combat.combatants.contents : combat.combatants;
+            let combatants = combat.combatants.contents;
             if (combatants.length > 0){
                 let initiativeOrder = combat.turns;
                 let oldCombatants = 0;
@@ -27,14 +26,14 @@ export class CombatTracker{
                     }     
                 }
                 for (let i=0; i<initiativeOrder.length; i++){
-                    let token = (compatibleCore("0.8.1")) ? initiativeOrder[i].token.data : initiativeOrder[i].token;
+                    let token = initiativeOrder[i].token.data;
                     let color;
                     const disposition = token.disposition;
                     if (disposition == 1) color = 87;
                     else if (disposition == 0) color = 74;
                     else if (disposition == -1) color = 72;
                     let type = 0;
-                    const currentCombatantId = (compatibleCore("0.8.1")) ? combat.combatant.token.id : combat.combatant.tokenId;
+                    const currentCombatantId = combat.combatant.token.id;
                     if (combat.started && token._id == currentCombatantId) type = 2;
                     let j = i;
                     if (i>7) j = i-18;
@@ -81,7 +80,7 @@ export class CombatTracker{
             if (selected < 0) selected += 18;
             if (selected < 0) selected += 18;
             
-            let token = (compatibleCore("0.8.1")) ? game.combat.turns[selected].token.data : game.combat.turns[selected].token;
+            let token = game.combat.turns[selected].token.data;
             if (token != undefined){
                 let tokenId = token._id;
                 let tokens = canvas.tokens.children[0].children;
@@ -99,7 +98,7 @@ export class CombatTracker{
     trackerUpdate(combat){
         if (launchpad.keyMode != 4) return;
         if (combat != undefined){
-            let combatants = (compatibleCore("0.8.1")) ? combat.combatants.contents : combat.combatants;
+            let combatants = combat.combatants.contents;
             if (combatants.length > 0){
                 if (combat.started)
                     this.combatState = 2; 
@@ -147,7 +146,7 @@ export class CombatTracker{
         let page = launchpad.keyMode % 10-1;
         let selected = key % 10 - 1 + 8 * page;
 
-        let token = (compatibleCore("0.8.1")) ? game.combat.turns[selected].token.data : game.combat.turns[selected].token;
+        let token = game.combat.turns[selected].token.data;
         if (token != undefined){
             let tokenId = token._id;
             let tokens = canvas.tokens.children[0].children;
@@ -166,7 +165,7 @@ export class CombatTracker{
         let hpTrackerPages;
         let combatants;
         if (game.combat) {
-            combatants = (compatibleCore("0.8.1")) ? game.combat.combatants.contents : game.combat.combatants;
+            combatants = game.combat.combatants.contents;
             hpTrackerPages = Math.ceil(combatants.length/8);
         }
         
@@ -200,7 +199,7 @@ export class CombatTracker{
             for (let i=0; i<8; i++){
                 let nr = i+8*page;
                 if (nr >= initiativeOrder.length) break;
-                let token = (compatibleCore("0.8.1")) ? initiativeOrder[i].token.data : initiativeOrder[i].token;
+                let token = initiativeOrder[i].token.data;
                 let color;
                 const disposition = token.disposition;
                 if (disposition == 1) color = 87;
@@ -208,7 +207,7 @@ export class CombatTracker{
                 else if (disposition == -1) color = 72;
                 
                 let type = 0;
-                const currentCombatantId = (compatibleCore("0.8.1")) ? combat.combatant.token.id : combat.combatant.tokenId;
+                const currentCombatantId = combat.combatant.token.id;
                 if (combat.started && token.id == currentCombatantId) type = 2;
                 let j = i;
                 if (i>7) j = i-18;

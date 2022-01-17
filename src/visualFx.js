@@ -3,7 +3,7 @@ import {launchpad} from "../MaterialKeys.js";
 export class VisualFx{
     constructor(){
         this.visualFxState = [false,false,false,false,false,false,false,false,false,false,false,false,false];
-        this.visualFxFilters = [false,false,false,false];
+        this.visualFxFilters = [false,false,false,false,false];
         this.colorizeColors = [
             {red: 1,green: 0,blue: 0},
             {red: 1,green: 0.5,blue: 0},
@@ -53,55 +53,81 @@ export class VisualFx{
                 let sel = (row - 1) + 5*(column);
                 if (sel > 9) sel--;
                 if (row < 1 || row == 6 || (row == 5 && column > 0)) return;
-                else if (column < 3 && row == 7) 
-                    for (let i=0; i<13; i++)
-                        this.visualFxState[i] = false;
-                else this.visualFxState[sel] = !this.visualFxState[sel];
-                    
-                let effects = {};
-                for (let i=0; i<13; i++){
-                    if (this.visualFxState[i] == false) continue;
-                    const type = this.getVisualFxType(i);
-                    effects[randomID()] = {
-                        type: type,
-                        options: {
-                            density: 50,
-                            speed: 50,
-                            scale: 50,
-                            tint: "#000000",
-                            direction: 50,
-                            apply_tint: false
+
+                //clear all effects
+                if (row == 7) { 
+                    const flags = canvas.scene.getFlag("fxmaster", "effects");
+                    if (flags) {
+                        const objKeys = Object.keys(flags);
+                        for (let i = 0; i < objKeys.length; ++i) {
+                            const effect = flags[objKeys[i]].type;
+                            Hooks.call("fxmaster.switchWeather", {
+                                name: `core_${effect}`,
+                                type: effect
+                                
+                            });
                         }
-                    };
+                    }
+                    return;
                 }
-                canvas.scene.unsetFlag("fxmaster", "effects").then(() => {
-                    canvas.scene.setFlag("fxmaster", "effects", effects);
-                });
+
+                //else toggle effect
+                const effect = this.getVisualFxType(sel);
+
+                const options = {
+                    density: 0.25,
+                    speed: 1,
+                    direction: 15,
+                    scale: 1,
+                    color: "#000000",
+                    applyColor: false
+                }
+    
+                Hooks.call("fxmaster.switchWeather", {
+                    name: `core_${effect}`,
+                    type: effect,
+                    options,
+                    });
             }
-            else if (column == 4 && ((row > 1 && row < 6) || row == 7)){
+            else if (column == 4 && ((row > 0 && row < 6) || row == 7)){
                 if (row == 7)
                     for (let i=0; i<4; i++) 
                         this.visualFxFilters[i] = false;
                 else {
                     let state = true;
-                    if (this.visualFxFilters[row-2]) state = false;
-                    this.visualFxFilters[row-2] = state;
+                    if (this.visualFxFilters[row-1]) state = false;
+                    this.visualFxFilters[row-1] = state;
+                }
+                const filterNum = row-1;
+                
+                const filterLabels = ["lightning", "underwater","predator","oldfilm","bloom"];
+                const filter = filterLabels[filterNum];
+
+                let options = {color: {value:"#000000", apply:false}};
+                if (filter == 'lightning') {
+                    options.period = 500;
+                    options.duration = 300;
+                    options.brightness = 1.3;
+                }
+                else if (filter == 'underwater') {
+                    options.speed = 0.3;
+                    options.scale = 4;
+                }
+                else if (filter == 'predator') {
+                    options.noise = 0.1;
+                    options.speed = 0.02;
                 }
                 
-                let filters = {};
-                const core_color = canvas.scene.getFlag("fxmaster", "filters").core_color;
-                if (core_color != undefined)
-                    filters["core_color"] = core_color;
-                for (let i=0; i<4; i++){
-                    if (this.visualFxFilters[i] == false) continue;
-                    const name = this.getFilterName(i);
-                    filters[name] = {
-                        type: this.getFilterType(i)
-                    };
+                else if (filter == 'bloom') {
+                    options.blur = 1;
+                    options.bloom = 0.1;
+                    options.threshold = 0.5;
                 }
-                canvas.scene.unsetFlag("fxmaster", "filters").then(() => {
-                    canvas.scene.setFlag("fxmaster", "filters", filters);
-                });
+                else if (filter == 'oldfilm') {
+                    options.sepia = 0.3;
+                    options.noise = 0.1;
+                }
+                FXMASTER.filters.switch(`core_${filter}`, filter, options);
             }
         }  
     }
@@ -205,7 +231,9 @@ export class VisualFx{
             if (flags) {
                 const objKeys = Object.keys(flags);
                 for (let i = 0; i < objKeys.length; ++i) {
-                    const weather = CONFIG.weatherEffects[flags[objKeys[i]].type];
+                    const weather = CONFIG.fxmaster.weather[flags[objKeys[i]].type];
+                    if (weather == undefined) continue;
+    
                     if (weather.label === 'Autumn Leaves') this.visualFxState[0] = true;
                     else if (weather.label === 'Rain') this.visualFxState[1] = true;
                     else if (weather.label === 'Snow') this.visualFxState[2] = true;
@@ -224,10 +252,10 @@ export class VisualFx{
             
             //VisualFx leds
             const fxLedColor = [127,79,90,90,3,71,84,79,81,99,97,1,79];
-            const weatherLabel = [CONFIG.weatherEffects.leaves.label,CONFIG.weatherEffects.rain.label,CONFIG.weatherEffects.snow.label,CONFIG.weatherEffects.snowstorm.label
-                ,CONFIG.weatherEffects.bubbles.label,CONFIG.weatherEffects.clouds.label,CONFIG.weatherEffects.embers.label,CONFIG.weatherEffects.rainsimple.label,
-                CONFIG.weatherEffects.stars.label,CONFIG.weatherEffects.crows.label,CONFIG.weatherEffects.bats.label,CONFIG.weatherEffects.fog.label,
-                CONFIG.weatherEffects.raintop.label]
+            const weatherLabel = [CONFIG.weatherEffects.leaves.label,CONFIG.weatherEffects.rain.label,CONFIG.weatherEffects.snow.label,CONFIG.fxmaster.weather.snowstorm.label
+                ,CONFIG.fxmaster.weather.bubbles.label,CONFIG.fxmaster.weather.clouds.label,CONFIG.fxmaster.weather.embers.label,CONFIG.fxmaster.weather.rainsimple.label,
+                CONFIG.fxmaster.weather.stars.label,CONFIG.fxmaster.weather.crows.label,CONFIG.fxmaster.weather.bats.label,CONFIG.fxmaster.weather.fog.label,
+                CONFIG.fxmaster.weather.raintop.label]
             let stopState = 0;
             for (let i=0; i<13; i++){
                 const state = this.visualFxState[i] ? 2 : 0;
@@ -250,20 +278,21 @@ export class VisualFx{
             else {
                 const objKeys = Object.keys(fxmaster);
                 for (let i=0; i<objKeys.length; i++){
-                    if (objKeys[i] == "core_underwater") this.visualFxFilters[0] = true;
-                    else if (objKeys[i] == "core_predator") this.visualFxFilters[1] = true;
-                    else if (objKeys[i] == "core_oldfilm") this.visualFxFilters[2] = true;
-                    else if (objKeys[i] == "core_bloom") this.visualFxFilters[3] = true;
+                    if (objKeys[i] == "core_lightning") this.visualFxFilters[0] = true;
+                    else if (objKeys[i] == "core_underwater") this.visualFxFilters[1] = true;
+                    else if (objKeys[i] == "core_predator") this.visualFxFilters[2] = true;
+                    else if (objKeys[i] == "core_oldfilm") this.visualFxFilters[3] = true;
+                    else if (objKeys[i] == "core_bloom") this.visualFxFilters[4] = true;
                 }
             }
             stopState = 0;
-            const filterLedColor = [79,71,1,3];
-            const filterLabels = ["CONTROLS.Underwater","CONTROLS.Predator","CONTROLS.OldFilm","CONTROLS.Bloom"]
-            for (let i=0; i<4; i++){
+            const filterLedColor = [3,79,71,1,3];
+            const filterLabels = ["lightning", "underwater","predator","oldfilm","bloom"]
+            for (let i=0; i<5; i++){
                 let mode = 0;
                 if (this.visualFxFilters[i]) mode = 2;
                 if (mode) stopState = 2;
-                launchpad.setLED(65-10*i,mode,filterLedColor[i],0,0,game.i18n.localize(filterLabels[i]));
+                launchpad.setLED(75-10*i,mode,filterLedColor[i],0,0,CONFIG.fxmaster.filters[filterLabels[i]].label);
             }
             launchpad.setLED(15,stopState,72,0,0,game.i18n.localize("MaterialKeys.Emulator.Clear"));
 
@@ -309,18 +338,30 @@ export class VisualFx{
         return type;
     }
 
-    setColorize(){
-        let core_color = {};
-        let color = {};
-        let colors = this.colorizeColor;
-        core_color = {
-            type: "color",
-            options: colors
-        }
-        color = {
-            core_color: core_color
+    async setColorize(){
+        const colors = this.rgbToHex(this.colorizeColor.red,this.colorizeColor.green,this.colorizeColor.blue);
+
+        const color = {
+            core_color: {
+                type: "color",
+                options: {
+                    color: {
+                        value: colors,
+                        apply: true
+                    }
+                }
+            }
         }
         canvas.scene.setFlag("fxmaster", "filters", color);
     }
+
+    componentToHex(c) {
+        var hex = Math.ceil((255*c)).toString(16);
+        return hex.length == 1 ? "0" + hex : hex;
+      }
+      
+      rgbToHex(r, g, b) {
+        return "#" + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
+      }
 }
     

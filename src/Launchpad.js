@@ -1,4 +1,4 @@
-import {moduleName,playlistControl,soundboard,visualFx,combatTracker,macroBoard,sendWS} from "../MaterialKeys.js";
+import {moduleName,playlistControl,soundboard,visualFx,combatTracker,macroBoard,soundscape,sendWS} from "../MaterialKeys.js";
 import {getColor} from "./misc.js";
 import {setEmulatorLED} from "./forms/emulator.js";
 
@@ -86,6 +86,11 @@ export class Launchpad{
             if (state == 0) return;
             combatTracker.hpKeyPress(key);
         }
+        //Soundscape
+        else if (this.keyMode == 1) { 
+            if (state == 0) return;
+            soundscape.keyPress(key);
+        }
     }
 
     setMode(mode,iterate=true){
@@ -95,7 +100,9 @@ export class Launchpad{
          * No function yet on 1
          */
         if (mode == 1){
+            this.keyMode = mode
             this.setControlKeys(mode,87,0);
+            soundscape.update(mode);
         }
         /*
          * Macro board
@@ -104,7 +111,8 @@ export class Launchpad{
             if (Math.floor(this.keyMode/10) != 2 || iterate == false) this.keyMode = 20;
             else this.keyMode++;
 
-            const maxMacros = game.settings.get('MaterialKeys','macroSettings').macros.length;
+            let maxMacros = game.settings.get('MaterialKeys','macroSettings').macros?.length;
+            if (maxMacros == undefined) maxMacros = 32;
             if (this.keyMode > 19 + Math.ceil(maxMacros/64) || this.keyMode > 23) this.keyMode = 20;
             let color;
             if (this.keyMode == 20) color = 87;
@@ -194,7 +202,8 @@ export class Launchpad{
             if (Math.floor(this.keyMode/10) != 8 || iterate == false) this.keyMode = 80;
             else this.keyMode++;
 
-            const maxSounds = game.settings.get(moduleName,'soundboardSettings').volume.length;
+            let maxSounds = game.settings.get(moduleName,'soundboardSettings').volume?.length;
+            if (maxSounds == undefined) maxSounds = 16;
             if (this.keyMode > 79 + Math.ceil(maxSounds/64) || this.keyMode > 83) this.keyMode = 80;
             let color;
             if (this.keyMode == 80) color = 87;

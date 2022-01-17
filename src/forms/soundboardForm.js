@@ -1,5 +1,5 @@
 import {moduleName,enableModule,launchpad,soundboard} from "../../MaterialKeys.js";
-import {compatibleCore, getColor} from "../misc.js";
+import {getColor} from "../misc.js";
 import {exportConfigForm} from "./exportForm.js";
 import {importConfigForm} from "./importForm.js";
 
@@ -45,13 +45,14 @@ export class soundboardConfigForm extends FormApplication {
         if (this.settings.selectedPlaylists == undefined) this.settings.selectedPlaylists = [];
         if (this.settings.src == undefined) this.settings.src = [];
         if (this.settings.toggle == undefined) this.settings.toggle = [];
+        game.settings.set(moduleName,'soundboardSettings',this.settings)
 
         //Create the playlist array
         let playlists = [];
         playlists.push({id:"none",name:game.i18n.localize("MaterialKeys.None")});
         playlists.push({id:"FP",name:game.i18n.localize("MaterialKeys.FilePicker")})
 
-        const playlistArray = compatibleCore("0.8.1") ? game.playlists.contents : game.playlists.entities;
+        const playlistArray = game.playlists.contents;
         for (let playlist of playlistArray) 
             playlists.push({id: playlist.id, name: playlist.name})
 
@@ -98,19 +99,12 @@ export class soundboardConfigForm extends FormApplication {
                     }
                     else {
                         //Add the sound name and id to the sounds array
-                        if (compatibleCore("0.8.1"))
-                            for (let sound of pl.sounds.contents)
-                                sounds.push({
-                                    name: sound.name,
-                                    id: sound.id
-                                });
-                        else {
-                            for (let sound of pl.sounds)
-                                sounds.push({
-                                    name: sound.name,
-                                    id: sound._id
-                                });
-                        }        
+                        for (let sound of pl.sounds.contents)
+                            sounds.push({
+                                name: sound.name,
+                                id: sound.id
+                            });
+
                         //Get the playlist id
                         selectedPlaylist = pl.id;
                     }  
@@ -305,7 +299,7 @@ export class soundboardConfigForm extends FormApplication {
                 //Show the sound selector
                 document.querySelector(`#ss${iteration}`).style='';
 
-                const playlistArray = compatibleCore("0.8.1") ? game.playlists.contents : game.playlists.entities;
+                const playlistArray = game.playlists.contents;
                 const pl = playlistArray.find(p => p.id == event.target.value)
                 selectedPlaylist = pl.id;
 
@@ -321,20 +315,12 @@ export class soundboardConfigForm extends FormApplication {
                 optionNone.innerHTML = game.i18n.localize("MaterialKeys.None");
                 SSpicker.appendChild(optionNone);
 
-                if (compatibleCore("0.8.1"))
-                    for (let sound of pl.sounds.contents) {
-                        let newOption = document.createElement('option');
-                        newOption.value = sound.id;
-                        newOption.innerHTML = sound.name;
-                        SSpicker.appendChild(newOption);
-                    } 
-                else 
-                    for (let sound of pl.sounds) {
-                        let newOption = document.createElement('option');
-                        newOption.value = sound._id;
-                        newOption.innerHTML = sound.name;
-                        SSpicker.appendChild(newOption);
-                    }
+                for (let sound of pl.sounds.contents) {
+                    let newOption = document.createElement('option');
+                    newOption.value = sound.id;
+                    newOption.innerHTML = sound.name;
+                    SSpicker.appendChild(newOption);
+                } 
             }
             let settings = game.settings.get(moduleName,'soundboardSettings');
             settings.selectedPlaylists[iteration-1]=event.target.value;

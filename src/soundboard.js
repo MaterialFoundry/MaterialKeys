@@ -1,5 +1,4 @@
 import {moduleName,launchpad} from "../MaterialKeys.js";
-import {compatibleCore} from "./misc.js";
 
 export class SoundboardControl{
     constructor(){
@@ -50,7 +49,8 @@ export class SoundboardControl{
         let color;
         let type;
         let txt;
-        const maxSounds = game.settings.get(moduleName,'soundboardSettings').volume.length;
+        let maxSounds = game.settings.get(moduleName,'soundboardSettings').volume?.length;
+        if (maxSounds == undefined) maxSounds = 16;
         
         type = (launchpad.keyMode == 80)? 1 : 2;
         color = (maxSounds>64)? 87 : 0;
@@ -75,6 +75,7 @@ export class SoundboardControl{
             let mode = 0;
             
             let color = game.settings.get(moduleName,'soundboardSettings').colorOff[i];
+
             if (this.activeSounds[i] != undefined){
                 mode = game.settings.get(moduleName,'soundboardSettings').toggle[i];
                 if (mode == undefined) mode = 0;
@@ -110,7 +111,7 @@ export class SoundboardControl{
             const soundId = soundBoardSettings.sounds[soundNr];
             const sounds = game.playlists.get(playlistId).sounds;
             if (sounds == undefined) return;
-            const sound = compatibleCore("0.8.1") ? sounds.find(p => p.id == soundId) : sounds.find(p => p._id == soundId);
+            const sound = sounds.find(p => p.id == soundId);
             if (sound == undefined) return;
             src = sound.path;
         }
@@ -135,32 +136,16 @@ export class SoundboardControl{
         if (play){
             volume *= game.settings.get("core", "globalAmbientVolume");
 
-            if (compatibleCore("0.8.6")) {
-                let newSound = new Sound(src);
-                if(newSound.loaded == false) await newSound.load({autoplay:true});
-                newSound.on('end', ()=>{
-                    if (repeat == false) {
-                        this.activeSounds[soundNr] = undefined;
-                        this.update();
-                    }
-                });
-                newSound.play({loop:repeat,volume:volume});
-                this.activeSounds[soundNr] = newSound;
-            }
-            else {
-                let howl = new Howl({src, volume, loop: repeat, onend: (id)=>{
-                    if (repeat == false){
-                        this.activeSounds[soundNr] = undefined;
-                        this.update();
-                    }
-                },
-                onstop: ()=>{
+            let newSound = new Sound(src);
+            if(newSound.loaded == false) await newSound.load({autoplay:true});
+            newSound.on('end', ()=>{
+                if (repeat == false) {
                     this.activeSounds[soundNr] = undefined;
                     this.update();
-                }});
-                howl.play();
-                this.activeSounds[soundNr] = howl;
-            }
+                }
+            });
+            newSound.play({loop:repeat,volume:volume});
+            this.activeSounds[soundNr] = newSound;
         }
         else {
             if (this.activeSounds[soundNr] != undefined) this.activeSounds[soundNr].stop();
