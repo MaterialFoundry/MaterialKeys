@@ -13,7 +13,7 @@ export class importConfigForm extends FormApplication {
      */
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
-            id: "MK_Import",
+            id: "materialKeys_import",
             title: "Material Keys: " + game.i18n.localize("MaterialKeys.ImportDialog.Title"),
             template: "./modules/MaterialKeys/templates/importDialog.html",
             width: 500,
@@ -51,7 +51,7 @@ export class importConfigForm extends FormApplication {
     activateListeners(html) {
         super.activateListeners(html);
 
-        const upload = html.find("input[id='uploadJson']");
+        const upload = html.find("input[id='materialKeys_uploadJson']");
 
         upload.on('change',(event) => {
             event.preventDefault();

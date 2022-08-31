@@ -1,6 +1,6 @@
 <form autocomplete="off" onsubmit="event.preventDefault()" style="background-color:black">
     <style>
-        .box {
+        .materialKeys_emulator_box {
             border: 0px solid black ;
             border-radius: 0px ; 
             width:70px;
@@ -10,7 +10,7 @@
             padding: 2px; 
         }
 
-        .mainKeys {
+        .materialKeys_emulator_mainKeys {
             border-radius: 5px ; 
             margin: 0 auto; 
             margin-top: 3px;
@@ -25,7 +25,7 @@
             cursor: pointer;
         }
 
-        .catLabel {
+        .materialKeys_emulator_catLabel {
             border: 0px solid black ;
             word-wrap:break-word; 
             line-height: 15px;
@@ -40,7 +40,7 @@
             pointer-events: none;
         }
 
-        .row {
+        .materialKeys_emulator_row {
             display: flex;
             flex-direction: row;
             height: 70px;
@@ -53,11 +53,11 @@
    
         
     {{#each keys}}
-    <div class="row">
-        {{#each this.row}}
-        <div class="box" style="background-color:{{this.background}};visibility:{{this.visible}}">         
-            <button class={{this.cls}} type="button" name="mainKeys" id="mainKeys{{this.iteration}}" style="background-color:{{this.color}};visibility:{{this.visible}}"> 
-                <i class="" id="label{{this.iteration}}"></i> {{this.name}}
+    <div class="materialKeys_emulator_row">
+        {{#each row}}
+        <div class="materialKeys_emulator_box" style="background-color:{{this.background}};visibility:{{this.visible}}">         
+            <button class={{this.cls}} type="button" name="mainKeys" id="materialKeys_emulator_mainKeys-{{this.iteration}}" style="background-color:{{this.color}};visibility:{{this.visible}}"> 
+                <i class="" id="materialKeys_emulator_label-{{this.iteration}}"></i> {{this.name}}
             </button>
         </div>    
         {{/each}}

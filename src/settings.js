@@ -116,7 +116,8 @@ export const registerSettings = function() {
         name: "macroSettings",
         scope: "world",
         type: Object,
-        config: false
+        config: false,
+        default: {}
     });
 }
 

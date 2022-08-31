@@ -12,7 +12,7 @@ export class playlistConfigForm extends FormApplication {
      */
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
-            id: "playlist-config",
+            id: "materialKeys_playlistConfig",
             title: "Material Keys: "+game.i18n.localize("MaterialKeys.Sett.PlaylistConfig"),
             template: "./modules/MaterialKeys/templates/playlistConfig.html",
             classes: ["sheet"],
@@ -90,19 +90,19 @@ export class playlistConfigForm extends FormApplication {
         });
 
         selectedPlaylist.on("change", event => {
-            let id = event.target.id.replace('playlist','');
+            let id = event.target.id.replace('materialKeys_playlist','');
             this.data.selectedPlaylist[id-1]=event.target.value;
             this.updateSettings(this.data);
         });
 
         playlistMode.on("change", event => {
-            let id = event.target.id.replace('playlistMode','');
+            let id = event.target.id.replace('materialKeys_playlistMode','');
             this.data.playlistMode[id-1]=event.target.value;
             this.updateSettings(this.data);
         });
 
         colorPickerOn.on('click',(event) => {
-            let color = document.getElementById("colorOn").value;
+            let color = document.getElementById("materialKeys_colorOn").value;
             if ((color < 0 && color > 127) || color == "") color = 0;
             launchpad.colorPicker(null,1,color); 
         });
@@ -116,7 +116,7 @@ export class playlistConfigForm extends FormApplication {
         });
 
         colorPickerOff.on('click',(event) => {
-            let color = document.getElementById("colorOff").value;
+            let color = document.getElementById("materialKeys_colorOff").value;
             if ((color < 0 && color > 127) || color == "") color = 0;
             launchpad.colorPicker(null,0,color);
             

@@ -1,5 +1,5 @@
-import {getColor} from "../misc.js";
-import {launchpad} from "../../MaterialKeys.js";
+import { getColor } from "../misc.js";
+import { launchpad } from "../../MaterialKeys.js";
 
 let emulator;
 let blinkArray = [];
@@ -16,9 +16,9 @@ export async function newEmulator() {
 
 export function setEmulatorLED(led,mode,color,color2,color3,name) {
     if (led % 10 == 0) return;
-    const emulatorElement = document.getElementById('MK-emulator');
+    const emulatorElement = document.getElementById('materialKeys_emulator');
     if (emulatorElement == undefined) return;
-    let btn = document.getElementById(`mainKeys${led}`);
+    let btn = document.getElementById(`materialKeys_emulator_mainKeys-${led}`);
     if (btn == undefined || btn == null) return
     let newColor = '';
     if (mode == 0) newColor = getColor(color);
@@ -92,11 +92,10 @@ class emulatorForm extends FormApplication {
 
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
-            id: "MK-emulator",
+            id: "materialKeys_emulator",
             title: "Material Keys: "+game.i18n.localize("MaterialKeys.Emulator.Title"),
             template: "./modules/MaterialKeys/templates/emulator.html",
             classes: ["sheet"],
-            
         });
     }
 
@@ -108,20 +107,19 @@ class emulatorForm extends FormApplication {
             for (let j=1; j<11; j++) {
                 let background = ((i == 9 || j == 9)) ? '#000000' : '#666666';
                 const visible = (i==9 && j ==9) ? 'hidden' : 'visible';
-                let cls = "mainKeys";
+                let cls = "materialKeys_emulator_mainKeys";
                 let name = '';
                 let color = '#3f3f3f';
                 if (j == 10) {
-                    
-                    if (i == 8) name = game.i18n.localize("MaterialKeys.Emulator.Soundboard");
-                    else if (i == 7) name = game.i18n.localize("MaterialKeys.Emulator.Playlist");
-                    else if (i == 6) name = game.i18n.localize("MaterialKeys.Emulator.Volume");
-                    else if (i == 5) name = game.i18n.localize("MaterialKeys.Emulator.Visual");
-                    else if (i == 4) name = game.i18n.localize("MaterialKeys.Emulator.Combat");
-                    else if (i == 3) name = game.i18n.localize("MaterialKeys.Emulator.Token");
-                    else if (i == 2) name = game.i18n.localize("MaterialKeys.Emulator.Macro");
-                    else if (i == 1) name = game.i18n.localize("MaterialKeys.Emulator.Soundscape");
-                    cls = 'catLabel';
+                    if (i == 8)         name = game.i18n.localize("MaterialKeys.Emulator.Soundboard");
+                    else if (i == 7)    name = game.i18n.localize("MaterialKeys.Emulator.Playlist");
+                    else if (i == 6)    name = game.i18n.localize("MaterialKeys.Emulator.Volume");
+                    else if (i == 5)    name = game.i18n.localize("MaterialKeys.Emulator.Visual");
+                    else if (i == 4)    name = game.i18n.localize("MaterialKeys.Emulator.Combat");
+                    else if (i == 3)    name = game.i18n.localize("MaterialKeys.Emulator.Token");
+                    else if (i == 2)    name = game.i18n.localize("MaterialKeys.Emulator.Macro");
+                    else if (i == 1)    name = game.i18n.localize("MaterialKeys.Emulator.Soundscape");
+                    cls = 'materialKeys_emulator_catLabel';
                     background = '#000000';
                     color = '#000000';
                 }
@@ -147,7 +145,7 @@ class emulatorForm extends FormApplication {
         const mainKeys = html.find("button[name='mainKeys']");
 
         mainKeys.on('click',(event) => {
-            let id = event.target.id.replace('mainKeys','');
+            let id = event.target.id.replace('materialKeys_emulator_mainKeys-','');
             launchpad.keypress({button:id,state:1});
         });
     }

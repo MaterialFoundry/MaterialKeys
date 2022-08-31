@@ -16,13 +16,13 @@
     </style>
 
     <div class="navigationDiv" style="width:100%; display:flex; flex-direction:row;">
-        <button type="button" class="navigation" id="navPrev" {{prevDisabled}}>
+        <button type="button" class="navigation" id="materialKeys_navPrev" {{prevDisabled}}>
             <i class="fas fa-arrow-left"></i>
         </button>
         <p style="width:84%; text-align:center; padding: 0px 0; font-size: 20px"><b>
             {{localize "MaterialKeys.Macro"}}: {{macroRange}} {{localize "MaterialKeys.Of"}} {{totalMacros}}
         </b></p>
-        <button type="button" class="navigation" id="navNext">
+        <button type="button" class="navigation" id="materialKeys_navNext">
             <i class="fas fa-arrow-right"></i>
         </button>
     </div>
@@ -36,7 +36,7 @@
                         {{localize "MaterialKeys.Macro"}} {{this.iteration}}
                     </div>
                     <div>
-                        <select name="macros" class="macros-select" id="macros{{this.iteration}}" default="" style="max-width:132px;">
+                        <select name="macros" class="macros-select" id="materialKeys_macros{{this.iteration}}" default="" style="max-width:132px;">
                             {{#select this.macro}}
                                 <option value="">{{localize "MaterialKeys.None"}}</option>
                                 {{#each ../../macros}}
@@ -47,13 +47,13 @@
                     </div>
                     {{#if ../../furnace}}
                         <label>{{localize "MaterialKeys.FurnaceArgs"}}</label>
-                        <input type="text" name="args" id="args{{this.iteration}}" value="{{this.args}}">
+                        <input type="text" name="args" id="materialKeys_args{{this.iteration}}" value="{{this.args}}">
                     {{/if}}
                     
                     <div class="flex-container" style="display:flex;flex-direction:row;padding-top:10px"">  
                         <label style="flex:1">{{localize "MaterialKeys.Color"}}</label>
-                        <input type="number" id="color{{this.iteration}}" name="color" style="flex:4; background-color:{{this.colorRGB}};margin-left:5px" min="0" max="127" value={{this.color}}>
-                        <button type="button" name="colorPicker" id="colorBtn{{this.iteration}}" value={{this.iteration}} style="flex:1;height:28px">
+                        <input type="number" id="materialKeys_color{{this.iteration}}" name="color" style="flex:4; background-color:{{this.colorRGB}};margin-left:5px" min="0" max="127" value={{this.color}}>
+                        <button type="button" name="colorPicker" id="materialKeys_colorBtn{{this.iteration}}" value={{this.iteration}} style="flex:1;height:28px">
                             <i class="fas fa-palette"></i>
                         </button>  
                     </div>
@@ -63,17 +63,17 @@
     {{/each}}
     <hr>
     <div class="navigationDiv" style="width:100%; display:flex; flex-direction:row;">
-        <button type="button" class="navigation" id="clearPage">
+        <button type="button" class="navigation" id="materialKeys_clearPage">
             <i></i>{{localize "MaterialKeys.ClearPage"}}
         </button>
-        <button type="button" class="navigation" id="clearAll">
+        <button type="button" class="navigation" id="materialKeys_clearAll">
             <i></i>{{localize "MaterialKeys.ClearAll"}}
         </button>
         <p style="width:68%;"></p>
-        <button type="button" class="navigation" id="import">
+        <button type="button" class="navigation" id="materialKeys_import">
             <i></i>{{localize "MaterialKeys.Import"}}
         </button>
-        <button type="button" class="navigation" id="export">
+        <button type="button" class="navigation" id="materialKeys_export">
             <i></i>{{localize "MaterialKeys.Export"}}
         </button>
     </div>

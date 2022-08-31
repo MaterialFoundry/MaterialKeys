@@ -16,7 +16,7 @@ export class soundboardConfigForm extends FormApplication {
      */
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
-            id: "soundboard-config",
+            id: "materialKeys_soundboardConfig",
             title: "Material Keys: "+game.i18n.localize("MaterialKeys.Sett.SoundboardConfig"),
             template: "./modules/MaterialKeys/templates/soundboardConfig.html",
             classes: ["sheet"]
@@ -166,12 +166,12 @@ export class soundboardConfigForm extends FormApplication {
 
     async activateListeners(html) {
         super.activateListeners(html);
-        const navNext = html.find("button[id='navNext']");
-        const navPrev = html.find("button[id='navPrev']");
-        const clearAll = html.find("button[id='clearAll']");
-        const clearPage = html.find("button[id='clearPage']");
-        const importBtn = html.find("button[id='import']");
-        const exportBtn = html.find("button[id='export']");
+        const navNext = html.find("button[id='materialKeys_navNext']");
+        const navPrev = html.find("button[id='materialKeys_navPrev']");
+        const clearAll = html.find("button[id='materialKeys_clearAll']");
+        const clearPage = html.find("button[id='materialKeys_clearPage']");
+        const importBtn = html.find("button[id='materialKeys_import']");
+        const exportBtn = html.find("button[id='materialKeys_export']");
         const nameField = html.find("input[name='namebox']");
         const playlistSelect = html.find("select[name='playlist']");
         const soundSelect = html.find("select[name='sounds']");
@@ -268,7 +268,7 @@ export class soundboardConfigForm extends FormApplication {
         })
 
         nameField.on("change",event => {
-            let id = event.target.id.replace('name','')-1;
+            let id = event.target.id.replace('materialKeys_name','')-1;
             //let settings = game.settings.get(moduleName,'soundboardSettings');
             this.settings.name[id]=event.target.value;
             this.updateSettings(this.settings);
@@ -276,7 +276,7 @@ export class soundboardConfigForm extends FormApplication {
 
         playlistSelect.on("change", event => {
             //Get the sound number
-            const iteration = event.target.id.replace('playlists','');
+            const iteration = event.target.id.replace('materialKeys_playlists','');
 
             //Get the selected playlist and the sounds of that playlist
             let selectedPlaylist;
@@ -287,24 +287,24 @@ export class soundboardConfigForm extends FormApplication {
                 selectedPlaylist = 'FP';
 
                 //Show the file picker
-                document.querySelector(`#fp${iteration}`).style='';
+                document.querySelector(`#materialKeys_fp${iteration}`).style='';
                 
                 //Hide the sound selector
-                document.querySelector(`#ss${iteration}`).style='display:none';
+                document.querySelector(`#materialKeys_ss${iteration}`).style='display:none';
             }
             else {
                 //Hide the file picker
-                document.querySelector(`#fp${iteration}`).style='display:none';
+                document.querySelector(`#materialKeys_fp${iteration}`).style='display:none';
                 
                 //Show the sound selector
-                document.querySelector(`#ss${iteration}`).style='';
+                document.querySelector(`#materialKeys_ss${iteration}`).style='';
 
                 const playlistArray = game.playlists.contents;
                 const pl = playlistArray.find(p => p.id == event.target.value)
                 selectedPlaylist = pl.id;
 
                 //Get the sound select element
-                let SSpicker = document.getElementById(`soundSelect${iteration}`);
+                let SSpicker = document.getElementById(`materialKeys_soundSelect${iteration}`);
 
                 //Empty ss element
                 SSpicker.options.length=0;
@@ -328,21 +328,21 @@ export class soundboardConfigForm extends FormApplication {
         });
         
         soundSelect.on("change",event => {
-            let id = event.target.id.replace('soundSelect','')-1;
+            let id = event.target.id.replace('materialKeys_soundSelect','')-1;
             let settings = game.settings.get(moduleName,'soundboardSettings');
             settings.sounds[id]=event.target.value;
             this.updateSettings(settings);
         });
         
         soundFP.on("change",event => {
-            let id = event.target.id.replace('srcPath','')-1;
+            let id = event.target.id.replace('materialKeys_srcPath','')-1;
             let settings = game.settings.get(moduleName,'soundboardSettings');
             settings.src[id]=event.target.value;
             this.updateSettings(settings);
         });
 
         colorToggle.on("change",event => {
-            let id = event.target.id.replace('toggle','')-1;
+            let id = event.target.id.replace('materialKeys_toggle','')-1;
             let settings = game.settings.get(moduleName,'soundboardSettings');
             settings.toggle[id]=event.target.value;
             this.updateSettings(settings);
@@ -350,13 +350,13 @@ export class soundboardConfigForm extends FormApplication {
 
         colorPickerOn.on('click',(event) => {
             const target = event.currentTarget.value;
-            let color = document.getElementById("colorOn"+target).value;
+            let color = document.getElementById("materialKeys_colorOn"+target).value;
             if ((color < 0 && color > 127) || color == "") color = 0;
             launchpad.colorPicker(target,1,color); 
         });
 
         colorPickerOnNr.on('change',(event) => {
-            let id = event.target.id.replace('colorOn','')-1;
+            let id = event.target.id.replace('materialKeys_colorOn','')-1;
             let settings = game.settings.get(moduleName,'soundboardSettings');
             settings.colorOn[id]=event.target.value;
             this.updateSettings(settings,true);
@@ -364,28 +364,28 @@ export class soundboardConfigForm extends FormApplication {
 
         colorPickerOff.on('click',(event) => {
             const target = event.currentTarget.value;
-            let color = document.getElementById("colorOff"+target).value;
+            let color = document.getElementById("materialKeys_colorOff"+target).value;
             if ((color < 0 && color > 127) || color == "") color = 0;
             launchpad.colorPicker(target,0,color);
             
         });
 
         colorPickerOffNr.on('change',(event) => {
-            let id = event.target.id.replace('colorOff','')-1;
+            let id = event.target.id.replace('materialKeys_colorOff','')-1;
             let settings = game.settings.get(moduleName,'soundboardSettings');
             settings.colorOff[id]=event.target.value;
             this.updateSettings(settings,true);
         });
         
         playMode.on("change",event => {
-            let id = event.target.id.replace('playmode','')-1;
+            let id = event.target.id.replace('materialKeys_playmode','')-1;
             let settings = game.settings.get(moduleName,'soundboardSettings');
             settings.mode[id]=event.target.value;
             this.updateSettings(settings);
         });
 
         volumeSlider.on('change', event => {
-            let id = event.target.id.replace('volume','')-1;
+            let id = event.target.id.replace('materialKeys_volume','')-1;
             let settings = game.settings.get(moduleName,'soundboardSettings');
             settings.volume[id]=event.target.value;
             this.updateSettings(settings); 

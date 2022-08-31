@@ -1,4 +1,5 @@
-import {launchpad} from "../MaterialKeys.js";
+import { launchpad } from "../MaterialKeys.js";
+import { compatibleCore } from "./misc.js";
 
 export class VisualFx{
     constructor(){
@@ -61,10 +62,9 @@ export class VisualFx{
                         const objKeys = Object.keys(flags);
                         for (let i = 0; i < objKeys.length; ++i) {
                             const effect = flags[objKeys[i]].type;
-                            Hooks.call("fxmaster.switchWeather", {
+                            Hooks.call("fxmaster.switchParticleEffect", {
                                 name: `core_${effect}`,
-                                type: effect
-                                
+                                type: effect   
                             });
                         }
                     }
@@ -83,7 +83,7 @@ export class VisualFx{
                     applyColor: false
                 }
     
-                Hooks.call("fxmaster.switchWeather", {
+                Hooks.call("fxmaster.switchParticleEffect", {
                     name: `core_${effect}`,
                     type: effect,
                     options,
@@ -104,30 +104,37 @@ export class VisualFx{
                 const filter = filterLabels[filterNum];
 
                 let options = {color: {value:"#000000", apply:false}};
-                if (filter == 'lightning') {
-                    options.period = 500;
-                    options.duration = 300;
-                    options.brightness = 1.3;
+                if (filter == undefined) {
+                    const activeFilters = Object.entries(FXMASTER.filters.filters).filter(f => (f[0] == 'core_lightning' || f[0] == 'core_underwater' || f[0] == 'core_predator' || f[0] == 'core_bloom' || f[0] == 'core_oldfilm'));
+                    for (let filter of activeFilters)
+                        FXMASTER.filters.removeFilter(filter[0]);
                 }
-                else if (filter == 'underwater') {
-                    options.speed = 0.3;
-                    options.scale = 4;
+                else {
+                    if (filter == 'lightning') {
+                        options.period = 500;
+                        options.duration = 300;
+                        options.brightness = 1.3;
+                    }
+                    else if (filter == 'underwater') {
+                        options.speed = 0.3;
+                        options.scale = 4;
+                    }
+                    else if (filter == 'predator') {
+                        options.noise = 0.1;
+                        options.speed = 0.02;
+                    }
+                    
+                    else if (filter == 'bloom') {
+                        options.blur = 1;
+                        options.bloom = 0.1;
+                        options.threshold = 0.5;
+                    }
+                    else if (filter == 'oldfilm') {
+                        options.sepia = 0.3;
+                        options.noise = 0.1;
+                    }
+                    FXMASTER.filters.switch(`core_${filter}`, filter, options);
                 }
-                else if (filter == 'predator') {
-                    options.noise = 0.1;
-                    options.speed = 0.02;
-                }
-                
-                else if (filter == 'bloom') {
-                    options.blur = 1;
-                    options.bloom = 0.1;
-                    options.threshold = 0.5;
-                }
-                else if (filter == 'oldfilm') {
-                    options.sepia = 0.3;
-                    options.noise = 0.1;
-                }
-                FXMASTER.filters.switch(`core_${filter}`, filter, options);
             }
         }  
     }
@@ -155,9 +162,10 @@ export class VisualFx{
                     let filters = fxmaster.core_color;
                     if (filters != undefined){
                         if (filters.type == "color"){
-                            red = filters.options.red;
-                            green = filters.options.green;
-                            blue = filters.options.blue;
+                            const color = Color.from(canvas.scene.getFlag("fxmaster", "filters").core_color.options.color.value).rgb
+                            red = color[0];
+                            green = color[1];
+                            blue = color[2];
                             this.colorizeColor.red = red;
                             this.colorizeColor.green = green;
                             this.colorizeColor.blue = blue;
@@ -167,7 +175,7 @@ export class VisualFx{
                 launchpad.setLED(95,3,Math.ceil(red*127),Math.ceil(green*127),Math.ceil(blue*127));
                 launchpad.setLED(96,3,Math.ceil(red*127),Math.ceil(green*127),Math.ceil(blue*127),game.i18n.localize("MaterialKeys.Emulator.Clear"));
                 launchpad.setLED(97,3,Math.ceil(red*127),Math.ceil(green*127),Math.ceil(blue*127));
-                
+    
                 red = Math.ceil(red*8);
                 green = Math.ceil(green*8);
                 blue = Math.ceil(blue*8);
@@ -208,7 +216,7 @@ export class VisualFx{
             /*
             * Darkness
             */
-            const darkness = Math.floor(7-canvas.scene.data.darkness*7);
+            const darkness = compatibleCore('10.0') ? Math.floor(7-canvas.scene.darkness*7) : Math.floor(7-canvas.scene.data.darkness*7);
             const darknessColor = [7,17,27,47,67,87,107,127];
             launchpad.setLED(91,0,0,0,0,game.i18n.localize("MaterialKeys.Emulator.Darkness"));
             for (let i=0; i<8; i++){
@@ -231,31 +239,32 @@ export class VisualFx{
             if (flags) {
                 const objKeys = Object.keys(flags);
                 for (let i = 0; i < objKeys.length; ++i) {
-                    const weather = CONFIG.fxmaster.weather[flags[objKeys[i]].type];
+                    const weather = CONFIG.fxmaster.particleEffects[flags[objKeys[i]].type];
                     if (weather == undefined) continue;
     
-                    if (weather.label === 'Autumn Leaves') this.visualFxState[0] = true;
-                    else if (weather.label === 'Rain') this.visualFxState[1] = true;
-                    else if (weather.label === 'Snow') this.visualFxState[2] = true;
-                    else if (weather.label === 'Snowstorm') this.visualFxState[3] = true;
-                    else if (weather.label === 'Bubbles') this.visualFxState[4] = true;
-                    else if (weather.label === 'Clouds') this.visualFxState[5] = true;
-                    else if (weather.label === 'Embers') this.visualFxState[6] = true;
-                    else if (weather.label === 'Rain without splash') this.visualFxState[7] = true;
-                    else if (weather.label === 'Stars') this.visualFxState[8] = true;
-                    else if (weather.label === 'Crows') this.visualFxState[9] = true;
-                    else if (weather.label === 'Bats') this.visualFxState[10] = true;
-                    else if (weather.label === 'Fog') this.visualFxState[11] = true;
-                    else if (weather.label === 'Topdown Rain') this.visualFxState[12] = true;
+                    if (weather.name === 'AutumnLeavesParticleEffect') this.visualFxState[0] = true;
+                    else if (weather.name === 'RainParticleEffect') this.visualFxState[1] = true;
+                    else if (weather.name === 'SnowParticleEffect') this.visualFxState[2] = true;
+                    else if (weather.name === 'SnowstormParticleEffect') this.visualFxState[3] = true;
+                    else if (weather.name === 'BubblesParticleEffect') this.visualFxState[4] = true;
+                    else if (weather.name === 'CloudsParticleEffect') this.visualFxState[5] = true;
+                    else if (weather.name === 'EmbersParticleEffect') this.visualFxState[6] = true;
+                    else if (weather.name === 'RainSimpleParticleEffect') this.visualFxState[7] = true;
+                    else if (weather.name === 'StarsParticleEffect') this.visualFxState[8] = true;
+                    else if (weather.name === 'CrowsParticleEffect') this.visualFxState[9] = true;
+                    else if (weather.name === 'BatsParticleEffect') this.visualFxState[10] = true;
+                    else if (weather.name === 'FogParticleEffect') this.visualFxState[11] = true;
+                    else if (weather.name === 'RainTopParticleEffect') this.visualFxState[12] = true;
                 }
             }
             
             //VisualFx leds
             const fxLedColor = [127,79,90,90,3,71,84,79,81,99,97,1,79];
-            const weatherLabel = [CONFIG.weatherEffects.leaves.label,CONFIG.weatherEffects.rain.label,CONFIG.weatherEffects.snow.label,CONFIG.fxmaster.weather.snowstorm.label
-                ,CONFIG.fxmaster.weather.bubbles.label,CONFIG.fxmaster.weather.clouds.label,CONFIG.fxmaster.weather.embers.label,CONFIG.fxmaster.weather.rainsimple.label,
-                CONFIG.fxmaster.weather.stars.label,CONFIG.fxmaster.weather.crows.label,CONFIG.fxmaster.weather.bats.label,CONFIG.fxmaster.weather.fog.label,
-                CONFIG.fxmaster.weather.raintop.label]
+            const weatherEffects = CONFIG.fxmaster.particleEffects;
+            const weatherLabel = [weatherEffects.leaves.label,weatherEffects.rain.label,weatherEffects.snow.label,weatherEffects.snowstorm.label
+                ,weatherEffects.bubbles.label,weatherEffects.clouds.label,weatherEffects.embers.label,weatherEffects.rainsimple.label,
+                weatherEffects.stars.label,weatherEffects.crows.label,weatherEffects.bats.label,weatherEffects.fog.label,
+                weatherEffects.raintop.label]
             let stopState = 0;
             for (let i=0; i<13; i++){
                 const state = this.visualFxState[i] ? 2 : 0;
@@ -292,7 +301,7 @@ export class VisualFx{
                 let mode = 0;
                 if (this.visualFxFilters[i]) mode = 2;
                 if (mode) stopState = 2;
-                launchpad.setLED(75-10*i,mode,filterLedColor[i],0,0,CONFIG.fxmaster.filters[filterLabels[i]].label);
+                launchpad.setLED(75-10*i, mode, filterLedColor[i], 0, 0, game.i18n.localize(CONFIG.fxmaster.filterEffects[filterLabels[i]].label));
             }
             launchpad.setLED(15,stopState,72,0,0,game.i18n.localize("MaterialKeys.Emulator.Clear"));
 

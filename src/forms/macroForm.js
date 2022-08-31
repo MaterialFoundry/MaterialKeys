@@ -15,7 +15,7 @@ export class macroConfigForm extends FormApplication {
      */
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
-            id: "macro-config",
+            id: "materialKeys_macroConfig",
             title: "Material Keys: "+game.i18n.localize("MaterialKeys.Sett.MacroConfig"),
             template: "./modules/MaterialKeys/templates/macroConfig.html",
             classes: ["sheet"]
@@ -92,12 +92,12 @@ export class macroConfigForm extends FormApplication {
 
     activateListeners(html) {
         super.activateListeners(html);
-        const navNext = html.find("button[id='navNext']");
-        const navPrev = html.find("button[id='navPrev']");
-        const clearAll = html.find("button[id='clearAll']");
-        const clearPage = html.find("button[id='clearPage']");
-        const importBtn = html.find("button[id='import']");
-        const exportBtn = html.find("button[id='export']");
+        const navNext = html.find("button[id='materialKeys_navNext']");
+        const navPrev = html.find("button[id='materialKeys_navPrev']");
+        const clearAll = html.find("button[id='materialKeys_clearAll']");
+        const clearPage = html.find("button[id='materialKeys_clearPage']");
+        const importBtn = html.find("button[id='materialKeys_import']");
+        const exportBtn = html.find("button[id='materialKeys_export']");
         const macro = html.find("select[name='macros']");
         const args = html.find("input[name='args']");
         const colorPicker = html.find("button[name='colorPicker']");
@@ -187,14 +187,14 @@ export class macroConfigForm extends FormApplication {
         })
 
         macro.on("change", event => {
-            let id = event.target.id.replace('macros','');
+            let id = event.target.id.replace('materialKeys_macros','');
             let settings = game.settings.get(moduleName,'macroSettings');
             settings.macros[id-1]=event.target.value;
             this.updateSettings(settings);
         });
 
         args.on("change", event => {
-            let id = event.target.id.replace('args','');
+            let id = event.target.id.replace('materialKeys_args','');
             let settings = game.settings.get(moduleName,'macroSettings');
             let args = settings.args;
             if (args == undefined) args = [];
@@ -205,13 +205,13 @@ export class macroConfigForm extends FormApplication {
 
         colorPicker.on('click',(event) => {
             const target = event.currentTarget.value;
-            let color = document.getElementById("color"+target).value;
+            let color = document.getElementById("materialKeys_color"+target).value;
             if ((color < 0 && color > 127) || color == "") color = 0;
             launchpad.colorPicker(target,0,color);
         });
 
         colorPickerNr.on('change',(event) => {
-            let id = event.target.id.replace('color','')-1;
+            let id = event.target.id.replace('materialKeys_color','')-1;
             let j = Math.floor(id/8);
             let i = id % 8;
             let settings = game.settings.get(moduleName,'macroSettings');

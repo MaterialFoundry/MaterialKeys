@@ -6,7 +6,6 @@ import {VisualFx} from "./src/visualFx.js";
 import {CombatTracker} from "./src/combatTracker.js";
 import {MacroBoard} from "./src/macroBoard.js";
 import {Soundscape} from "./src/soundscape.js";
-import {soundboardCheatSheet,macroCheatSheet} from "./src/misc.js";
 import {newEmulator} from "./src/forms/emulator.js";
 export const moduleName = "MaterialKeys";
 export const launchpad = new Launchpad();
@@ -49,7 +48,7 @@ async function analyzeWSmessage(msg){
         const connectedDevice = data.data;
         if (connectedDevice == 'null') ui.notifications.warn("Material Keys: "+game.i18n.localize("MaterialKeys.Notifications.NoMidi"));
         else {
-            ui.notifications.notify("Material Keys: "+game.i18n.localize("MaterialKeys.Notifications.MidiConnect")+" "+connectedDevice);
+            ui.notifications.notify("Material Keys: "+game.i18n.localize("MaterialKeys.Notifications.MidiConnect"));
             launchpad.setBrightness(game.settings.get(moduleName,'brightness'));
             launchpad.setMode(8,false);
         }
@@ -157,16 +156,6 @@ Hooks.on("renderSettings", (app, html) => {
             `<h2>Material Keys</h2>
                 `
         );
-        const btnSoundboard = $(
-            `<button id="MaterialKeys_SBcheatsheet" data-action="MaterialKeys_SBcheatsheet" title="Material Keys: "+${game.i18n.localize("MaterialKeys.SBcheatSheet")}>
-                <i></i> ${game.i18n.localize("MaterialKeys.SBcheatSheet")}
-            </button>`
-        );
-        const btnMacroboard = $(
-            `<button id="MaterialKeys_SBcheatsheet" data-action="MaterialKeys_MBcheatsheet" title="Material Keys: "+${game.i18n.localize("MaterialKeys.MBcheatSheet")}>
-                <i></i> ${game.i18n.localize("MaterialKeys.MBcheatSheet")}
-            </button>`
-        );
 
         const btnEmulator = $(
             `<button id="MaterialKeys_Emulator" data-action="MaterialKeys_Emulator" title="Material Keys: "+${game.i18n.localize("MaterialKeys.Emulator")}>
@@ -176,20 +165,7 @@ Hooks.on("renderSettings", (app, html) => {
 
         const setupButton = html.find("button[data-action='setup']");
         setupButton.after(label);
-        //label.after(btnMacroboard);
-        //label.after(btnSoundboard);
         label.after(btnEmulator);
-        
-    
-        btnSoundboard.on("click", event => {
-            let dialog = new soundboardCheatSheet();
-            dialog.render(true)
-        });
-
-        btnMacroboard.on("click", event => {
-            let dialog = new macroCheatSheet();
-            dialog.render(true)
-        });
 
         btnEmulator.on("click", event => {
             newEmulator();

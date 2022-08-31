@@ -1,4 +1,5 @@
-import {moduleName, launchpad} from "../MaterialKeys.js";
+import { moduleName, launchpad } from "../MaterialKeys.js";
+import { compatibleCore } from "./misc.js";
 
 export class PlaylistControl{
     constructor(){
@@ -57,7 +58,7 @@ export class PlaylistControl{
             const playlist = this.getPlaylist(i);
             let led;
             if (playlist != undefined){
-                const nrOfTracks = playlist.data.sounds.size;
+                const nrOfTracks = compatibleCore('10.0') ? playlist.sounds.size : playlist.data.sounds.size;
                 let tracksRemaining = nrOfTracks - 8*screen;
                 if (tracksRemaining < 0) tracksRemaining = 0;
                 
@@ -231,7 +232,7 @@ export class PlaylistControl{
         for (let i=0; i<8; i++){
             const playlist = this.getPlaylist(i);
             if (playlist != undefined){
-                const nrOfTracks = playlist.data.sounds.size;
+                const nrOfTracks = compatibleCore('10.0') ? playlist.sounds.size : playlist.data.sounds.size;
                 if (nrOfTracks > maxTracks) maxTracks = nrOfTracks;
             }
         }

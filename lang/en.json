@@ -1,9 +1,9 @@
 {
     "MaterialKeys.Notifications.NoMidi": "No MIDI device detected",
-    "MaterialKeys.Notifications.MidiConnect": "Connected to",
-    "MaterialKeys.Notifications.WSConnect": "Connected to the Material Server on",
-    "MaterialKeys.Notifications.WSDisconnect": "Disconnected from the Material Server, attempting to reconnect",
-    "MaterialKeys.Notifications.WSCantConnect": "Can't connect to the Material Server, retrying",
+    "MaterialKeys.Notifications.MidiConnect": "Connected to MIDI device",
+    "MaterialKeys.Notifications.WSConnect": "Connected to Material Server on",
+    "MaterialKeys.Notifications.WSDisconnect": "Disconnected from Material Server, attempting to reconnect",
+    "MaterialKeys.Notifications.WSCantConnect": "Can't connect to Material Server, retrying",
 
     "MaterialKeys.Sett.Help": "Help",
     "MaterialKeys.Sett.PlaylistConfig": "Playlist Configuration",
@@ -13,7 +13,7 @@
     "MaterialKeys.Sett.Brightness_Hint": "LED brightness level",
     "MaterialKeys.Sett.Enable": "Enable module",
     "MaterialKeys.Sett.MidiAddr": "Material Server address",
-    "MaterialKeys.Sett.MidiAddrHint": "Fill in the IP address and port of the Material Server",
+    "MaterialKeys.Sett.MidiAddrHint": "Fill in the IP address and port of Material Server",
     "MaterialKeys.Sett.NrOfConnMessages": "Number of Connection Warnings",
     "MaterialKeys.Sett.NrOfConnMessagesHint": "Sets the number of times a connection warning is displayed if Material Keys cannot connect to Material Server. If set to 0, it will give not be limited.",
 

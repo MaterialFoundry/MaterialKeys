@@ -12,7 +12,7 @@ export class exportConfigForm extends FormApplication {
      */
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
-            id: "MK_Export",
+            id: "materialKeys_export",
             title: "Material Keys: " + game.i18n.localize("MaterialKeys.ExportDialog.Title"),
             template: "./modules/MaterialKeys/templates/exportDialog.html",
             width: 500,

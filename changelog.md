@@ -1,4 +1,13 @@
 # Changelog Material Keys Module
+### v1.2.8 - 01-09-2022
+Other:
+<ul>
+<li>Made compatible with Foundry v10</li>
+<li>Cleaned up documentation</li>
+<li>Improved naming of html elements to prevent compatibility issues</li>
+<li>Improved FXMaster compatibility by updating to the latest API</li>
+</ul>
+
 ### v1.2.7 - 17-01-2022
 Additions:
 <ul>

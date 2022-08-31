@@ -1,4 +1,5 @@
-import {launchpad} from "../MaterialKeys.js";
+import { launchpad } from "../MaterialKeys.js";
+import { compatibleCore } from "./misc.js";
 
 export class CombatTracker{
     constructor(){
@@ -26,14 +27,14 @@ export class CombatTracker{
                     }     
                 }
                 for (let i=0; i<initiativeOrder.length; i++){
-                    let token = initiativeOrder[i].token.data;
+                    let token = compatibleCore('10.0') ? initiativeOrder[i].token : initiativeOrder[i].token.data;
                     let color;
                     const disposition = token.disposition;
                     if (disposition == 1) color = 87;
                     else if (disposition == 0) color = 74;
                     else if (disposition == -1) color = 72;
                     let type = 0;
-                    const currentCombatantId = combat.combatant.token.id;
+                    const currentCombatantId = combat.combatant?.token.id;
                     if (combat.started && token._id == currentCombatantId) type = 2;
                     let j = i;
                     if (i>7) j = i-18;
@@ -80,7 +81,7 @@ export class CombatTracker{
             if (selected < 0) selected += 18;
             if (selected < 0) selected += 18;
             
-            let token = game.combat.turns[selected].token.data;
+            let token = compatibleCore('10.0') ? game.combat.turns[selected].token : game.combat.turns[selected].token.data;
             if (token != undefined){
                 let tokenId = token._id;
                 let tokens = canvas.tokens.children[0].children;
@@ -146,7 +147,7 @@ export class CombatTracker{
         let page = launchpad.keyMode % 10-1;
         let selected = key % 10 - 1 + 8 * page;
 
-        let token = game.combat.turns[selected].token.data;
+        let token = compatibleCore('10.0') ? game.combat.turns[selected].token : game.combat.turns[selected].token.data;
         if (token != undefined){
             let tokenId = token._id;
             let tokens = canvas.tokens.children[0].children;
@@ -195,11 +196,10 @@ export class CombatTracker{
         launchpad.setMainLEDs(0,0);
         if (combatants.length > 0){
             let initiativeOrder = combat.turns;
-        
             for (let i=0; i<8; i++){
                 let nr = i+8*page;
                 if (nr >= initiativeOrder.length) break;
-                let token = initiativeOrder[i].token.data;
+                let token = compatibleCore('10.0') ? initiativeOrder[i].token : initiativeOrder[i].token.data;
                 let color;
                 const disposition = token.disposition;
                 if (disposition == 1) color = 87;
@@ -214,10 +214,10 @@ export class CombatTracker{
                 if (j>15) j = i-28;
                 
                 let led = 91+i;
-
+                
                 token = canvas.tokens.children[0].children.find(p => p.id == token._id);
-                let hp = token.actor.data.data.attributes.hp.value;
-                let hpMax = token.actor.data.data.attributes.hp.max;
+                let hp = compatibleCore('10.0') ? token.actor.system.attributes.hp.value : token.actor.data.data.attributes.hp.value;
+                let hpMax = compatibleCore('10.0') ? token.actor.system.attributes.hp.max : token.actor.data.data.attributes.hp.max;
                 if (hp == null) hp = 0;
                 if (hpMax == null) hpMax = 0;
                 const txt = `${token.name} - ${hp}/${hpMax}`;

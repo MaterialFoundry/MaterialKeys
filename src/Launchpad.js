@@ -342,19 +342,20 @@ export class Launchpad{
 
     async colorPickerUpdate(value){
         this.colorPickerActive = false;
-        if (document.getElementById("macro-config") != null) {
-            let element = document.getElementById("color"+this.colorPickerKey);
+        if (document.getElementById("materialKeys_macroConfig") != null) {
+            let element = document.getElementById("materialKeys_color"+this.colorPickerKey);
             element.value=value;
             element.style="flex:4; background-color:"+getColor(value);
             let settings = game.settings.get(moduleName,'macroSettings');
+            if (settings.color == undefined) settings.color = [];
             settings.color[this.colorPickerKey-1] = value;
             await game.settings.set(moduleName,'macroSettings',settings);
             this.setMode(this.keyMode,false);
         }
         
-        else if (document.getElementById("soundboard-config") != null) {
+        else if (document.getElementById("materialKeys_soundboardConfig") != null) {
             if (this.colorPickerMode == 0){
-                let element = document.getElementById("colorOff"+this.colorPickerKey);
+                let element = document.getElementById("materialKeys_colorOff"+this.colorPickerKey);
                 element.value=value;
                 element.style="flex:4; background-color:"+getColor(value);  
                 let settings = game.settings.get(moduleName,'soundboardSettings');
@@ -363,7 +364,7 @@ export class Launchpad{
                 soundboard.update();
             }
             else {
-                let element = document.getElementById("colorOn"+this.colorPickerKey);
+                let element = document.getElementById("materialKeys_colorOn"+this.colorPickerKey);
                 element.value=value;
                 element.style="flex:4; background-color:"+getColor(value);
                 let settings = game.settings.get(moduleName,'soundboardSettings');
@@ -373,9 +374,9 @@ export class Launchpad{
             }
             this.setMode(this.keyMode,false);
         }
-        else if (document.getElementById("playlist-config") != null) {
+        else if (document.getElementById("materialKeys_playlistConfig") != null) {
             if (this.colorPickerMode == 0){
-                let element = document.getElementById("colorOff");
+                let element = document.getElementById("materialKeys_colorOff");
                 element.value=value;
                 element.style="flex:7; background-color:"+getColor(value);  
                 let settings = game.settings.get(moduleName,'playlists');
@@ -384,7 +385,7 @@ export class Launchpad{
                 playlistControl.playlistUpdate();
             }
             else {
-                let element = document.getElementById("colorOn");
+                let element = document.getElementById("materialKeys_colorOn");
                 element.value=value;
                 element.style="flex:7; background-color:"+getColor(value);
                 let settings = game.settings.get(moduleName,'playlists');
