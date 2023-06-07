@@ -30,7 +30,19 @@
             "path": "lang/en.json"
         }
     ],
-    "url": "https://github.com/CDeenen/MaterialKeys",
-    "manifest": "https://github.com/CDeenen/MaterialKeys/releases/latest/download/module.json",
-    "download": "https://github.com/CDeenen/MaterialKeys/releases/download/v1.2.8/module.zip"
+    "media": [
+        {
+          "type": "icon",
+          "url": "modules/MaterialKeys/img/MaterialFoundry512x512.png"
+        },{
+                "type": "setup",
+                "url": "modules/MaterialKeys/img/MaterialFoundry2560x1440.jpg"
+            },{
+                "type": "cover",
+                "url": "modules/MaterialKeys/img/MaterialFoundry2560x1440.jpg"
+            }
+    ],
+    "url": "https://github.com/MaterialFoundry/MaterialKeys",
+    "manifest": "https://github.com/MaterialFoundry/MaterialKeys/releases/latest/download/module.json",
+    "download": "https://github.com/MaterialFoundry/MaterialKeys/releases/download/v1.2.9/module.zip"
 }
