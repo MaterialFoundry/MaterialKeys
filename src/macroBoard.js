@@ -1,4 +1,5 @@
-import {moduleName,launchpad} from "../MaterialKeys.js";
+import {moduleName,launchpad,marcoArgumentsEnabled} from "../MaterialKeys.js";
+import { compatibleCore } from "./misc.js";
 
 export class MacroBoard{
     constructor(){
@@ -18,22 +19,30 @@ export class MacroBoard{
         const macroId = game.settings.get(moduleName,'macroSettings').macros[nr];
         const macro = game.macros.get(macroId);
         if (macro == null) return;
-        if (game.settings.get(moduleName,'macroSettings').args != undefined) {
+        const args = game.settings.get(moduleName,'macroSettings')?.args[nr];
+        if (!marcoArgumentsEnabled || args == undefined || args == '') {
+            macro.execute();
+        }
+        else {
             const args = game.settings.get(moduleName,'macroSettings').args[nr];
-            let furnaceEnabled = false;
-            const furnace = game.modules.get("furnace");
-            if (furnace != undefined && furnace.active) furnaceEnabled = true;
-            if (furnaceEnabled) {
+            if (compatibleCore('11.0')) {
+                let argument;
+                try {
+                    argument = JSON.parse(args)
+                    macro.execute(argument);
+                } catch (err) {
+                    console.error(err)
+                }
+            }
+            else {
                 const chatData = {
                     user: game.user._id,
                     speaker: ChatMessage.getSpeaker(),
-                    content: "/'" + macro.name + "' " + args
+                    content: "/amacro '" + macro.name + "' " + args
                   };
                 ChatMessage.create(chatData, {});
-                return;
             }
         }
-        macro.execute();
     }
 
     update(){

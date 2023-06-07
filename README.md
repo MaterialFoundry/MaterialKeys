@@ -1,7 +1,7 @@
 # Material Keys
 Material Keys is a <a href="https://foundryvtt.com/">Foundry VTT</a> module that allows you to control various features of Foundry using a Novation Launchpad Mini Mk3 or through the built-in <a href="https://github.com/CDeenen/MaterialKeys#emulator">emulator</a>. The Launchpad is a MIDI controller, that has 80 physical keys, each with an RGB LED.<br>
 <br>
-Material Keys currently has 7 different functions:<br>
+Material Keys currently has 8 different functions:<br>
 <ul>
 <li><a href="https://github.com/CDeenen/MaterialKeys#soundboard">Soundboard</a></li>
 <li><a href="https://github.com/CDeenen/MaterialKeys#playlist-control">Playlist Control</a></li>
@@ -10,10 +10,11 @@ Material Keys currently has 7 different functions:<br>
 <li><a href="https://github.com/CDeenen/MaterialKeys#combat-tracker">Combat Tracker</a></li>
 <li><a href="https://github.com/CDeenen/MaterialKeys#token-health-tracker">Token Health Tracker</a></li>
 <li><a href="https://github.com/CDeenen/MaterialKeys#macroboard">Macroboard</a></li>
+<li><a href="https://github.com/CDeenen/MaterialKeys#soundscape">Soundscape</a></li>
 </ul>
 Each of these functions are discussed in detail below.<br>
 <br>
-This video shows all the features, and how to set everything up.<br>
+This video shows most of the features, and how to set everything up.<br>
 
 [![Youtube Video](https://github.com/CDeenen/MaterialKeys/blob/master/img/YoutubeMatKeys.png)](https://youtu.be/GIuCK13fYUw "YoutubeVid")
 
@@ -203,7 +204,7 @@ If there are more than 8 tokens in the initiative tracker, you can press the sam
 <img src="https://github.com/CDeenen/MaterialKeys/blob/master/img/HPTracker.jpg" width="500">
 
 ## Macroboard
-The macroboard allows you to trigger macro's. You can use chat or script macro's, and when you have <a href="https://foundryvtt.com/packages/furnace/">The Furnace</a> installed, you can use advanced macros with arguments.<br>
+The macroboard allows you to trigger macro's. You can use chat or script macro's, and when you have <a href="https://foundryvtt.com/packages/advanced-macros">Advanced Macros</a> installed or you're on Foundry V11, you can use macro arguments.<br>
 You can enter the Macroboard by pressing the 7th function button from the top.<br>
 Once you've set up the macroboard, pressing a key will trigger the pre-set macro.<br>
         <br>
@@ -217,7 +218,7 @@ You can set up a total of 256 macros. Since there are only 64 keys on the Launch
 For each sound there are multiple options:
 <ul>
 <li><b>Macro:</b> Using the drop-down menu you can select the desired macro</li>
-<li><b>Furnace Arguments:</b> (The Furnace required) Here you can enter arguments for Furnace macro's. Normally, to run a Furnace macro, you'd call "/my-macro-name argument1 argument2 argument3", in this box, you only have to enter "argument1 argument2 argument3". Please refer to the Furnace documentation for more info on using Furnace macro's.</li>
+<li><b>Macro Arguments:</b> (Advanced Macros or Foundry V11 required) Here you can enter macro arguments, see below.</li>
 <li><b>Color:</b> This sets the color of the corresponding macro key. See the Soundboard section for information on what the color number represents</li>
 </ul>
 <br>
@@ -232,7 +233,61 @@ When importing and exporting, you only import/export the metadata, not the actua
 or you might run into issues.
 <br>
 
+#### Macro Arguments
+When you have <a href="https://foundryvtt.com/packages/advanced-macros">Advanced Macros</a> installed or you're on Foundry V11 you can use macro arguments.<br>
+<br>
+<b>Macro Arguments in Foundry V11</b><br>
+In Foundry v11 you enter objects as macro arguments, which can be retrieved in the macro from the scope object, for example, `scope.x`.
+
+Take the following macro to move the selected token to coordinates x and y:<br>
+`token.document.update({x: scope.x, y: scope.y})`<br>
+If you want to call this macro from Material Keys to move the token to x=1000 and y=1500, you'd use the following arguments:<br>
+`{"x":1000, "y":1500}`<br>
+Please note that you must include the quotation marks around the object keys.<br>
+<br>
+<b>Macro Arguments using Advanced Macros</b><br>
+Please read the <a href="https://github.com/mclemente/fvtt-advanced-macros/tree/old-v1.19">Advanced Macros documentation</a>.<br>
+If, for example, you wanted to execute a macro named 'My Macro' with the arguments 'argument1 argument2 argument3', you would use for example `/amacro "My Macro" 100 50 "test"` in the chat. In the macro configuration screen you would only fill in the arguments, so: `100 50 "test"`.
+
+
 <img src="https://github.com/CDeenen/MaterialKeys/blob/master/img/MacroConfiguration.png" width="1000">
+
+## Soundscape
+The Soundscape function allows you to control the <a href="https://foundryvtt.com/packages/soundscape">Soundscape</a> module. You can, for example, change the volume of the different channels, mute or solo them, and play sounds from the soundboard.<br>
+You enter the Soundscape function by pressing the 8th function button from the top.<br>
+There are 4 different pages, which can be accessed using the top-left control keys, from left to right:
+<ul>
+<li>Channel Volume</li>
+<li>Channel Configuration</li>
+<li>Master Volume</li>
+<li>Soundboard</li>
+</ul>
+The top-right button can be used to start and stop the soundscape, and the color changes accordingly from red (soundscape not playing) to green (soundscape playing).
+
+### Channel Volume
+The volume of each channel is represented by the columns on the Launchpad. The amount of Launchpad keys that are lit indicate the volume, and pressing one of the keys changes the volume in Soundscape.
+
+### Channel Configuration
+Each channel is represented by a column on the Launchpad. The 4 buttons do the following, from top to bottom:
+<ul>
+<li>Red: Mute channel</li>
+<li>Yellow: Solo channel</li>
+<li>Blue: Link channel</li>
+<li>Green: Channel is playing</li>
+</ul>
+If one of those applies to the channel, the corresponding key lights up bright, otherwise it is dim.<br>
+Pressing one of these keys applies the corresponding setting in Soundscape.
+
+### Master Volume
+The left-most column of keys represents the Soundscape master volume. Pressing one of the keys changes the volume accordingly.
+
+### Soundboard
+The Main Keys section of the Launchpad is divided into 3 parts:
+<ul>
+<li>Top-left 15 keys: These represent the 15 soundboard sounds of Soundscape. Green means there is a sound configured, red means there is no sound configured.</li>
+<li>Top-right key: Pressing this stops all currently playing soundboard sounds.</li>
+<li>Bottom row: These represent the soundboard volume. Pressing one of the keys changes the volume accordingly.</li>
+</ul>
 
 ## Emulator
 Material Keys has a built-in Launchpad emulator. This emulator has the same buttons as a Launchpad Mini or Launchpad X. It mirrors what is displayed on your physical Launchpad (if there is any connected),
@@ -244,7 +299,7 @@ You can access the emulator in the sidebar, under the 'Game Settings'.
 <img src="https://github.com/CDeenen/MaterialKeys/blob/master/img/Emulator.png" width="500">
 
 # Software Versions & Module Incompatibilities
-<b>Foundry VTT:</b> Tested on 0.7.7 - 0.8.6 (not fully compatible with 0.6.6)<br>
+<b>Foundry VTT:</b> Tested on V10 and V11<br>
 <b>Module Incompatibilities:</b> None known<br>
 
 # Feedback

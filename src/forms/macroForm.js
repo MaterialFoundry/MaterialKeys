@@ -1,4 +1,4 @@
-import {moduleName,enableModule,launchpad,macroBoard} from "../../MaterialKeys.js";
+import {moduleName,enableModule,launchpad,macroBoard,marcoArgumentsEnabled} from "../../MaterialKeys.js";
 import {getColor} from "../misc.js";
 import {exportConfigForm} from "./exportForm.js";
 import {importConfigForm} from "./importForm.js";
@@ -31,11 +31,8 @@ export class macroConfigForm extends FormApplication {
         if (settings.color == undefined) settings.color = [];
         if (settings.args == undefined) settings.args = [];
 
-        let furnaceEnabled = false;
-        const furnace = game.modules.get("furnace");
-        if (furnace != undefined && furnace.active) furnaceEnabled = true;
         let height = 95;
-        if (furnaceEnabled) height += 50;
+        if (marcoArgumentsEnabled) height += 50;
 
         let iteration = this.page*32;
         let macroData = [];
@@ -60,11 +57,12 @@ export class macroConfigForm extends FormApplication {
             };
             macroData.push(data);
         }
+       
         return {
             height: height,
             macros: game.macros,
             macroData: macroData,
-            furnace: furnaceEnabled,
+            macroArguments: marcoArgumentsEnabled,
             macroRange: `${this.page*32 + 1} - ${this.page*32 + 32}`,
             prevDisabled: this.page == 0 ? 'disabled' : '',
             totalMacros: Math.max(Math.ceil(settings.macros.length/32)*32, this.page*32 + 32)
@@ -82,8 +80,7 @@ export class macroConfigForm extends FormApplication {
             color: formData["color"]
        });
 
-        let furnace = game.modules.get("furnace");
-        if (furnace != undefined && furnace.active) 
+        if (marcoArgumentsEnabled) 
             await game.settings.set(moduleName,'macroArgs', formData["args"]);
        
        launchpad.setMode(launchpad.keyMode,false);

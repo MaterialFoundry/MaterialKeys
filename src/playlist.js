@@ -58,7 +58,7 @@ export class PlaylistControl{
             const playlist = this.getPlaylist(i);
             let led;
             if (playlist != undefined){
-                const nrOfTracks = compatibleCore('10.0') ? playlist.sounds.size : playlist.data.sounds.size;
+                const nrOfTracks = playlist.sounds.size;
                 let tracksRemaining = nrOfTracks - 8*screen;
                 if (tracksRemaining < 0) tracksRemaining = 0;
                 
@@ -98,23 +98,29 @@ export class PlaylistControl{
     }
     
     async playTrack(track,playlist,playlistNr){
-        let play;
-        if (track.playing)
-            play = false;
-        else {
-            play = true;
-            let mode = game.settings.get(moduleName,'playlists').playlistMode[playlistNr];
-            if (mode == 0) {
-                mode = game.settings.get(moduleName,'playlists').playMode;
-                if (mode == 1) await playlist.stopAll();
-                else if (mode == 2) await this.stopAll();
-            }
-            else if (mode == 2) await playlist.stopAll();
-        }
-        if (play) await playlist.playSound(track);
-        else await playlist.stopSound(track);
         
-        playlist.update({playing: play});
+        if (track.playing)
+            playlist.stopSound(track);
+        else {
+            let playlistMode = game.settings.get(moduleName,'playlists').playlistMode[playlistNr];
+            let globalMode = game.settings.get(moduleName,'playlists').playMode;
+
+            if (playlistMode == 1 || (playlistMode == 0 && globalMode == 0)) { //unrestricted
+                await playlist.update({
+                    playing: true,
+                    sounds: [
+                        {_id: track.id, playing: true}
+                    ]
+                });
+            }
+            else if ((playlistMode == 0 && globalMode == 1) || playlistMode == 2) { //one track per playlist
+                playlist.playSound(track);
+            }
+            else if (playlistMode == 0 && globalMode == 2) { //one track in total
+                await this.stopAll();
+                playlist.playSound(track);
+            }
+        }
     }
 
     stopAll(force=false){
@@ -202,8 +208,7 @@ export class PlaylistControl{
             for (let i=0; i<8; i++){
                 const track = playlist.sounds.contents[i+8*screen];
                 if (track == undefined) continue;
-                const trackVolume = track.volume/game.settings.get("core", "globalPlaylistVolume");
-                const volume = Math.ceil(AudioHelper.volumeToInput(trackVolume)*7);
+                const volume = Math.ceil(AudioHelper.volumeToInput(track.volume)*7);
                 let color = colorOff;
                 let txt = '';
                 if (track.playing) color = colorOn;
@@ -232,7 +237,7 @@ export class PlaylistControl{
         for (let i=0; i<8; i++){
             const playlist = this.getPlaylist(i);
             if (playlist != undefined){
-                const nrOfTracks = compatibleCore('10.0') ? playlist.sounds.size : playlist.data.sounds.size;
+                const nrOfTracks = playlist.sounds.size;
                 if (nrOfTracks > maxTracks) maxTracks = nrOfTracks;
             }
         }

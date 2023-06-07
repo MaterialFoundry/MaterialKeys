@@ -7,6 +7,7 @@ import {CombatTracker} from "./src/combatTracker.js";
 import {MacroBoard} from "./src/macroBoard.js";
 import {Soundscape} from "./src/soundscape.js";
 import {newEmulator} from "./src/forms/emulator.js";
+import { compatibleCore } from "./src/misc.js";
 export const moduleName = "MaterialKeys";
 export const launchpad = new Launchpad();
 export const playlistControl = new PlaylistControl();
@@ -25,6 +26,8 @@ let WSconnected = false;
 //Other global variables
 export let enableModule;
 let activeSounds = [];
+
+export let marcoArgumentsEnabled = false;
 
 //CONFIG.debug.hooks = true
 
@@ -130,6 +133,13 @@ Hooks.once('ready', async()=>{
             if (macroSettings.args == undefined) macroSettings.args = [];
             game.settings.set(moduleName,'macroSettings',macroSettings)
         }
+        if (compatibleCore('11.0')) {
+            marcoArgumentsEnabled = true;
+        }
+        else {
+            const advancedMacros = game.modules.get("advanced-macros");
+            if (advancedMacros != undefined && advancedMacros.active) marcoArgumentsEnabled = true;
+        }
     }
 
     game.socket.on(`module.MaterialKeys`, (payload) =>{
@@ -171,6 +181,10 @@ Hooks.on("renderSettings", (app, html) => {
             newEmulator();
         });
     });
+
+Hooks.on("updatePlaylistSound", (sound, volume, diff, id) => {
+    playlistControl.volumeUpdate();
+});
 
 /**
  * Start a new websocket

@@ -25,7 +25,7 @@ export class VisualFx{
         if (launchpad.keyMode == 5){
             if (column == 0 && row >= 0){
                 const darkness = row/7;
-                canvas.scene.update({darkness: darkness});
+                canvas.scene.update({darkness: darkness}, {animateDarkness:500});
             }
             else if (column == 2 && row >= 0){
                 row = 8 - row;
@@ -216,7 +216,7 @@ export class VisualFx{
             /*
             * Darkness
             */
-            const darkness = compatibleCore('10.0') ? Math.floor(7-canvas.scene.darkness*7) : Math.floor(7-canvas.scene.data.darkness*7);
+            const darkness = Math.floor(7-canvas.scene.darkness*7);
             const darknessColor = [7,17,27,47,67,87,107,127];
             launchpad.setLED(91,0,0,0,0,game.i18n.localize("MaterialKeys.Emulator.Darkness"));
             for (let i=0; i<8; i++){

@@ -45,12 +45,13 @@
                             {{/select}}
                         </select>
                     </div>
-                    {{#if ../../furnace}}
-                        <label>{{localize "MaterialKeys.FurnaceArgs"}}</label>
+                    
+                    {{#if ../../macroArguments}}
+                        <label>{{localize "MaterialKeys.MacroArgs"}}</label>
                         <input type="text" name="args" id="materialKeys_args{{this.iteration}}" value="{{this.args}}">
                     {{/if}}
                     
-                    <div class="flex-container" style="display:flex;flex-direction:row;padding-top:10px"">  
+                    <div class="flex-container" style="display:flex;flex-direction:row;padding-top:10px">  
                         <label style="flex:1">{{localize "MaterialKeys.Color"}}</label>
                         <input type="number" id="materialKeys_color{{this.iteration}}" name="color" style="flex:4; background-color:{{this.colorRGB}};margin-left:5px" min="0" max="127" value={{this.color}}>
                         <button type="button" name="colorPicker" id="materialKeys_colorBtn{{this.iteration}}" value={{this.iteration}} style="flex:1;height:28px">

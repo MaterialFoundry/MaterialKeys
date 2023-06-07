@@ -1,4 +1,20 @@
 # Changelog Material Keys Module
+### v1.2.9 - 07-06-2023
+Fixes: 
+<ul>
+    <li>Playlist Configuration: 'Unrestricted' default playmode is an option again and playlist modes function like they should again</li>
+    <li>Playlist Volume: Volume display is updated correctly again</li>
+    <li>Combat Tracker HP Display: When combat hadn't started yet, the hitpoints would not display properly and throw an error</li>
+    <li>(Foundry V10) Macro arguments using Advanced Macros function again</li>
+</ul>
+
+Other:
+<ul>
+    <li>(Foundry v11) Macro arguments are now in the core, so Advanced Macros is no longer used</li>
+    <li>VisualFx: Darkness changes are now smooth transistions</li>
+</ul>
+
+
 ### v1.2.8 - 01-09-2022
 Other:
 <ul>

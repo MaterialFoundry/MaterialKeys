@@ -31,7 +31,7 @@
             Material Keys is a <a href="https://foundryvtt.com/">Foundry VTT</a> module that allows you to control various features of Foundry using a Novation Launchpad Mini Mk3 or through the built-in emulator. 
             The Launchpad is a MIDI controller, that has 80 physical keys, each with an RGB LED.<br>
             <br>
-            Material Keys currently has 7 different functions:<br>
+            Material Keys currently has 8 different functions:<br>
             <ul>
             <li>Soundboard</li>
             <li>Playlist Control</li>
@@ -40,10 +40,13 @@
             <li>Combat Tracker</li>
             <li>Token Health Tracker</li>
             <li>Macroboard</li>
+            <li>Soundscape</li>
             </ul>
             Each of these functions are discussed in detail below.<br>
             <br>
-            <a href="https://youtu.be/GIuCK13fYUw">This</a> video shows all the features, and how to set everything up.<br>
+            If you're confused about what any button does, try opening the emulator which has each button labeled.<br>
+            <br>
+            <a href="https://youtu.be/GIuCK13fYUw">This</a> video shows most of the features, and how to set everything up.<br>
         </div>
     
         <h1 class="materialKeys_expandable"><img src="modules/MaterialKeys/img/icons/right.png" class="materialKeys_expandableIcon" style="width:20px">Getting Started</h1>
@@ -271,7 +274,7 @@
                 For each sound there are multiple options:
                 <ul>
                 <li><b>Macro:</b> Using the drop-down menu you can select the desired macro</li>
-                <li><b>Furnace Arguments:</b> (The Furnace required) Here you can enter arguments for Furnace macro's. Normally, to run a Furnace macro, you'd call "/my-macro-name argument1 argument2 argument3", in this box, you only have to enter "argument1 argument2 argument3". Please refer to the Furnace documentation for more info on using Furnace macro's.</li>
+                <li><b>Macro Arguments:</b> (Advanced Macros or Foundry V11 required) Here you can enter macro arguments, see below.</li>
                 <li><b>Color:</b> This sets the color of the corresponding macro key. See the Soundboard section for information on what the color number represents</li>
                 </ul>
                 <br>
@@ -285,9 +288,53 @@
                 When importing and exporting, you only import/export the metadata, not the actual macros. This means that you need to have the same macros in the same relative location in both the source and target Foundry client,
                 or you might run into issues.
                 <br>
+                <h3><b>Macro Arguments</b></h3> 
+                When you have <a href="https://foundryvtt.com/packages/advanced-macros">Advanced Macros</a> installed or you're on Foundry V11 you can use macro arguments.<br>
+                <br>
+                <b>Macro Arguments in Foundry V11</b><br>
+                In Foundry v11 you enter objects as macro arguments, which can be retrieved in the macro from the scope object, for example, 'scope.x'.
+
+                Take the following macro to move the selected token to coordinates x and y:<br>
+                'token.document.update({x: scope.x, y: scope.y})'<br>
+                If you want to call this macro from Material Keys to move the token to x=1000 and y=1500, you'd use the following arguments:<br>
+                '{"x":1000, "y":1500}'<br>
+                Please note that you must include the quotation marks around the object keys.<br>
+                <br>
+                <b>Macro Arguments using Advanced Macros</b><br>
+                Please read the <a href="https://github.com/mclemente/fvtt-advanced-macros/tree/old-v1.19">Advanced Macros documentation</a>.<br>
+                If, for example, you wanted to execute a macro named 'My Macro' with the arguments 'argument1 argument2 argument3', you would use for example '/amacro "My Macro" 100 50 "test"' in the chat. In the macro configuration screen you would only fill in the arguments, so: '100 50 "test"'.<br>
+                <br>
                 <img src="modules/MaterialKeys/img/MacroConfiguration.png" align="center" HSPACE="5" width="900">
                 
                 <BR CLEAR="right" />
+            </div>
+
+            <h2 class="materialKeys_expandable"><img src="modules/MaterialKeys/img/icons/right.png" class="materialKeys_expandableIcon" style="width:15px">Soundscape</h2>
+            <div class="materialKeys_collapsed">
+                The Soundscape function allows you to control the <a href="https://foundryvtt.com/packages/soundscape">Soundscape</a> module. You can, for example, change the volume of the different channels, mute or solo them, and play sounds from the soundboard.<br>
+                    You enter the Soundscape function by pressing the 8th function button from the top.<br>
+                    There are 4 different pages, which can be accessed using the top-left control keys, from left to right:
+                    <ul>
+                    <li>Channel Volume</li>
+                    <li>Channel Configuration</li>
+                    <li>Master Volume</li>
+                    <li>Soundboard</li>
+                    </ul>
+                    The top-right button can be used to start and stop the soundscape, and the color changes accordingly from red (soundscape not playing) to green (soundscape playing).
+                    
+                    ### Channel Volume
+                    The volume of each channel is represented by the columns on the Launchpad. The amount of Launchpad keys that are lit indicate the volume, and pressing one of the keys changes the volume in Soundscape.
+                    
+                    ### Channel Configuration
+                    Each channel is represented by a column on the Launchpad. The 4 buttons do the following, from top to bottom:
+                    <ul>
+                    <li>Red: Mute channel</li>
+                    <li>Yellow: Solo channel</li>
+                    <li>Blue: Link channel</li>
+                    <li>Green: Channel is playing</li>
+                    </ul>
+                    If one of those applies to the channel, the corresponding key lights up bright, otherwise it is dim.<br>
+                    Pressing one of these keys applies the corresponding setting in Soundscape.
             </div>
 
             <h2 class="materialKeys_expandable"><img src="modules/MaterialKeys/img/icons/right.png" class="materialKeys_expandableIcon" style="width:15px">Emulator</h2>
