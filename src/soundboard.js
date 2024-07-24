@@ -1,4 +1,5 @@
-import {moduleName,launchpad} from "../MaterialKeys.js";
+import { moduleName, launchpad } from "../MaterialKeys.js";
+import { compatibilityHandler } from "./compatibilityHandler.js";
 
 export class SoundboardControl{
     constructor(){
@@ -42,51 +43,51 @@ export class SoundboardControl{
 
     update(){
         if (Math.floor(launchpad.keyMode/10) != 8) return;
-        launchpad.setMainLEDs(0,0);
+        launchpad.setMainLEDs(0,'static');
 
-        launchpad.setLED(91,0,72,0,0, game.i18n.localize("MaterialKeys.Emulator.StopAll"));
+        launchpad.setLED(91,'static',72,0, game.i18n.localize("MaterialKeys.Emulator.StopAll"));
 
         let color;
-        let type;
+        let mode;
         let txt;
         let maxSounds = game.settings.get(moduleName,'soundboardSettings').volume?.length;
         if (maxSounds == undefined) maxSounds = 16;
         
-        type = (launchpad.keyMode == 80)? 1 : 2;
+        mode = (launchpad.keyMode == 80)? 'flashing' : 'pulsing';
         color = (maxSounds>64)? 87 : 0;
         txt = (maxSounds>64)? `${game.i18n.localize("MaterialKeys.Emulator.Page")} 1` : '';
-        launchpad.setLED(79,type,color,0,0,txt);
-        type = (launchpad.keyMode == 81)? 1 : 2;
+        launchpad.setLED(79,mode,color,0,txt);
+        mode = (launchpad.keyMode == 81)? 'flashing' : 'pulsing';
         color = (maxSounds>64)? 79 : 0;
         txt = (maxSounds>64)? `${game.i18n.localize("MaterialKeys.Emulator.Page")} 2` : '';
-        launchpad.setLED(69,type,color,0,0, txt);
-        type = (launchpad.keyMode == 82)? 1 : 2;
+        launchpad.setLED(69,mode,color,0,txt);
+        mode = (launchpad.keyMode == 82)? 'flashing' : 'pulsing';
         color = (maxSounds>128)? 53 : 0;
         txt = (maxSounds>128)? `${game.i18n.localize("MaterialKeys.Emulator.Page")} 3` : '';
-        launchpad.setLED(59,type,color,0,0,txt);
-        type = (launchpad.keyMode == 83)? 1 : 2;
+        launchpad.setLED(59,mode,color,0,txt);
+        mode = (launchpad.keyMode == 83)? 'flashing' : 'pulsing';
         color = (maxSounds>192)? 74 : 0;
         txt = (maxSounds>192)? `${game.i18n.localize("MaterialKeys.Emulator.Page")} 4` : '';
-        launchpad.setLED(49,type,color,0,0,txt);
+        launchpad.setLED(49,mode,color,0,txt);
 
         const page = launchpad.keyMode - 80;
 
         for (let i=64*page; i<64*page+64; i++){
-            let mode = 0;
+            let mode = 'static';
             
             let color = game.settings.get(moduleName,'soundboardSettings').colorOff[i];
 
             if (this.activeSounds[i] != undefined){
                 mode = game.settings.get(moduleName,'soundboardSettings').toggle[i];
-                if (mode == undefined) mode = 0;
-                if (mode == 0) color = game.settings.get(moduleName,'soundboardSettings').colorOn[i];
+                if (mode == undefined) mode = 'static';
+                if (mode == 'static') color = game.settings.get(moduleName,'soundboardSettings').colorOn[i];
             }  
             
             let ledIteration = i - 64*page;
             const row = 8-Math.floor(ledIteration/8);
             const column = ledIteration % 8 + 1;
             const led = row*10+column;
-            launchpad.setLED(led,mode,color,0,0,game.settings.get(moduleName,'soundboardSettings').name[i]);
+            launchpad.setLED(led,mode,color,0,game.settings.get(moduleName,'soundboardSettings').name[i]);
         }
         launchpad.updateLEDs(); 
     }
@@ -117,7 +118,7 @@ export class SoundboardControl{
         }
    
         let volume = game.settings.get(moduleName,'soundboardSettings').volume[soundNr]/100;
-        volume = AudioHelper.inputToVolume(volume);
+        volume = compatibilityHandler('audioHelper').inputToVolume(volume);
         
         let payload = {
             "msgType": "playSound", 
@@ -136,14 +137,14 @@ export class SoundboardControl{
         if (play){
             volume *= game.settings.get("core", "globalAmbientVolume");
 
-            let newSound = new Sound(src);
+            let newSound = compatibilityHandler('newSound', src);
             if(newSound.loaded == false) await newSound.load({autoplay:true});
-            newSound.on('end', ()=>{
+            compatibilityHandler('onSoundEnd', newSound, ()=> {
                 if (repeat == false) {
                     this.activeSounds[soundNr] = undefined;
                     this.update();
                 }
-            });
+            })
             newSound.play({loop:repeat,volume:volume});
             this.activeSounds[soundNr] = newSound;
         }

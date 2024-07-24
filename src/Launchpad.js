@@ -1,21 +1,20 @@
-import {moduleName,playlistControl,soundboard,visualFx,combatTracker,macroBoard,soundscape,sendWS} from "../MaterialKeys.js";
+import {moduleName,playlistControl,soundboard,visualFx,combatTracker,macroBoard,soundscape} from "../MaterialKeys.js";
+import { sendWS } from "./websocket.js";
 import {getColor} from "./misc.js";
 import {setEmulatorLED} from "./forms/emulator.js";
 
 export class Launchpad{
     constructor() {
         this.keyMode = 80;
-        this.ledBufferColor = [];
-        this.ledBufferColor2 = [];
-        this.ledBufferColor3 = [];
-        this.ledBufferType = [];
-        this.ledBufferName = [];
+
+        this.ledBuffer = [];
         for (let i=0; i<100; i++){
-            this.ledBufferColor[i] = 0;
-            this.ledBufferColor2[i] = 0;
-            this.ledBufferColor3[i] = 0;
-            this.ledBufferType[i] = 0;
-            this.ledBufferName[i] = '';
+            this.ledBuffer[i] = {
+                button: i,
+                mode: 'static',
+                color: 0,
+                color2: 0
+            }
         }
         this.colorPickerActive = false;
         this.colorPickerSel = 0;
@@ -95,13 +94,14 @@ export class Launchpad{
 
     setMode(mode,iterate=true){
         if (mode > 10) mode = Math.floor(mode/10);
-        this.setMainLEDs(0,0);
+       
+        this.setMainLEDs(0,'static');
         /*
-         * No function yet on 1
+         * Soundscape
          */
         if (mode == 1){
             this.keyMode = mode
-            this.setControlKeys(mode,87,0);
+            this.setControlKeys(mode,87);
             soundscape.update(mode);
         }
         /*
@@ -119,7 +119,7 @@ export class Launchpad{
             else if (this.keyMode == 21) color = 79;
             else if (this.keyMode == 22) color = 53;
             else if (this.keyMode == 23) color = 74;
-            this.setControlKeys(mode,color,0);
+            this.setControlKeys(mode,color);
 
             macroBoard.update();
         }
@@ -137,7 +137,7 @@ export class Launchpad{
             else if (this.keyMode == 32) color = 79;
             else if (this.keyMode == 33) color = 53;
             else if (this.keyMode == 34) color = 74;
-            this.setControlKeys(mode,color,0);
+            this.setControlKeys(mode,color);
             if (game.combat) combatTracker.hpUpdate(game.combat);
         }
         /*
@@ -145,7 +145,7 @@ export class Launchpad{
         */
         if (mode == 4){
             this.keyMode = mode;
-            this.setControlKeys(mode,87,0);
+            this.setControlKeys(mode,87);
             combatTracker.trackerUpdate(game.combat);
             if (game.combat) combatTracker.updateTokens(game.combat);
         }
@@ -155,11 +155,11 @@ export class Launchpad{
         else if (mode == 5){
             if (this.keyMode == 5){
                 this.keyMode = 51;
-                this.setControlKeys(mode,72,0);
+                this.setControlKeys(mode,72);
             }
             else {
                 this.keyMode = 5;
-                this.setControlKeys(mode,87,0);
+                this.setControlKeys(mode,87);
             }
             visualFx.update();
         }
@@ -176,7 +176,7 @@ export class Launchpad{
             else if (this.keyMode == 61) color = 79;
             else if (this.keyMode == 62) color = 53;
             else if (this.keyMode == 63) color = 74;
-            this.setControlKeys(mode,color,0);
+            this.setControlKeys(mode,color);
             playlistControl.volumeUpdate();
         }
         /*
@@ -192,7 +192,7 @@ export class Launchpad{
             else if (this.keyMode == 71) color = 79;
             else if (this.keyMode == 72) color = 53;
             else if (this.keyMode == 73) color = 74;
-            this.setControlKeys(mode,color,0);
+            this.setControlKeys(mode,color);
             playlistControl.playlistUpdate();
         }
         /* 
@@ -210,91 +210,106 @@ export class Launchpad{
             else if (this.keyMode == 81) color = 79;
             else if (this.keyMode == 82) color = 53;
             else if (this.keyMode == 83) color = 74;
-            this.setControlKeys(mode,color,0);
+            this.setControlKeys(mode,color);
             soundboard.update();
         }
         this.updateLEDs();
     }
     
     updateLEDs(){
-        let msg = "";
+        let data = [];
         for (let i=11; i<100; i++) {
-            if (i>11) msg += ";";
-            msg += i+","+this.ledBufferType[i]+","+this.ledBufferColor[i];
-            if (this.ledBufferType[i] == 1) msg += ","+this.ledBufferColor2[i];
-            else if (this.ledBufferType[i] == 3) msg += ","+this.ledBufferColor2[i]+","+this.ledBufferColor3[i];
-            setEmulatorLED(i,this.ledBufferType[i],this.ledBufferColor[i],this.ledBufferColor2[i],this.ledBufferColor3[i],this.ledBufferName[i])
+            if (i % 10 == 0) continue;
+            data.push({
+                button: i,
+                mode: this.ledBuffer[i].mode,
+                color: this.ledBuffer[i].color,
+                color2: this.ledBuffer[i].color2
+            })
+            setEmulatorLED(i, this.ledBuffer[i].mode, this.ledBuffer[i].color, this.ledBuffer[i].color2, this.ledBuffer[i].name);
         }
-        const data = {
-            target: "MIDI",
-            type: "LED",
-            data: msg
+        const dataToSend = {
+            target: "MaterialKeys_Device",
+            source: "MaterialKeys_Foundry",
+            userId: game.userID,
+            event: "updateAllLEDs",
+            payload: data
         }
-        sendWS(JSON.stringify(data));
+        sendWS(JSON.stringify(dataToSend));
     }
     
-    setLED(led,type,color,color2=0,color3=0,name=""){
-        this.ledBufferColor[led] = color;
-        this.ledBufferColor2[led] = color2;
-        this.ledBufferColor3[led] = color3;
-        this.ledBufferType[led] = type;
-        this.ledBufferName[led] = name;
+    //Store LED data in buffer
+    setLED(led, mode, color, color2=0, name=""){
+        this.ledBuffer[led] = {
+            button: led,
+            mode,
+            color,
+            color2,
+            name
+        }
     }
     
-    setMainLEDs(color,type,name=""){
+    setMainLEDs(color,mode,name=""){
         for (let i=11; i<99; i++) {
-            if (i % 10 == 9) continue;
-            this.ledBufferColor[i] = color;
-            this.ledBufferType[i] = type;
-            this.ledBufferName[i] = name;
+            if (i % 10 == 0 || i % 10 == 9) continue;
+            this.ledBuffer[i] = {
+                button: i,
+                mode,
+                color,
+                name
+            }
         }
     }
     
-    setControlKeys(keyMode,color,type,name=""){
+    setControlKeys(keyMode, color, name=""){
         for (let i=0; i<8; i++) {
-            const led = i*10+19;
-            let newColor = 0;
-            if (i == keyMode-1) newColor = color; 
-            this.ledBufferColor[led] = newColor;
-            this.ledBufferType[led] = type;
-            this.ledBufferName[led] = name;
+            const led = i*10 + 19;
+            this.ledBuffer[led] = {
+                button: led,
+                mode: 'static',
+                color: i == keyMode-1 ? color : 0,
+                name
+            }
         }
     }
     
-    setArrow(location,dir,color,type){
+    setArrow(location,dir,color,mode){
         if (dir == "right") dir = 0;
         else if (dir == "left") dir = 1;
         else if (dir == "up") dir = 2;
         else if (dir == "down") dir = 3;
 
         if (dir == 0){
-            this.setLED(location,type,color);
-            this.setLED(location + 11,type,color);
-            this.setLED(location + 20,type,color);
+            this.setLED(location,mode,color);
+            this.setLED(location + 11,mode,color);
+            this.setLED(location + 20,mode,color);
         }
         else if (dir == 1){
-            this.setLED(location + 1,type,color);
-            this.setLED(location + 10,type,color);
-            this.setLED(location + 21,type,color);
+            this.setLED(location + 1,mode,color);
+            this.setLED(location + 10,mode,color);
+            this.setLED(location + 21,mode,color);
         }
         else if (dir == 2){
-            this.setLED(location,type,color);
-            this.setLED(location + 2,type,color);
-            this.setLED(location + 11,type,color);
+            this.setLED(location,mode,color);
+            this.setLED(location + 2,mode,color);
+            this.setLED(location + 11,mode,color);
         }
         else if (dir == 3){
-            this.setLED(location + 1,type,color);
-            this.setLED(location + 10,type,color);
-            this.setLED(location + 12,type,color);
+            this.setLED(location + 1,mode,color);
+            this.setLED(location + 10,mode,color);
+            this.setLED(location + 12,mode,color);
         }
     }
 
     setBrightness(brightness){
         const data = {
-            target: "MIDI",
-            type: "Brightness",
-            data: brightness
+            target: "MaterialKeys_Device",
+            source: "MaterialKeys_Foundry",
+            userId: game.userID,
+            event: "setBrightness",
+            payload: brightness
         }
+        
         sendWS(JSON.stringify(data));
     }
 
@@ -304,40 +319,35 @@ export class Launchpad{
         this.colorPickerTarget = target;
         this.colorPickerActive = true;
         this.colorPickerScreen = screen;
-        let msg = "";
-        let counter = screen*64;
-        
-        for (let i=11; i<100; i++){
-            if (i>11) msg += ';';
+    
+        let data = [];
+        let color = screen*64;
+
+        for (let i=11; i<100; i++) {
+            if (i % 10 == 0) continue;
             if (i % 10 == 9) {
-                let color = 0;
-                let type = 0;
-                if (i == 89) {
-                    if (screen == 0) type = 2;
-                    color = 87;
-                }
-                else if (i == 79){
-                    if (screen == 1) type = 2;
-                    color = 72;
-                }
-                msg += i+','+type+','+color;
+                data.push({
+                    button: i,
+                    mode: (i == 89 && screen == 0) ? 'pulsing' : (i == 79 && screen == 1) ? 'pulsing' : 'static',
+                    color: (i == 89) ? 87 : (i == 79) ? 72 : 0
+                });
+                continue;
             }
-            else if (i % 10 == 0){}
-            else if (Math.floor(i/10) == 9){
-                msg += i+',0,0';
-            }
-            else {
-                if (counter == target) msg += i+',2,'+counter;
-                else msg += i+',0,'+counter;
-                counter++;
-            }
+            data.push({
+                button: i,
+                mode: (color == target) ? 'pulsing' : 'static',
+                color: color++
+            });
         }
-        const data = {
-            target: "MIDI",
-            type: "LED",
-            data: msg
+
+        const dataToSend = {
+            target: "MaterialKeys_Device",
+            source: "MaterialKeys_Foundry",
+            userId: game.userID,
+            event: "updateAllLEDs",
+            payload: data
         }
-        sendWS(JSON.stringify(data));
+        sendWS(JSON.stringify(dataToSend));
     }
 
     async colorPickerUpdate(value){

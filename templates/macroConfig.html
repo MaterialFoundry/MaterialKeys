@@ -46,10 +46,8 @@
                         </select>
                     </div>
                     
-                    {{#if ../../macroArguments}}
-                        <label>{{localize "MaterialKeys.MacroArgs"}}</label>
-                        <input type="text" name="args" id="materialKeys_args{{this.iteration}}" value="{{this.args}}">
-                    {{/if}}
+                    <label>{{localize "MaterialKeys.MacroArgs"}}</label>
+                    <input type="text" name="args" id="materialKeys_args{{this.iteration}}" value="{{this.args}}">
                     
                     <div class="flex-container" style="display:flex;flex-direction:row;padding-top:10px">  
                         <label style="flex:1">{{localize "MaterialKeys.Color"}}</label>

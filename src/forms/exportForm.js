@@ -1,4 +1,6 @@
 
+import { compatibilityHandler } from "../compatibilityHandler.js";
+
 export class exportConfigForm extends FormApplication {
     constructor(data, options) {
         super(data, options);
@@ -11,7 +13,7 @@ export class exportConfigForm extends FormApplication {
      * Default Options for this FormApplication
      */
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return compatibilityHandler('mergeObject', super.defaultOptions, {
             id: "materialKeys_export",
             title: "Material Keys: " + game.i18n.localize("MaterialKeys.ExportDialog.Title"),
             template: "./modules/MaterialKeys/templates/exportDialog.html",

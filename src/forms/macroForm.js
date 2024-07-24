@@ -1,7 +1,8 @@
-import {moduleName,enableModule,launchpad,macroBoard,marcoArgumentsEnabled} from "../../MaterialKeys.js";
+import {moduleName,enableModule,launchpad,macroBoard} from "../../MaterialKeys.js";
 import {getColor} from "../misc.js";
 import {exportConfigForm} from "./exportForm.js";
 import {importConfigForm} from "./importForm.js";
+import { compatibilityHandler } from "../compatibilityHandler.js";
 
 export class macroConfigForm extends FormApplication {
     constructor(data, options) {
@@ -14,7 +15,7 @@ export class macroConfigForm extends FormApplication {
      * Default Options for this FormApplication
      */
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return compatibilityHandler('mergeObject', super.defaultOptions, {
             id: "materialKeys_macroConfig",
             title: "Material Keys: "+game.i18n.localize("MaterialKeys.Sett.MacroConfig"),
             template: "./modules/MaterialKeys/templates/macroConfig.html",
@@ -31,9 +32,7 @@ export class macroConfigForm extends FormApplication {
         if (settings.color == undefined) settings.color = [];
         if (settings.args == undefined) settings.args = [];
 
-        let height = 95;
-        if (marcoArgumentsEnabled) height += 50;
-
+        let height = 145;
         let iteration = this.page*32;
         let macroData = [];
 
@@ -62,7 +61,6 @@ export class macroConfigForm extends FormApplication {
             height: height,
             macros: game.macros,
             macroData: macroData,
-            macroArguments: marcoArgumentsEnabled,
             macroRange: `${this.page*32 + 1} - ${this.page*32 + 32}`,
             prevDisabled: this.page == 0 ? 'disabled' : '',
             totalMacros: Math.max(Math.ceil(settings.macros.length/32)*32, this.page*32 + 32)
@@ -80,8 +78,7 @@ export class macroConfigForm extends FormApplication {
             color: formData["color"]
        });
 
-        if (marcoArgumentsEnabled) 
-            await game.settings.set(moduleName,'macroArgs', formData["args"]);
+        await game.settings.set(moduleName,'macroArgs', formData["args"]);
        
        launchpad.setMode(launchpad.keyMode,false);
        macroBoard.update();
@@ -186,6 +183,7 @@ export class macroConfigForm extends FormApplication {
         macro.on("change", event => {
             let id = event.target.id.replace('materialKeys_macros','');
             let settings = game.settings.get(moduleName,'macroSettings');
+            if (settings.macros == undefined) settings.macros = [];
             settings.macros[id-1]=event.target.value;
             this.updateSettings(settings);
         });

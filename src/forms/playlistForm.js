@@ -1,5 +1,6 @@
 import {moduleName,enableModule,launchpad,playlistControl} from "../../MaterialKeys.js";
 import {getColor} from "../misc.js";
+import { compatibilityHandler } from "../compatibilityHandler.js";
 
 export class playlistConfigForm extends FormApplication {
     constructor(data, options) {
@@ -11,7 +12,7 @@ export class playlistConfigForm extends FormApplication {
      * Default Options for this FormApplication
      */
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return compatibilityHandler('mergeObject', super.defaultOptions, {
             id: "materialKeys_playlistConfig",
             title: "Material Keys: "+game.i18n.localize("MaterialKeys.Sett.PlaylistConfig"),
             template: "./modules/MaterialKeys/templates/playlistConfig.html",

@@ -1,4 +1,6 @@
 
+import { compatibilityHandler } from "../compatibilityHandler.js";
+
 export class importConfigForm extends FormApplication {
     constructor(data, options) {
         super(data, options);
@@ -12,7 +14,7 @@ export class importConfigForm extends FormApplication {
      * Default Options for this FormApplication
      */
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return compatibilityHandler('mergeObject', super.defaultOptions, {
             id: "materialKeys_import",
             title: "Material Keys: " + game.i18n.localize("MaterialKeys.ImportDialog.Title"),
             template: "./modules/MaterialKeys/templates/importDialog.html",

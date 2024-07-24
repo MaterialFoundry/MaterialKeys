@@ -1,0 +1,46 @@
+site_name: Material Keys Documentation
+site_url: https://example.com
+nav:
+  - Home: index.md
+  - Getting Started: gettingStarted.md
+  - Material Companion: materialCompanion.md
+  - Module Settings: moduleSettings.md
+  - Functions: 
+    - Soundboard: functions/soundboard.md
+    - Playlist Control: functions/playlist.md
+    - Playlist Volume Control: functions/playlistVolume.md
+    - Visual Effects Control: functions/visualFx.md
+    - Combat Tracker: functions/combatTracker.md
+    - Token Health Tracker: functions/tokenHealth.md
+    - Macroboard: functions/macroboard.md
+    - Soundscape: functions/soundscape.md
+  - Emulator: emulator.md
+  - Color Picker: colorPicker.md
+  - Supported Devices: supportedDevices.md
+theme:
+  name: material
+  palette:
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: black
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+    # Palette toggle for light mode
+    - scheme: default
+      primary: blue grey
+      toggle:
+        icon: material/brightness-7 
+        name: Switch to dark mode
+    
+  features:
+    - navigation.tracking
+    #- navigation.tabs
+    - toc.integrate
+    #- navigation.top
+plugins:
+  - search
+markdown_extensions:
+  - attr_list
+extra_css: []

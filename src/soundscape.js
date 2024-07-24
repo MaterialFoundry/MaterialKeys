@@ -186,81 +186,74 @@ export class Soundscape{
 
     update(mode){
         if (launchpad.keyMode != 1) return;
-        launchpad.setMainLEDs(0,0);
+        launchpad.setMainLEDs(0,'static');
         
         const settings = game.settings.get(moduleName,'playlists');
         const colorOn = settings.colorOn ? settings.colorOn : 87;
         const colorOff = settings.colorOff ? settings.colorOff : 72;
 
-        launchpad.setLED(91,0,colorOff,0,0,game.i18n.localize("MaterialKeys.Soundscape.Volume"));
-        launchpad.setLED(92,0,colorOff,0,0,game.i18n.localize("MaterialKeys.Soundscape.Channel"));
-        launchpad.setLED(93,0,colorOff,0,0,game.i18n.localize("MaterialKeys.Soundscape.Master"));
-        launchpad.setLED(94,0,colorOff,0,0,game.i18n.localize("MaterialKeys.Soundscape.Soundboard"));
+        launchpad.setLED(91,'static',colorOff,0,game.i18n.localize("MaterialKeys.Soundscape.Volume"));
+        launchpad.setLED(92,'static',colorOff,0,game.i18n.localize("MaterialKeys.Soundscape.Channel"));
+        launchpad.setLED(93,'static',colorOff,0,game.i18n.localize("MaterialKeys.Soundscape.Master"));
+        launchpad.setLED(94,'static',colorOff,0,game.i18n.localize("MaterialKeys.Soundscape.Soundboard"));
         const color = this.playing ? colorOn : colorOff;
-        launchpad.setLED(98,0,color,0,0,game.i18n.localize("MaterialKeys.Soundscape.Play"));
+        launchpad.setLED(98,'static',color,0,game.i18n.localize("MaterialKeys.Soundscape.Play"));
 
         //set Volume
         if (this.mode == 'volume') {
-            launchpad.setLED(91,0,colorOn,0,0,game.i18n.localize("MaterialKeys.Soundscape.Volume"));
+            launchpad.setLED(91,'static',colorOn,0,game.i18n.localize("MaterialKeys.Soundscape.Volume"));
             
             //each channel
             for (let i=0; i<8; i++) {
-                const volume = Math.round(8*this.channelData[i].volume/1.25);
+                const volume = Math.round(7*this.channelData[i].volume/1.25)+1;
                 for (let j=0; j<8; j++) {
                     let color = this.channelData[i].playing ? colorOn : colorOff;
                     if (volume <= j) 
                         color = 0;
                     const led = 11+i + 10*j;
                     const txt = j == 0 ? `Ch${i+1}` : '';
-                    launchpad.setLED(led,0,color,undefined,undefined,txt);
+                    launchpad.setLED(led,'static',color,0,txt);
                 }
             }
         }
         //channel
         else if (this.mode == 'channel') {
-            launchpad.setLED(92,0,colorOn,0,0,game.i18n.localize("MaterialKeys.Soundscape.Channel"));
+            launchpad.setLED(92,'static',colorOn,0,game.i18n.localize("MaterialKeys.Soundscape.Channel"));
             //each channel
             for (let i=0; i<8; i++) {
-                let color1;
-                let color2 = 0;
-                let color3 = 0;
+                let color;
 
-                color1 = this.channelData[i].mute ? 127 : 10;
-                launchpad.setLED(11+i + 30,3,color1,color2,color3,'mute');
+                color = this.channelData[i].mute ? '#ff0000' : '#110000';
+                launchpad.setLED(11+i + 30,'rgb',color,0,'mute');
 
-                color1 = this.channelData[i].solo ? 127 : 10;
-                color2 = this.channelData[i].solo ? 127 : 10;
-                launchpad.setLED(11+i + 20,3,color1,color2,color3,'solo');
+                color = this.channelData[i].solo ? '#ffff00' : '#111100';
+                launchpad.setLED(11+i + 20,'rgb',color,0,'solo');
 
-                color1 = 0;
-                color2 = this.channelData[i].link ? 127 : 0;
-                color3 = this.channelData[i].link ? 127 : 30;
-                launchpad.setLED(11+i + 10,3,color1,color2,color3,'link');
+                color = this.channelData[i].link ? '#0000ff' : '#000011';
+                launchpad.setLED(11+i + 10,'rgb',color,0,'link');
 
-                color1 = 0;
-                color2 = this.channelData[i].playing ? 127 : 10;
-                color3 = 0;
-                launchpad.setLED(11+i,3,color1,color2,color3,'playing');
+                color = this.channelData[i].playing ? '#00ff00' : '#001100';
+                launchpad.setLED(11+i,'rgb',color,0,'playing');
 
             }
         }
         //master
         else if (this.mode == 'master') {
-            launchpad.setLED(93,0,colorOn,0,0,game.i18n.localize("MaterialKeys.Soundscape.Master"));
+            launchpad.setLED(93,'static',colorOn,0,game.i18n.localize("MaterialKeys.Soundscape.Master"));
             
-            const volume = Math.round(8*this.masterData.volume/1.25);
+            const volume = Math.round(7*this.masterData.volume/1.25)+1;
             for (let i=0; i<8; i++) {
                 let color = colorOn;
                 if (volume <= i) 
                     color = 0;
                 const led = 11 + 10*i;
                 const txt = i == 0 ? `Master` : '';
-                launchpad.setLED(led,0,color,undefined,undefined,txt);
+                launchpad.setLED(led,'static',color,0,txt);
             }
         }
         else {
-            launchpad.setLED(94,0,colorOn,0,0,game.i18n.localize("MaterialKeys.Soundscape.Soundboard"));
-            launchpad.setLED(88,0,colorOff,0,0,game.i18n.localize("MaterialKeys.Soundscape.StopSoundboard"));
+            launchpad.setLED(94,'static',colorOn,0,game.i18n.localize("MaterialKeys.Soundscape.Soundboard"));
+            launchpad.setLED(88,'static',colorOff,0,game.i18n.localize("MaterialKeys.Soundscape.StopSoundboard"));
             
             //Set soundboard sounds
             for (let i=0; i<25; i++) {
@@ -269,18 +262,18 @@ export class Soundscape{
                 const row = 8 - Math.floor(i/5);
                 const column = i-5*Math.floor(i/5)+1;
                 const led = 10*row + column;
-                launchpad.setLED(led,0,color,undefined,undefined,txt);
+                launchpad.setLED(led,'static',color,0,txt);
             }
 
             //Set soundboard volume
-            const volume = Math.round(8*this.soundboardVolume/1.25);
+            const volume = Math.round(7*this.soundboardVolume/1.25)+1;
             for (let i=0; i<8; i++) {
                 let color = colorOn;
                 if (volume <= i) 
                     color = 0;
                 const led = 11+i;
                 const txt = i == 0 ? `Vol` : '';
-                launchpad.setLED(led,0,color,undefined,undefined,txt);
+                launchpad.setLED(led,'static',color,0,txt);
             }
         }
         launchpad.updateLEDs();

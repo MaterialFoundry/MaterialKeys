@@ -1,5 +1,6 @@
 import { getColor } from "../misc.js";
 import { launchpad } from "../../MaterialKeys.js";
+import { compatibilityHandler } from "../compatibilityHandler.js";
 
 let emulator;
 let blinkArray = [];
@@ -14,19 +15,15 @@ export async function newEmulator() {
     setInterval(function() {setEmulatorFade() }, 40);
 }
 
-export function setEmulatorLED(led,mode,color,color2,color3,name) {
+export function setEmulatorLED(led,mode,color,color2,name,color3) {
     if (led % 10 == 0) return;
     const emulatorElement = document.getElementById('materialKeys_emulator');
     if (emulatorElement == undefined) return;
     let btn = document.getElementById(`materialKeys_emulator_mainKeys-${led}`);
     if (btn == undefined || btn == null) return
-    let newColor = '';
-    if (mode == 0) newColor = getColor(color);
-    else if (mode == 1) newColor = getColor(color);
-    else if (mode == 2) newColor = getColor(color);
-    else newColor = `rgb(${color*1.5+63} ${color2*1.5+63} ${color3*1.5+63})`
+    const newColor = (mode == 'rgb') ? color : getColor(color);
 
-    if (mode == 1) blinkArray[led] = {
+    if (mode == 'flashing') blinkArray[led] = {
         element: btn,
         state: 0,
         color1: getColor(color),
@@ -34,7 +31,7 @@ export function setEmulatorLED(led,mode,color,color2,color3,name) {
     }
     else blinkArray[led] = undefined;
 
-    if (mode == 2 && color != 0) {
+    if (mode == 'pulsing' && color != 0) {
         var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(getColor(color));
         fadeArray[led] = {
             element: btn,
@@ -47,7 +44,6 @@ export function setEmulatorLED(led,mode,color,color2,color3,name) {
     }
     else fadeArray[led] = undefined;
 
-    if (newColor == undefined) newColor = '';
     btn.style.backgroundColor = newColor;
     btn.innerHTML=name;
 }
@@ -91,11 +87,11 @@ class emulatorForm extends FormApplication {
     }
 
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return compatibilityHandler('mergeObject', super.defaultOptions, {
             id: "materialKeys_emulator",
             title: "Material Keys: "+game.i18n.localize("MaterialKeys.Emulator.Title"),
             template: "./modules/MaterialKeys/templates/emulator.html",
-            classes: ["sheet"],
+            classes: ["sheet"]
         });
     }
 

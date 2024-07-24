@@ -1,5 +1,5 @@
 import { launchpad } from "../MaterialKeys.js";
-import { compatibleCore } from "./misc.js";
+import { compatibilityHandler } from "./compatibilityHandler.js";
 
 export class VisualFx{
     constructor(){
@@ -142,7 +142,7 @@ export class VisualFx{
     update(){
         if (launchpad.keyMode != 5 && launchpad.keyMode != 51) return;
         
-        launchpad.setMainLEDs(0,0);
+        launchpad.setMainLEDs(0,'static');
         
         let fxmasterEnabled = false;
         const fxmaster = game.modules.get("fxmaster");
@@ -151,18 +151,20 @@ export class VisualFx{
 
         if (launchpad.keyMode == 5){
             if (fxmasterEnabled){
-                launchpad.setLED(49,1,87,0,0,game.i18n.localize("MaterialKeys.Emulator.Overlays"));
-                launchpad.setLED(39,2,72,0,0,game.i18n.localize("MaterialKeys.Emulator.WeatherFilters"));
+                launchpad.setLED(49,'flashing',87,0,game.i18n.localize("MaterialKeys.Emulator.Overlays"));
+                launchpad.setLED(39,'pulsing',72,0,game.i18n.localize("MaterialKeys.Emulator.WeatherFilters"));
                 const fxmaster = canvas.scene.getFlag("fxmaster", "filters");
-                launchpad.setLED(93,0,0,0,0,game.i18n.localize("MaterialKeys.Emulator.Colorize"));
+                launchpad.setLED(93,'static',0,0,game.i18n.localize("MaterialKeys.Emulator.Colorize"));
                 let red = 1;
                 let green = 1;
                 let blue = 1;
+                let hexColor = '#ffffff';
                 if (fxmaster != undefined) {
                     let filters = fxmaster.core_color;
                     if (filters != undefined){
                         if (filters.type == "color"){
-                            const color = Color.from(canvas.scene.getFlag("fxmaster", "filters").core_color.options.color.value).rgb
+                            hexColor = canvas.scene.getFlag("fxmaster", "filters").core_color.options.color.value;
+                            const color = Color.from(hexColor).rgb
                             red = color[0];
                             green = color[1];
                             blue = color[2];
@@ -172,9 +174,9 @@ export class VisualFx{
                         }
                     }
                 }
-                launchpad.setLED(95,3,Math.ceil(red*127),Math.ceil(green*127),Math.ceil(blue*127));
-                launchpad.setLED(96,3,Math.ceil(red*127),Math.ceil(green*127),Math.ceil(blue*127),game.i18n.localize("MaterialKeys.Emulator.Clear"));
-                launchpad.setLED(97,3,Math.ceil(red*127),Math.ceil(green*127),Math.ceil(blue*127));
+                launchpad.setLED(95,'rgb',hexColor);
+                launchpad.setLED(96,'rgb',hexColor,0,game.i18n.localize("MaterialKeys.Emulator.Clear"));
+                launchpad.setLED(97,'rgb',hexColor);
     
                 red = Math.ceil(red*8);
                 green = Math.ceil(green*8);
@@ -184,54 +186,54 @@ export class VisualFx{
                 if (blue == 0) blue = 1;
                 
                 for (let i=0; i<8; i++){
-                    let color = i*15+7;
+                    let color = i/8+0.125;
                     if (red <= i) 
                         color = 0;
                     let led = 15 + 10*i;
-                    launchpad.setLED(led,3,color,0,0);
+                    launchpad.setLED(led,'rgb', `#${this.componentToHex(color)}0000`);
     
-                    color = i*15+7;
+                    color = i/8+0.125;
                     if (green <= i)
                         color = 0;
                     led = 16 + 10*i;
-                    launchpad.setLED(led,3,0,color,0);
+                    launchpad.setLED(led,'rgb', `#00${this.componentToHex(color)}00`);
         
-                    color = i*15+7;
+                    color = i/8+0.125;
                     if (blue <= i)
                         color = 0;
                     led = 17 + 10*i;
-                    launchpad.setLED(led,3,0,0,color);
+                    launchpad.setLED(led,'rgb', `#0000${this.componentToHex(color)}`);
                 }
     
                 //Colorize effects
                 const colorizeLedColor = [53,45,37,27,21,13,9,5];
                 const colorizeLabel = ['Magenta','DBlue','LBlue','DGreen','LGreen','Yellow','Orange','Red'];
                 for (let i=1; i<9; i++){
-                    const state = (this.colorizeState == i) ? 2 : 0;
+                    const state = (this.colorizeState == i) ? 'pulsing' : 'static';
                     const led = 10*i + 3;
                     const txt = game.i18n.localize(`MaterialKeys.Emulator.Colors.${colorizeLabel[i-1]}`)
-                    launchpad.setLED(led,state,colorizeLedColor[i-1],0,0,txt);
+                    launchpad.setLED(led,state,colorizeLedColor[i-1],0,txt);
                 }
             }
             /*
             * Darkness
             */
-            const darkness = Math.floor(7-canvas.scene.darkness*7);
-            const darknessColor = [7,17,27,47,67,87,107,127];
-            launchpad.setLED(91,0,0,0,0,game.i18n.localize("MaterialKeys.Emulator.Darkness"));
+            const darkness = Math.floor(7-compatibilityHandler('sceneDarkness')*7);
+            const darknessColor = ['#080808','#3e3e3e','#939393','#7c7c7c','#9b9b9b','#bababa','#d9d9d9','#ffffff'];
+            launchpad.setLED(91,'static',0,0,game.i18n.localize("MaterialKeys.Emulator.Darkness"));
             for (let i=0; i<8; i++){
                 const txt = `${Math.ceil(i*100/7)}%`;
                 let color = darknessColor[i];
                 if (darkness < i) 
-                    color = 0;
+                    color = darknessColor[0];
                 const led = 11 + 10*i;
-                launchpad.setLED(led,3,color,color,color,txt);
+                launchpad.setLED(led, 'rgb',color, 0, txt);
             }
         }
 
         else if (launchpad.keyMode == 51 && fxmasterEnabled){
-            launchpad.setLED(49,2,87,0,0,game.i18n.localize("MaterialKeys.Emulator.Overlays"));
-            launchpad.setLED(39,1,72,0,0,game.i18n.localize("MaterialKeys.Emulator.WeatherFilters"));
+            launchpad.setLED(49,'pulsing',87,0,game.i18n.localize("MaterialKeys.Emulator.Overlays"));
+            launchpad.setLED(39,'flashing',72,0,game.i18n.localize("MaterialKeys.Emulator.WeatherFilters"));
             //Weather effects
             for (let i=0; i<11; i++)
                 this.visualFxState[i] = false;
@@ -265,18 +267,18 @@ export class VisualFx{
                 ,weatherEffects.bubbles.label,weatherEffects.clouds.label,weatherEffects.embers.label,weatherEffects.rainsimple.label,
                 weatherEffects.stars.label,weatherEffects.crows.label,weatherEffects.bats.label,weatherEffects.fog.label,
                 weatherEffects.raintop.label]
-            let stopState = 0;
+            let stopState = 'static';
             for (let i=0; i<13; i++){
-                const state = this.visualFxState[i] ? 2 : 0;
-                if (state) stopState = 2;
+                const state = this.visualFxState[i] ? 'pulsing' : 'static';
+                if (state) stopState = 'pulsing';
                 let led;
                 if (i < 5) led = 71-10*i;
                 else if (i < 9) led = 72-10*(i-5);
                 else led = 73-10*(i-9);
-                launchpad.setLED(led,state,fxLedColor[i],0,0,game.i18n.localize(weatherLabel[i]));
+                launchpad.setLED(led,state,fxLedColor[i],0,game.i18n.localize(weatherLabel[i]));
             }
             launchpad.setLED(11,stopState,72);
-            launchpad.setLED(12,stopState,72,0,0,game.i18n.localize("MaterialKeys.Emulator.Clear"));
+            launchpad.setLED(12,stopState,72,0,game.i18n.localize("MaterialKeys.Emulator.Clear"));
             launchpad.setLED(13,stopState,72);
             
             //Filters
@@ -294,19 +296,19 @@ export class VisualFx{
                     else if (objKeys[i] == "core_bloom") this.visualFxFilters[4] = true;
                 }
             }
-            stopState = 0;
+            stopState = 'static';
             const filterLedColor = [3,79,71,1,3];
             const filterLabels = ["lightning", "underwater","predator","oldfilm","bloom"]
             for (let i=0; i<5; i++){
-                let mode = 0;
-                if (this.visualFxFilters[i]) mode = 2;
-                if (mode) stopState = 2;
-                launchpad.setLED(75-10*i, mode, filterLedColor[i], 0, 0, game.i18n.localize(CONFIG.fxmaster.filterEffects[filterLabels[i]].label));
+                let mode = 'static';
+                if (this.visualFxFilters[i]) mode = 'pulsing';
+                if (mode) stopState = 'pulsing';
+                launchpad.setLED(75-10*i, mode, filterLedColor[i], 0, game.i18n.localize(CONFIG.fxmaster.filterEffects[filterLabels[i]].label));
             }
-            launchpad.setLED(15,stopState,72,0,0,game.i18n.localize("MaterialKeys.Emulator.Clear"));
+            launchpad.setLED(15,stopState,72,0,game.i18n.localize("MaterialKeys.Emulator.Clear"));
 
-            launchpad.setLED(92,0,0,0,0,game.i18n.localize("MaterialKeys.Emulator.WeatherEffects"));
-            launchpad.setLED(95,0,0,0,0,game.i18n.localize("MaterialKeys.Emulator.Filters"));
+            launchpad.setLED(92,'static',0,0,game.i18n.localize("MaterialKeys.Emulator.WeatherEffects"));
+            launchpad.setLED(95,'static',0,0,game.i18n.localize("MaterialKeys.Emulator.Filters"));
         }
         launchpad.updateLEDs();  
     }

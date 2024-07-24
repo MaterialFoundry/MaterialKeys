@@ -1,4 +1,11 @@
 # Changelog Material Keys Module
+### v1.3.0 - 18-08-2023
+Fixes:
+<ul>
+    <li>Changing playlist volumes also changes the volume slider in the sidebar</li>
+</ul>
+
+
 ### v1.2.9 - 07-06-2023
 Fixes: 
 <ul>

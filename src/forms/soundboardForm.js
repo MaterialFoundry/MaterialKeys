@@ -2,6 +2,7 @@ import {moduleName,enableModule,launchpad,soundboard} from "../../MaterialKeys.j
 import {getColor} from "../misc.js";
 import {exportConfigForm} from "./exportForm.js";
 import {importConfigForm} from "./importForm.js";
+import { compatibilityHandler } from "../compatibilityHandler.js";
 
 export class soundboardConfigForm extends FormApplication {
     constructor(data, options) {
@@ -15,7 +16,7 @@ export class soundboardConfigForm extends FormApplication {
      * Default Options for this FormApplication
      */
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return compatibilityHandler('mergeObject', super.defaultOptions, {
             id: "materialKeys_soundboardConfig",
             title: "Material Keys: "+game.i18n.localize("MaterialKeys.Sett.SoundboardConfig"),
             template: "./modules/MaterialKeys/templates/soundboardConfig.html",
@@ -133,7 +134,7 @@ export class soundboardConfigForm extends FormApplication {
                     name: this.settings.name[iteration],
                     styleSS: styleSS,
                     styleFP: styleFP,
-                    toggle: this.settings.toggle[iteration]
+                    toggle: this.settings.toggle[iteration] == '' ? 'static' : this.settings.toggle[iteration]
                 }
                 soundsThis.push(dataThis);
                 iteration++;
@@ -269,7 +270,6 @@ export class soundboardConfigForm extends FormApplication {
 
         nameField.on("change",event => {
             let id = event.target.id.replace('materialKeys_name','')-1;
-            //let settings = game.settings.get(moduleName,'soundboardSettings');
             this.settings.name[id]=event.target.value;
             this.updateSettings(this.settings);
         });
@@ -449,7 +449,9 @@ export class soundboardConfigForm extends FormApplication {
         let arrayVolume = [];
         for (let i=0; i<16; i++) arrayVolume[i] = "50";
         let arrayZero = [];
-        for (let i=0; i<16; i++) arrayZero[i] = "0";
+        for (let i=0; i<16; i++) arrayZero[i] = 0;
+        let toggleArray = [];
+        for (let i=0; i<16; i++) toggleArray[i] = "static";
     
         const settings = {
             playlist: "",
@@ -457,7 +459,7 @@ export class soundboardConfigForm extends FormApplication {
             colorOn: arrayZero,
             colorOff: arrayZero,
             mode: arrayZero,
-            toggle: arrayZero,
+            toggle: toggleArray,
             volume: arrayVolume,
             name: array
         };

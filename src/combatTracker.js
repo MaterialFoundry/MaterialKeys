@@ -1,5 +1,4 @@
 import { launchpad } from "../MaterialKeys.js";
-import { compatibleCore } from "./misc.js";
 
 export class CombatTracker{
     constructor(){
@@ -23,7 +22,7 @@ export class CombatTracker{
                         if (i>23) j = i-54;
                         if (i>31) break;
                         let led = 81+j;
-                        launchpad.setLED(led,0,0);
+                        launchpad.setLED(led,'static',0);
                     }     
                 }
                 for (let i=0; i<initiativeOrder.length; i++){
@@ -33,9 +32,9 @@ export class CombatTracker{
                     if (disposition == 1) color = 87;
                     else if (disposition == 0) color = 74;
                     else if (disposition == -1) color = 72;
-                    let type = 0;
+                    let mode = 'static';
                     const currentCombatantId = combat.combatant?.token.id;
-                    if (combat.started && token._id == currentCombatantId) type = 2;
+                    if (combat.started && token._id == currentCombatantId) mode = 'pulsing';
                     let j = i;
                     if (i>7) j = i-18;
                     if (i>15) j = i-36;
@@ -43,9 +42,9 @@ export class CombatTracker{
                     if (i>31) break;
                     let led = 81+j;
                     if (initiativeOrder[i].defeated)
-                        launchpad.setLED(led,type,3,0,0,token.name);
+                        launchpad.setLED(led,mode,3,0,token.name);
                     else
-                        launchpad.setLED(led,type,color,0,0,token.name);
+                        launchpad.setLED(led,mode,color,0,token.name);
                 }
                 
                 this.combatantsLengthOld = combatants.length;
@@ -59,7 +58,7 @@ export class CombatTracker{
                 if (i>7) j = i-18;
                 if (j>15) j = i-28;
                 let led = 81+j;
-                launchpad.setLED(led,0,0);
+                launchpad.setLED(led,'static',0);
             } 
             launchpad.updateLEDs();    
         }
@@ -113,21 +112,21 @@ export class CombatTracker{
         else 
             this.combatState = 0;
 
-        let mode = 2;
+        let mode = 'pulsing';
         let color = 87;
-        let modeArrows = 2;
+        let modeArrows = 'pulsing';
         let colorArrows = 72;
 
         if (this.combatState == 0){
-            launchpad.setMainLEDs(0,0);
+            launchpad.setMainLEDs(0,'static');
         }
         if (this.combatState == 1) {
-            mode = 0;
+            mode = 'static';
         }
         else if (this.combatState == 2){
-            mode = 0;
+            mode = 'static';
             color = 72;
-            modeArrows = 0;
+            modeArrows = 'static';
             colorArrows = 87;
         }
         launchpad.setLED(14,mode,color);
@@ -171,29 +170,29 @@ export class CombatTracker{
         }
         
         let color;
-        let type;
+        let mode;
         let txt;
         
-        type = (launchpad.keyMode == 31)? 1 : 2;
+        mode = (launchpad.keyMode == 31)? 'flashing' : 'pulsing';
         color = (hpTrackerPages>1)? 87 : 0;
         txt = (hpTrackerPages>1)? `${game.i18n.localize("MaterialKeys.Emulator.Page")} 1` : '';
-        launchpad.setLED(79,type,color,0,0,txt);
-        type = (launchpad.keyMode == 32)? 1 : 2;
+        launchpad.setLED(79,mode,color,0,txt);
+        mode = (launchpad.keyMode == 32)? 'flashing' : 'pulsing';
         color = (hpTrackerPages>1)? 79 : 0;
         txt = (hpTrackerPages>1)? `${game.i18n.localize("MaterialKeys.Emulator.Page")} 2` : '';
-        launchpad.setLED(69,type,color,0,0,txt);
-        type = (launchpad.keyMode == 33)? 1 : 2;
+        launchpad.setLED(69,mode,color,0,txt);
+        mode = (launchpad.keyMode == 33)? 'flashing' : 'pulsing';
         color = (hpTrackerPages>2)? 53 : 0;
         txt = (hpTrackerPages>2)? `${game.i18n.localize("MaterialKeys.Emulator.Page")} 3` : '';
-        launchpad.setLED(59,type,color,0,0,txt);
-        type = (launchpad.keyMode == 34)? 1 : 2;
+        launchpad.setLED(59,mode,color,0,txt);
+        mode = (launchpad.keyMode == 34)? 'flashing' : 'pulsing';
         color = (hpTrackerPages>3)? 74 : 0;
         txt = (hpTrackerPages>3)? `${game.i18n.localize("MaterialKeys.Emulator.Page")} 4` : '';
-        launchpad.setLED(49,type,color,0,0,txt);
+        launchpad.setLED(49,mode,color,0,txt);
 
         let page = launchpad.keyMode % 10-1;
         
-        launchpad.setMainLEDs(0,0);
+        launchpad.setMainLEDs(0,'static');
         if (combatants.length > 0){
             let initiativeOrder = combat.turns;
             for (let i=0; i<8; i++){
@@ -206,8 +205,8 @@ export class CombatTracker{
                 else if (disposition == 0) color = 74;
                 else if (disposition == -1) color = 72;
                 
-                let type = 0;
-                if (combat.started && token.id == combat.combatant.token.id) type = 2;
+                let mode = 'static';
+                if (combat.started && token.id == combat.combatant.token.id) mode = 'pulsing';
                 let j = i;
                 if (i>7) j = i-18;
                 if (j>15) j = i-28;
@@ -222,9 +221,9 @@ export class CombatTracker{
                 const txt = `${token.name} - ${hp}/${hpMax}`;
 
                 if (initiativeOrder[nr].defeated)
-                    launchpad.setLED(led,type,3,0,0,txt);
+                    launchpad.setLED(led,mode,3,0,txt);
                 else
-                    launchpad.setLED(led,type,color,0,0,txt);
+                    launchpad.setLED(led,mode,color,0,txt);
                 
                 let leds = 0;
 
@@ -235,7 +234,7 @@ export class CombatTracker{
                     let led = 11+10*j+i;
                     if (j>=leds) 
                         color = 0; 
-                    launchpad.setLED(led,type,color,0,0,`${Math.ceil(j*100/7)}%`);
+                    launchpad.setLED(led,mode,color,0,`${Math.ceil(j*100/7)}%`);
                 }
             }
             this.combatantsLengthOld = combatants.length;

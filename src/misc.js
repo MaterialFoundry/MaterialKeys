@@ -1,4 +1,5 @@
 import {moduleName, soundboard, macroBoard} from "../MaterialKeys.js";
+import { compatibilityHandler } from "./compatibilityHandler.js";
 
 export function compareVersions(checkedVersion, requiredVersion) {
     requiredVersion = requiredVersion.split(".");
@@ -19,8 +20,8 @@ export function compareVersions(checkedVersion, requiredVersion) {
   
 export function compatibleCore(compatibleVersion){
     const split = compatibleVersion.split(".");
-    if (split.length == 2) compatibleVersion = `0.${compatibleVersion}`;
-    let coreVersion = game.version == undefined ? game.data.version : `0.${game.version}`;
+    if (split.length == 1) compatibleVersion = `${compatibleVersion}.0`;
+    let coreVersion = game.version;
     return compareVersions(compatibleVersion, coreVersion);
 }
 
@@ -33,12 +34,11 @@ export class soundboardCheatSheet extends FormApplication {
     }
 
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return compatibilityHandler('mergeObject', super.defaultOptions, {
             id: "soundboard-cheatsheet",
             title: "Material Keys: "+game.i18n.localize("MaterialKeys.SBcheatSheet"),
             template: "./modules/MaterialKeys/templates/soundboardCheatSheet.html",
-            classes: ["sheet"],
-            
+            classes: ["sheet"]
         });
     }
 
@@ -97,11 +97,11 @@ export class macroCheatSheet extends FormApplication {
     }
 
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return compatibilityHandler('mergeObject', super.defaultOptions, {
             id: "macro-cheatsheet",
             title: "Material Keys: "+game.i18n.localize("MaterialKeys.MBcheatSheet"),
             template: "./modules/MaterialKeys/templates/macroCheatSheet.html",
-            classes: ["sheet"], 
+            classes: ["sheet"]
         });
     }
 
