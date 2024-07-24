@@ -1,7 +1,7 @@
 ## Introduction
 Material Keys is a [Foundry VTT](https://foundryvtt.com/) module that allows you to control various features of Foundry using a [supported](supportedDevices.md) Novation Launchpad device or through the built-in [emulator](emulator.md). 
 
-# [Documentation](https://materialfoundry.github.io/MaterialKeys/)
+## [Documentation](https://materialfoundry.github.io/MaterialKeys/)
 
 ## Software Versions & Module Incompatibilities
 <b>Foundry VTT:</b> Tested on V11 and V12<br>
